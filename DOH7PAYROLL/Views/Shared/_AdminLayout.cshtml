@@ -38,7 +38,29 @@
     <link rel="stylesheet" type="text/css" href="@Url.Content("/public/assets/datepicer/css/bootstrap-datepicker3.css")" />
     <link rel="stylesheet" type="text/css" href="@Url.Content("/public/assets/datepicer/css/bootstrap-datepicker3.standalone.css")" />
     <script src="@Url.Content("/public/assets/js/jquery.min.js")"></script>
-               
+     <style>  
+        body {
+            background-color:#F5F5F5;
+        }
+        .container-padding {
+            padding:50px;
+        }
+        .card-view {
+            border-style:solid;
+            border-color:#d0d0d0;
+            border-width:1px;
+            background-color:#fff;
+            padding:10px;
+            border-radius:5px;
+            margin-top:10px;
+        }
+        .margin-top {
+            margin-top:20px;
+        }
+        .text-color-white {
+            color:#fff;
+        }
+     </style>
 </head>
 
 <body class="ng-cloak ">
@@ -79,8 +101,8 @@
             <div id="navbar" class="navbar-collapse collapse">
                @Html.Partial("admin_header")
             </div><!--/.nav-collapse -->
+            </div>
         </nav>
-
         <div class="container">
             <div class="loading"></div>
             @RenderBody()
