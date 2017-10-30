@@ -1,18 +1,183 @@
 //tracking history of the document
-$("a[href='#track']").on('click',function(){
-    $('.track_history').html(loadingState);
-    var route_no = $(this).data('route');
-    var url = $(this).data('link');
+var id = 0, salary = 0, half_salary = 0, minutes_late = 0, deduction = 0, net_amount = 0, tax_10 = 0, tax_3 = 0, coop = 0,
+    phic = 0, disallowance = 0, gsis = 0, pagibig = 0, excess = 0, total_amount = 0, working_days = 0;
+$(document).ready(function () {
 
-    $('#track_route_no').val('Loading...');
-    setTimeout(function(){
-        $('#track_route_no').val(route_no);
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(data) {
-                $('.track_history').html(data);
-            }
+
+    $('.input-daterange input').each(function () {
+        $(this).datepicker("clearDates");
+    });
+    $('#inclusive3').daterangepicker();
+    $('#filter_dates').daterangepicker();
+    $('#print_pdf').submit(function () {
+        $('#upload').button('loading');
+        $('#print_individual').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
         });
-    },1000);
+    });
+
+
+    $("a[href='#track']").on('click', function () {
+        $('.track_history').html(loadingState);
+        var route_no = $(this).data('route');
+        var url = $(this).data('link');
+
+        $('#track_route_no').val('Loading...');
+        setTimeout(function () {
+            $('#track_route_no').val(route_no);
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $('.track_history').html(data);
+                }
+            });
+        }, 1000);
+    });
+
+    $("#coop").change(function () {        
+        coop = $(this).val();
+        computeTotal();
+    });
+
+    $("#phic").change(function () {
+        phic = $(this).val();
+        computeTotal();
+    });
+
+    $("#disallowance").change(function () {
+        disallowance = $(this).val();
+        computeTotal();
+    });
+
+    $("#gsis").change(function () {
+        gsis = $(this).val();
+        computeTotal();
+    });
+
+    $("#pagibig").change(function () {
+        pagibig = $(this).val();
+        computeTotal();
+    });
+
+    $("#excess").change(function () {
+        excess = $(this).val();
+        computeTotal();
+    });
+
+    $("#salary").change(function () {
+        salary = $(this).val();
+        half_salary = (salary / 2).toFixed(2);
+        $("#half_salary").val(half_salary);
+        computeAbsentRate();
+        netAmount();
+        computeTotal();
+    });
+
+    $("#minutes_late").change(function () {
+        minutes_late = $(this).val();
+        computeAbsentRate();
+        netAmount();
+        computeTotal();
+
+    });
+
+    $("#working_days").change(function () {
+        working_days = $(this).val();
+        computeAbsentRate();
+        netAmount();
+        computeTotal();
+
+    });
+
+
+    $("#button_close").click(function () {
+        clearFeld();
+    });
+
+
+
+    $(".btn_view").click(function () {
+        id= $(this).closest('tr').find('td:eq(0)').text();
+        var firstname = $(this).closest('tr').find('td:eq(1)').text();
+        var surname = $(this).closest('tr').find('td:eq(2)').text();
+        var position = $(this).closest('tr').find('td:eq(3)').text();
+
+        salary = $(this).closest('tr').find('td:eq(4)').text();
+        half_salary = (salary / 2).toFixed(2);
+        minutes_late = $(this).closest('tr').find('td:eq(5)').text();
+        working_days = $(this).closest('tr').find('td:eq(13)').text();
+        computeAbsentRate();
+        netAmount();
+        coop = $(this).closest('tr').find('td:eq(6)').text();
+        phic= $(this).closest('tr').find('td:eq(7)').text();
+        disallowance = $(this).closest('tr').find('td:eq(8)').text();
+        gsis = $(this).closest('tr').find('td:eq(9)').text();
+        pagibig = $(this).closest('tr').find('td:eq(10)').text();
+        excess = $(this).closest('tr').find('td:eq(11)').text();
+        var flag = $(this).closest('tr').find('td:eq(12)').text();
+        
+        $("#type_request").val(flag);
+        $("#id").val(id);
+        $("#fname").val(firstname);
+        $("#lname").val(surname);
+        $("#type").val(position);
+        $("#working_days").val(working_days);
+        $("#salary").val(salary)
+        $("#half_salary").val(salary / 2);
+        $("#minutes_late").val(minutes_late);
+        $("#coop").val(coop);
+        $("#phic").val(phic);
+        $("#disallowance").val(disallowance);
+        $("#gsis").val(gsis);
+        $("#pagibig").val(pagibig);
+        $("#excess").val(excess);
+
+        computeTotal();
+    });
 });
+
+function clearFeld() {
+    $("#salary").val("");
+    $("#half_salary").val("");
+    $("#working_days").val("");
+    $("#minutes_late").val("");
+    $("#deduction").val("");
+    $("#net_amount").val("");
+    $("#tax_10").val("");
+    $("#tax_3").val("");
+    $("#coop").val("");
+    $("#phic").val("");
+    $("#disallowance").val("");
+    $("#gsis").val("");
+    $("#pagibig").val("");
+    $("#excess").val("");
+    $("#total_amount").val("");
+}
+
+function computeAbsentRate() {
+    deduction = (minutes_late * (((salary / working_days) / 8) / 60)).toFixed(2);
+    if (isNaN(deduction) == true) {
+        deduction = "0";
+    }
+    $("#deduction").val(deduction);
+}
+
+function netAmount() {
+    net_amount = half_salary;
+    tax_10 = (net_amount * 0.10).toFixed(2);
+    tax_3 = (net_amount * 0.03).toFixed(2);
+    if (minutes_late > 0) {
+        net_amount = (half_salary - deduction).toFixed(2);
+    }
+    $("#net_amount").val(net_amount);
+    $("#tax_10").val(tax_10);
+    $("#tax_3").val(tax_3);
+}
+
+function computeTotal() {
+    total_amount = (net_amount - tax_10 - tax_3 - coop - disallowance - pagibig - phic - gsis - excess).toFixed(2);
+    $("#total_amount").val(total_amount);
+}

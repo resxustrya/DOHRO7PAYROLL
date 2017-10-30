@@ -1,1 +1,119 @@
-﻿
+﻿<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label style="display:inline;font-size:medium">Personnel Information</label>
+                <button type="button" style="display:inline;" class="btn btn-danger pull-right" id="button_close" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <form action="Payroll/Insert" method="POST">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Personnel ID</label>
+                                <input type="text" class="form-control" id="id" name="id" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label>Firstname</label>
+                                <input type="text" class="form-control" id="fname" name="fname" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label>Lastname</label>
+                                <input type="text" class="form-control" id="lname" name="lname" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label>Type</label>
+                                <input type="text" class="form-control" id="type" name="type" readonly />
+                            </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label>Monthly Rate</label>
+                            <input type="text" name="salary" id="salary" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Half Month Pay</label>
+                            <input type="text" class="form-control" name="half_salary" id="half_salary" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label>Working Days</label>
+                            <input type="text" class="form-control" id="working_days" name="working_days">
+                        </div>
+                        <div class="form-group">
+                            <label>Minutes (Late/Undertime/Absent)</label>
+                            <input type="text" id="minutes_late" name="minutes_late" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Deduction(Late/Undertime/Absent)</label>
+                            <input type="text" class="form-control" id="deduction" name="deduction" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label>Net Amount</label>
+                            <input type="text" class="form-control" id="net_amount" name="net_amount" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>With Tax 10%</label>
+                                <input type="tel" class="form-control" id="tax_10" name="tax_10" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>With Tax 3%</label>
+                                <input type="text" class="form-control" id="tax_3" name="tax_3" readonly />
+                            </div>
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label>Coop</label>
+                            <input type="text" class="form-control" id="coop" name="coop" />
+                        </div>
+                        <div class="form-group">
+                            <label>Disallowance</label>
+                            <input type="text" class="form-control" id="disallowance" name="disallowance" />
+                            <input type="text" class="hidden" id="type_request" name="type_request" />
+                        </div>
+                        <div class="form-group">
+                            <label>Pag-Ibig</label>
+                            <input type="text" class="form-control" id="pagibig" name="pagibig" />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label>PHIC</label>
+                            <input type="text" class="form-control" id="phic" name="phic" />
+                        </div>
+                        <div class="form-group">
+                            <label>GSIS</label>
+                            <input type="text" class="form-control" id="gsis" name="gsis" />
+                        </div>
+                        <div class="form-group">
+                            <label>Excess Mobile Plan</label>
+                            <input type="text" class="form-control" id="excess" name="excess" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label>Total Amount</label>
+                            <input type="text" class="form-control" id="total_amount" name="total_amount" readonly />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                        <input type="submit" class="btn btn-primary form-control margin-top" id="btn_save" value="Save" />
+                    </div>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>

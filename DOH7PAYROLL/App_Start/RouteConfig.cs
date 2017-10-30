@@ -16,7 +16,7 @@ namespace DOH7PAYROLL
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Payroll", action = "Job_Order",  id = 3, search = "" }
             );
         }
     }
