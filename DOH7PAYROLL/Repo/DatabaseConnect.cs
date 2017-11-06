@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using DOH7PAYROLL.Models;
 using MySql.Data.MySqlClient;
 
@@ -151,13 +149,13 @@ namespace DOH7PAYROLL.Repo
             string query = "";
             if (!search.Equals(""))
             {
-                query = "SELECT (SELECT COUNT(userid) FROM users WHERE emptype = 'JO' AND fname = '"+search+"') as 'MAX_SIZE', u.userid,u.fname,u.lname,u.emptype,p.working_days,p.monthly_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM users u LEFT JOIN payroll p ON u.userid = p.userid WHERE emptype = 'JO'";
-                query = query + " AND fname = '" + search + "'";
+                query = "SELECT (SELECT COUNT(userid) FROM users WHERE emptype = 'JO' AND (fname LIKE '" + search + "%' OR lname LIKE '%" + search + "')) as 'MAX_SIZE', u.userid,u.fname,u.lname,u.emptype,p.working_days,p.monthly_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM users u LEFT JOIN payroll p ON u.userid = p.userid WHERE emptype = 'JO'";
+                query = query + " AND (fname LIKE '" + search + "%' OR lname LIKE '%"+search+"')";
             }
             else {
                 query = "SELECT (SELECT COUNT(userid) FROM users WHERE emptype = 'JO') as 'MAX_SIZE', u.userid,u.fname,u.lname,u.emptype,p.working_days,p.monthly_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM users u LEFT JOIN payroll p ON u.userid = p.userid WHERE emptype = 'JO'";
             }
-            query = query +" LIMIT 10 OFFSET "+ DatabaseConnect.start;
+            query = query +" ORDER BY fname,lname LIMIT 10 OFFSET "+ DatabaseConnect.start;
 
             //Create a list to store the result
             List<Employee> list = new List<Employee>();
@@ -249,13 +247,14 @@ namespace DOH7PAYROLL.Repo
             if (count == 0) {
                 start = 0;
                 end = 0;
+                max_size = "0";
             }
             return list;
         }
 
         public List<Employee> GeneratePayroll(){
             List<Employee> list = new List<Employee>();
-            string query = "SELECT u.userid,u.fname,u.lname,u.emptype,p.working_days,p.monthly_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll p LEFT JOIN users p ON p.userid = u.userid WHERE emptype = 'JO'";
+            string query = "SELECT u.userid,u.fname,u.lname,u.emptype,p.working_days,p.monthly_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll p LEFT JOIN users u ON p.userid = u.userid";
             if (this.OpenConnection() == true)
             {
                 //Create Command
@@ -336,6 +335,122 @@ namespace DOH7PAYROLL.Repo
 
             }
             return list;
+        }
+
+        public Boolean ifWeekend(String dateToday) {
+            DateTime dateTime = Convert.ToDateTime(dateToday).Date;
+            DayOfWeek date = dateTime.DayOfWeek;
+            if ((date == DayOfWeek.Saturday) || (date == DayOfWeek.Sunday))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public int GetMins(String id,String from,String to)
+        {
+            List<String> days = new List<String>();
+            int month = int.Parse(from.Split('-')[1]);
+            int year = int.Parse(from.Split('-')[0]);
+
+            String status = "";
+
+            int from_days = int.Parse(from.Split('-')[2]);
+            int to_days = int.Parse(to.Split('-')[2]);
+            for (int i=0; i <= (to_days-from_days); i++) {
+                days.Add((i + from_days)+"");
+            }
+            String format = month+" "+year+" ";
+            int mins = 0;
+            string query = "SELECT datein,time,event FROM dtr_file WHERE userid = '"+id+"' AND datein BETWEEN '"+from+ "' AND '"+to+"'";
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                     int day = int.Parse(dataReader["datein"].ToString().Split('/')[1]);
+                    String time = dataReader["time"].ToString();
+                    String mEvent = dataReader["event"].ToString();
+                    TimeSpan timeSpan = TimeSpan.Parse(time);
+                    
+
+                    if (mEvent.Equals("IN"))
+                    {
+                        if ((timeSpan.Hours < 12) || (timeSpan.Hours == 12 && timeSpan.Minutes == 0))
+                        {
+                            TimeSpan subtrahend = TimeSpan.Parse("08:00:00");
+                            int seconds_subtrahend = (int)subtrahend.TotalSeconds;
+                            int seconds_timeSpan = (int)timeSpan.TotalSeconds;
+                            int result = (seconds_timeSpan - seconds_subtrahend) / 60;
+                            if (result > 0){
+                                mins += result;
+                            }
+                        }
+                        else {
+                            TimeSpan subtrahend = TimeSpan.Parse("13:00:00");
+                            int seconds_subtrahend = (int)subtrahend.TotalSeconds;
+                            int seconds_timeSpan = (int)timeSpan.TotalSeconds;
+                            int result = (seconds_timeSpan - seconds_subtrahend) / 60;
+                            if (result > 0) {
+                                mins += result;
+                            }
+                        }
+                    }
+                    else {
+                            if ((timeSpan.Hours < 12) || (timeSpan.Hours == 12 && timeSpan.Minutes == 0))
+                            {
+                            TimeSpan subtrahend = TimeSpan.Parse("12:00:00");
+                            int seconds_subtrahend = (int)subtrahend.TotalSeconds;
+                            int seconds_timeSpan = (int)timeSpan.TotalSeconds;
+                            int result = (seconds_subtrahend - seconds_timeSpan) / 60;
+                            if (result > 0){
+                                mins += result;
+                            }
+                        }
+                        else {
+                            TimeSpan subtrahend = TimeSpan.Parse("17:00:00");
+                            int seconds_subtrahend = (int)subtrahend.TotalSeconds;
+                            int seconds_timeSpan = (int)timeSpan.TotalSeconds;
+                            int result = (seconds_subtrahend - seconds_timeSpan) / 60;
+                            if (result > 0){
+                                mins += result;
+                            }
+                        }
+                    }
+                    
+                  if (days.Contains(day+"")) {
+                        days.Remove(day+"");
+                  }
+
+                  
+                }
+               
+                for (int i = 0; i < days.Count; i++) {
+                     format = month + "/" + days[i] + "/" + year;
+                    if (!ifWeekend(format)) {
+                        mins += 480;
+                    }
+                    
+                }
+               
+
+                //close Data Reader
+                dataReader.Close();
+
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+
+            }
+           
+           
+            return mins;
         }
     }
 }

@@ -18,6 +18,50 @@ $(document).ready(function () {
         });
     });
 
+    $('#filter_dates').change(function () {
+        var mFrom = $("#filter_dates").val().split("-")[0];
+        var mTo = $("#filter_dates").val().split("-")[1];
+
+        var from_year = mFrom.split("/")[2].trimRight();
+        from_year = from_year.replace(/\s+/g,'');
+
+        var from_day = mFrom.split("/")[1].trimRight();
+        from_day = from_day.replace(/\s+/g, '');
+
+        var from_month = mFrom.split("/")[0].trimRight();
+        from_month = from_month.replace(/\s+/g, '');
+
+        var to_year = mTo.split("/")[2].trimRight();
+        to_year = to_year.replace(/\s+/g, '');
+
+        var to_day = mTo.split("/")[1].trimRight();
+        to_day = to_day.replace(/\s+/g, '');
+
+        var to_month = mTo.split("/")[0].trimRight();
+        to_month = to_month.replace(/\s+/g, '');
+
+        mFrom = from_year + "-" + from_month + "-" + from_day;
+        mTo =   to_year + "-" + to_month + "-" + to_day;
+        
+        $.ajax({
+            url: "Payroll/GetMins",
+            type: 'POST',
+            data:
+                {
+                    "id": id,
+                    "from": mFrom,
+                    "to": mTo
+                },
+            success: function (data) {
+                minutes_late = data;
+                $("#minutes_late").val(minutes_late);
+                computeAbsentRate();
+            }
+        });
+    });
+
+
+
 
     $("a[href='#track']").on('click', function () {
         $('.track_history').html(loadingState);
@@ -166,12 +210,15 @@ function computeAbsentRate() {
 }
 
 function netAmount() {
-    net_amount = half_salary;
+    net_amount = 0.00;
+    if (working_days != 0 && salary != 0) {
+        net_amount = half_salary;
+        if (minutes_late > 0) {
+            net_amount = (half_salary - deduction).toFixed(2);
+        }
+    }
     tax_10 = (net_amount * 0.10).toFixed(2);
     tax_3 = (net_amount * 0.03).toFixed(2);
-    if (minutes_late > 0) {
-        net_amount = (half_salary - deduction).toFixed(2);
-    }
     $("#net_amount").val(net_amount);
     $("#tax_10").val(tax_10);
     $("#tax_3").val(tax_3);

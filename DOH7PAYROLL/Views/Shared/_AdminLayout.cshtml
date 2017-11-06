@@ -40,8 +40,11 @@
     <script src="@Url.Content("/public/assets/js/jquery.min.js")"></script>
      <style>  
         body {
-            background-color:#F5F5F5;
+            background-color:#dddddd;
         }
+         .panel-text-color {
+             color:#f0ad4e;
+         }
          .modal-header{
              background-color:#9C8AA5;
          }
@@ -57,6 +60,9 @@
             border-radius:5px;
             margin-top:10px;
         }
+         .inline {
+         display:inline;
+         }
         .margin-top {
             margin-top:20px;
         }
@@ -75,12 +81,30 @@
          .span-align {
           display: inline-flex;
           align-items: center;
+          margin-top:5px;
          }
+
+         .margin-top-50 {
+             margin-top:5em;
+         }
+
+         .span-align-medium-size{
+          display: inline-flex;
+          align-items: center;
+          margin-top:5px;
+          font-size:large;
+          font-family:sans-serif
+         }
+
          .message {
             background-color:rgb(102, 255, 147);
             font-size:19px;
             color:#fff;
             text-align:center;
+         }
+          .panel-header-background {
+            background-color:rgb(200, 129, 255);
+
          }
      </style>
 </head>
@@ -93,15 +117,15 @@
     <nav class="navbar navbar-default navbar-static-top">
         <div class="header" style="background-color:#2F4054;padding:10px;">
             <div class="col-md-4">
-                <span class="title-info">Welcome,</span> <span class="title-desc"></span>
+                <span class="title-info">Welcome,</span> <span class="title-desc">Asnaui Pangcata</span>
             </div>
             <div class="col-md-4">
                 <span class="title-info">Section:</span>
-                <span class="title-desc">
+                <span class="title-desc">Accounting
                 </span>
             </div>
             <div class="col-md-4">
-                <span class="title-info">Date:</span> <span class="title-desc"></span>
+                <span class="title-info">Date:</span> <span class="title-desc">@(DateTime.Now.ToString("MM/dd/yyyy"))</span>
             </div>
             <div class="clearfix"></div>
         </div>

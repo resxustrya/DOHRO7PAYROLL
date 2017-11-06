@@ -21,5 +21,7 @@ namespace DOH7PAYROLL.Models
             this.JobType = JobType;
             this.Payroll = payroll;
         }
+
+        public Employee() { }
     }
 }
