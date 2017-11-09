@@ -9,6 +9,7 @@ namespace DOH7PAYROLL.Models
     {
         public String UserId { get; set; }
         public String WorkDays { get; set; }
+        public String PayrollDate { get; set; }
         public String Salary { get; set; }
         public String MinutesLate { get; set; }
         public String Coop { get; set; }
@@ -20,9 +21,10 @@ namespace DOH7PAYROLL.Models
         
         public String Flag { get; set; }
 
-        public Payroll(String UserId,String WorkDays,String Salary, String MinutesLate, String Coop, String Phic, String Disallowance
+        public Payroll(String UserId,String PayrollDate, String WorkDays,String Salary, String MinutesLate, String Coop, String Phic, String Disallowance
             , String Gsis,String Pagibig, String ExcessMobile,String Flag) {
             this.UserId = UserId;
+            this.PayrollDate = PayrollDate;
             this.WorkDays = WorkDays;
             this.Salary = Salary;
             this.MinutesLate = MinutesLate;

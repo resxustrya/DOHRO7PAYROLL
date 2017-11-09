@@ -3,12 +3,16 @@ var id = 0, salary = 0, half_salary = 0, minutes_late = 0, deduction = 0, net_am
     phic = 0, disallowance = 0, gsis = 0, pagibig = 0, excess = 0, total_amount = 0, working_days = 0;
 $(document).ready(function () {
 
+    $('.input-data').keypress(function (event) {
+        return isNumber(event, this)
+    });
 
     $('.input-daterange input').each(function () {
         $(this).datepicker("clearDates");
     });
     $('#inclusive3').daterangepicker();
     $('#filter_dates').daterangepicker();
+    $('#search').daterangepicker();
     $('#print_pdf').submit(function () {
         $('#upload').button('loading');
         $('#print_individual').modal({
@@ -53,9 +57,13 @@ $(document).ready(function () {
                     "to": mTo
                 },
             success: function (data) {
-                minutes_late = data;
+                minutes_late = data.split(" ")[0];
+                working_days = data.split(" ")[1];
                 $("#minutes_late").val(minutes_late);
+                $("#working_days").val(working_days);
                 computeAbsentRate();
+                netAmount();
+                computeTotal();
             }
         });
     });
@@ -83,38 +91,73 @@ $(document).ready(function () {
 
     $("#coop").change(function () {        
         coop = $(this).val();
+        if (coop == '') {
+            coop = "0.00";
+        }
+        coop = parseFloat(coop.replace(/,/g, '')).toFixed(2);
+        $("#coop").val(formatComma(coop))
         computeTotal();
     });
 
     $("#phic").change(function () {
         phic = $(this).val();
+        if (phic == '') {
+            phic = "0.00";
+        }
+        phic = parseFloat(phic.replace(/,/g, '')).toFixed(2);
+        $("#phic").val(formatComma(phic))
         computeTotal();
     });
 
     $("#disallowance").change(function () {
         disallowance = $(this).val();
+        if (disallowance == '') {
+            disallowance = "0.00";
+        }
+        disallowance = parseFloat(disallowance.replace(/,/g, '')).toFixed(2);
+        $("#disallowance").val(formatComma(disallowance))
         computeTotal();
     });
 
     $("#gsis").change(function () {
         gsis = $(this).val();
+        if (gsis == '') {
+            gsis = "0.00";
+        }
+        gsis = parseFloat(gsis.replace(/,/g, '')).toFixed(2);
+        $("#gsis").val(formatComma(gsis))
         computeTotal();
     });
 
     $("#pagibig").change(function () {
         pagibig = $(this).val();
+        if (pagibig == '') {
+            pagibig = "0.00";
+        }
+        pagibig = parseFloat(pagibig.replace(/,/g, '')).toFixed(2);
+        $("#pagibig").val(formatComma(pagibig))
         computeTotal();
     });
 
     $("#excess").change(function () {
         excess = $(this).val();
+        if (excess == '') {
+            excess = "0.00";
+        }
+        excess = parseFloat(excess.replace(/,/g, '')).toFixed(2);
+        $("#excess").val(formatComma(excess))
         computeTotal();
     });
 
     $("#salary").change(function () {
         salary = $(this).val();
+        if (salary == '') {
+            salary = "0.00";
+        }
+        salary = parseFloat(salary.replace(/,/g, '')).toFixed(2);
         half_salary = (salary / 2).toFixed(2);
-        $("#half_salary").val(half_salary);
+        $("#salary").val(formatComma(salary))
+        $("#half_salary").val(formatComma(half_salary));
         computeAbsentRate();
         netAmount();
         computeTotal();
@@ -148,6 +191,8 @@ $(document).ready(function () {
         var firstname = $(this).closest('tr').find('td:eq(1)').text();
         var surname = $(this).closest('tr').find('td:eq(2)').text();
         var position = $(this).closest('tr').find('td:eq(3)').text();
+        var range = $(this).closest('tr').find('td:eq(14)').text();
+
 
         salary = $(this).closest('tr').find('td:eq(4)').text();
         half_salary = (salary / 2).toFixed(2);
@@ -168,16 +213,17 @@ $(document).ready(function () {
         $("#fname").val(firstname);
         $("#lname").val(surname);
         $("#type").val(position);
+        $("#filter_dates").val(range);
         $("#working_days").val(working_days);
-        $("#salary").val(salary)
-        $("#half_salary").val(salary / 2);
+        $("#salary").val(formatComma(salary))
+        $("#half_salary").val(formatComma(half_salary));
         $("#minutes_late").val(minutes_late);
-        $("#coop").val(coop);
-        $("#phic").val(phic);
-        $("#disallowance").val(disallowance);
-        $("#gsis").val(gsis);
-        $("#pagibig").val(pagibig);
-        $("#excess").val(excess);
+        $("#coop").val(formatComma(coop));
+        $("#phic").val(formatComma(phic));
+        $("#disallowance").val(formatComma(disallowance));
+        $("#gsis").val(formatComma(gsis));
+        $("#pagibig").val(formatComma(pagibig));
+        $("#excess").val(formatComma(excess));
 
         computeTotal();
     });
@@ -188,6 +234,7 @@ function clearFeld() {
     $("#half_salary").val("");
     $("#working_days").val("");
     $("#minutes_late").val("");
+    $("#filter_dates").val("");
     $("#deduction").val("");
     $("#net_amount").val("");
     $("#tax_10").val("");
@@ -206,7 +253,7 @@ function computeAbsentRate() {
     if (isNaN(deduction) == true) {
         deduction = "0";
     }
-    $("#deduction").val(deduction);
+    $("#deduction").val(formatComma(deduction));
 }
 
 function netAmount() {
@@ -219,12 +266,30 @@ function netAmount() {
     }
     tax_10 = (net_amount * 0.10).toFixed(2);
     tax_3 = (net_amount * 0.03).toFixed(2);
-    $("#net_amount").val(net_amount);
-    $("#tax_10").val(tax_10);
-    $("#tax_3").val(tax_3);
+    $("#net_amount").val(formatComma(net_amount));
+    $("#tax_10").val(formatComma(tax_10));
+    $("#tax_3").val(formatComma(tax_3));
 }
 
 function computeTotal() {
     total_amount = (net_amount - tax_10 - tax_3 - coop - disallowance - pagibig - phic - gsis - excess).toFixed(2);
-    $("#total_amount").val(total_amount);
+    $("#total_amount").val(formatComma(total_amount));
 }
+
+function formatComma(number) {
+    number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return number;
+}
+function isNumber(evt, element) {
+
+    var charCode = (evt.which) ? evt.which : event.keyCode
+
+    if (
+        (charCode != 45 || $(element).val().indexOf('-') != -1) &&      // “-” CHECK MINUS, AND ONLY ONE.
+        (charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
+        (charCode < 48 || charCode > 57))
+        return false;
+
+    return true;
+}
+

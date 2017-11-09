@@ -28,12 +28,27 @@ namespace DOH7PAYROLL.Controllers
             return View();
         }
 
-        
+        public ActionResult ViewPdf(String pdf) {
+            string strAttachment = Server.MapPath(Url.Content("~/public/Pdf/" + pdf));
+            return File(strAttachment, "application/pdf");
+        }
+
+        public ActionResult Payroll(String id,String search)
+        {
+            ViewBag.List = connection.FetchPdf(id,search);
+            ViewBag.Prev = DatabaseConnect.start;
+            ViewBag.Next = DatabaseConnect.end;
+            ViewBag.Max = int.Parse(DatabaseConnect.max_size);
+            ViewBag.Search = search;
+            return View();
+        }
+
         [HttpPost]
-        public ActionResult Insert(String id, String working_days,String salary,String minutes_late, String coop,String phic,String disallowance,String gsis,String pagibig, String excess,String type_request)
+        public ActionResult Insert(String id, String filter_dates, String working_days,String salary,String minutes_late, String coop,String phic,String disallowance,String gsis,String pagibig, String excess,String type_request)
         {
             String message = "";
-            Payroll payroll = new Payroll(id, working_days, salary, minutes_late, coop,phic,disallowance,gsis,pagibig,excess,"");
+            Payroll payroll = new Payroll(id, filter_dates, working_days, salary.Replace(",",""), minutes_late, coop.Replace(",", ""), phic.Replace(",", ""), 
+                disallowance.Replace(",", ""), gsis.Replace(",", ""), pagibig.Replace(",", ""), excess.Replace(",", ""), "");
             if(type_request.Equals("0"))
                 message = connection.Insert(payroll);
             else
@@ -47,7 +62,7 @@ namespace DOH7PAYROLL.Controllers
 
 
         [HttpPost]
-        public int GetMins(String id,String from, String to) {
+        public String GetMins(String id,String from, String to) {
             return connection.GetMins("0001", from, to);
         }
 
@@ -141,93 +156,124 @@ namespace DOH7PAYROLL.Controllers
             }
         }
 
-        public FileResult CreatePdf()
+        public String getMonthName(int number) {
+            String month = "";
+            switch (number) {
+                case 1:
+                    month = "January";
+                    break;
+                case 2:
+                    month = "February";
+                    break;
+                case 3:
+                    month = "March";
+                    break;
+                case 4:
+                    month = "April";
+                    break;
+                case 5:
+                    month = "May";
+                    break;
+                case 6:
+                    month = "June";
+                    break;
+                case 7:
+                    month = "July";
+                    break;
+                case 8:
+                    month = "August";
+                    break;
+                case 9:
+                    month = "September";
+                    break;
+                case 10:
+                    month = "October";
+                    break;
+                case 11:
+                    month = "November";
+                    break;
+                case 12:
+                    month = "December";
+                    break;
+            }
+            return month;
+        }
+
+        public ActionResult CreatePdf(String filter_dates)
         {
+            String message = "";
+            int month = int.Parse(filter_dates.Split('/')[0]);
+            int day_from = int.Parse(filter_dates.Split('/')[1]);
+            int day_to= int.Parse(filter_dates.Split('/')[3]);
+            int year = int.Parse(filter_dates.Split('/')[4]);
+            filter_dates = getMonthName(month) + " " + day_from + "-" + day_to+","+year;
+            
             MemoryStream workStream = new MemoryStream();
             StringBuilder status = new StringBuilder("");
-            DateTime dTime = DateTime.Now;
-            //file name to be created   
-            string strPDFFileName = string.Format("Payroll_" + dTime.ToString("yyyyMMdd") + ".pdf");
+            string strPDFFileName = String.Format("Payroll_" + getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year + ".pdf");
 
             Document doc = new Document();
             doc.SetMargins(20f, 20f, 20f, 20f);
             doc.SetPageSize(PageSize.A4.Rotate());
-          
-            //Create PDF Table with 5 columns  
-            PdfPTable tableLayout = new PdfPTable(16);
-            //Create PDF Table  
+         
+            PdfPTable tableLayout = new PdfPTable(18);
+            String strAttachment = Server.MapPath(Url.Content("~/public/Pdf/"+strPDFFileName));
+            String imageURL = Server.MapPath(Url.Content("~/public/img/logo.png"));
+            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(strAttachment,FileMode.Create));
 
-            //file will created in this path  
-            string strAttachment = Server.MapPath("~/Downloadss/" + strPDFFileName);
-
-
-            PdfWriter.GetInstance(doc, workStream).CloseStream = false;
             doc.Open();
-
-            //Add Content to PDF   
-            doc.Add(Add_Content_To_PDF(tableLayout));
-
-            // Closing the document  
+            doc.Add(Add_Content_To_PDF(writer,doc,tableLayout, filter_dates,imageURL));
             doc.Close();
 
-            byte[] byteInfo = workStream.ToArray();
-            workStream.Write(byteInfo, 0, byteInfo.Length);
-            workStream.Position = 0;
-
-
-            return File(workStream, "application/pdf", strPDFFileName);
-
+            message = connection.InsertPDF(strPDFFileName);
+            TempData["pdf"] = message;
+         
+            return File(strAttachment, "application/pdf");
         }
 
-        protected PdfPTable Add_Content_To_PDF(PdfPTable tableLayout)
-        {            
-            float[] headers = { 5,12,5,5,5,5,5,5,5,5,7,5,5,5,5,5};
+     
+        protected PdfPTable Add_Content_To_PDF(PdfWriter writer,Document document,PdfPTable tableLayout,String filter_range1,String imageURL)
+        {
+            float[] headers = {7,7,7,6,5,5,6,6,5,5,5,5,5,5,5,5,5,7};
             
-            tableLayout.SetWidths(headers); 
+            tableLayout.SetWidths(headers);
+            tableLayout.TotalWidth = 400;
             tableLayout.WidthPercentage = 100;
-            tableLayout.SplitLate = false;
-            
-
-            //Add Title to the PDF file at the top  
+            tableLayout.SplitRows = true;
+            tableLayout.SplitLate= true;
+            tableLayout.HeaderRows = 6;
 
             List<Employee> employees = connection.GeneratePayroll();
-
-           
-            
-            tableLayout.AddCell(new PdfPCell(new Phrase("Employee(Job Order) Payroll", new Font(Font.FontFamily.HELVETICA, 14, 1, new BaseColor(0, 0, 0)))) {
-                Colspan = 16, Border = 0, Padding = 15, HorizontalAlignment = Element.ALIGN_CENTER,VerticalAlignment = Element.ALIGN_CENTER
-            });
-
-
-            ////Add header  
-            AddCellToHeader(tableLayout, "ID");
-            AddCellToHeader(tableLayout, "Name");
-            AddCellToHeader(tableLayout, "Job Type");
-            AddCellToHeader(tableLayout, "Salary");
-            AddCellToHeader(tableLayout, "Half Salary");
-            AddCellToHeader(tableLayout, "Deduction");
-            AddCellToHeader(tableLayout, "Net Amount");
-            AddCellToHeader(tableLayout, "Tax 10%");
-            AddCellToHeader(tableLayout, "Tax 3%");
-            AddCellToHeader(tableLayout, "Coop");
-            AddCellToHeader(tableLayout, "Disallowance");
-            AddCellToHeader(tableLayout, "Pagibig");
-            AddCellToHeader(tableLayout, "PHIC");
-            AddCellToHeader(tableLayout, "GSIS");
-            AddCellToHeader(tableLayout, "Excess Mobile");
-            AddCellToHeader(tableLayout, "Total Amount");
-            ////Add body  
-
+            addHeader(tableLayout, filter_range1, imageURL);
+            String description = "";
+            decimal overall_net = 0;
+            decimal grand_overall_net = 0;
+            decimal grand_mo_rate = 0;
+            decimal grand_half_rate = 0;
+            decimal grand_absences = 0;
+            decimal grand_tax_10 = 0;
+            decimal grand_tax_3 = 0;
+            decimal grand_coop = 0;
+            decimal grand_disallow = 0;
+            decimal grand_pagibig = 0;
+            decimal grand_phic = 0;
+            decimal grand_gsis = 0;
+            decimal grand_excess = 0;
+            decimal grand_total_amount = 0;
+            int count = 0;
             foreach (var emp in employees)
             {
+                count++;
+                string TIN = emp.Tin;
+                string section = emp.Section;
                 string ID = emp.PersonnelID;
                 string fname = emp.Firstname;
                 string lname = emp.Lastname;
                 string position = emp.JobType;
-                if (position == "JO")
-                    position = "Job Order";
                 decimal salary = decimal.Parse(emp.Payroll.Salary);
+                grand_mo_rate += salary;
                 decimal half_salary = salary / 2;
+                grand_half_rate += half_salary;
                 int minutes_late = int.Parse(emp.Payroll.MinutesLate);
                 int working_days = int.Parse(emp.Payroll.WorkDays);
                 decimal per_day = 0;
@@ -237,27 +283,53 @@ namespace DOH7PAYROLL.Controllers
                     per_day = salary / working_days;
                     absences = (minutes_late * (((per_day) / 8) / 60));
                 }
+                grand_absences += absences;
 
                 decimal net_amount = 0;
                 if (working_days != 0)
                 {
                     net_amount = (half_salary - absences);
                 }
+                grand_overall_net += net_amount;
                 decimal tax10 = (decimal)0.10;
                 decimal tax3 = (decimal)0.03;
                 decimal tax_10 = (net_amount * tax10);
+                grand_tax_10 += tax_10;
                 decimal tax_3 = (net_amount * tax3);
-
+                grand_tax_3 += tax_3;
                 decimal coop = decimal.Parse(emp.Payroll.Coop);
+                grand_coop += coop;
                 decimal disallowance = decimal.Parse(emp.Payroll.Disallowance);
+                grand_disallow += disallowance;
                 decimal pagibig = decimal.Parse(emp.Payroll.Pagibig);
+                grand_pagibig += pagibig;
                 decimal phic = decimal.Parse(emp.Payroll.Phic);
+                grand_phic += phic;
                 decimal gsis = decimal.Parse(emp.Payroll.Gsis);
+                grand_gsis += gsis;
                 decimal excess = decimal.Parse(emp.Payroll.ExcessMobile);
-                decimal total_amount = (net_amount - tax_10 - tax_3 - coop - disallowance - pagibig - phic - gsis - excess);
-
-                AddCellToBody(tableLayout, ID,"left");
-                AddCellToBody(tableLayout, fname+" "+lname, "left");
+                grand_excess += excess;
+                decimal total_amount = net_amount - tax_10 - tax_3 - coop - disallowance - pagibig - phic - gsis - excess;
+                grand_total_amount += total_amount;
+                if (description.Equals("")) { 
+                    addSection(tableLayout, section);
+                    overall_net += net_amount;
+                }
+                else{
+                    if (!section.Equals(description))
+                    {
+                        addOverall(tableLayout, overall_net.ToString("#,##0.00"));
+                        addSection(tableLayout, section);
+                        overall_net = net_amount;
+                    }
+                    else {
+                        overall_net += net_amount;
+                    }
+                }
+                description = section;
+                AddCellToBody(tableLayout, TIN, "left");
+                AddCellToBody(tableLayout, fname, "left");
+                AddCellToBody(tableLayout, lname, "left");
                 AddCellToBody(tableLayout, position, "left");
                 AddCellToBody(tableLayout, salary.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, half_salary.ToString("#,##0.00"), "right");
@@ -272,41 +344,441 @@ namespace DOH7PAYROLL.Controllers
                 AddCellToBody(tableLayout, gsis.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, excess.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, total_amount.ToString("#,##0.00"), "right");
+                AddCellToBody(tableLayout, minutes_late+" min(s)", "right");
             }
-
-
+            addOverall(tableLayout, overall_net.ToString("#,##0.00"));
+            addGrandOverall(tableLayout, grand_mo_rate.ToString("#,##0.00"), grand_half_rate.ToString("#,##0.00"),
+                grand_absences.ToString("#,##0.00"), grand_overall_net.ToString("#,##0.00"), grand_tax_10.ToString("#,##0.00"),
+                grand_tax_3.ToString("#,##0.00"), grand_coop.ToString("#,##0.00"), grand_disallow.ToString("#,##0.00"),
+                grand_pagibig.ToString("#,##0.00"), grand_phic.ToString("#,##0.00"), grand_gsis.ToString("#,##0.00"),grand_excess.ToString("#,##0.00"), grand_total_amount.ToString("#,##0.00"));
+            addFooter(tableLayout);
             return tableLayout;
         }
+        protected static void addHeader(PdfPTable tableLayout, String filter_range1, String imageURL)
+        {
+
+            Image jpg = Image.GetInstance(imageURL);
+            //Resize image depend upon your need
+            jpg.ScaleToFit(50f, 50f);
+            //Give space before image
+            //Give some space after the image
+            jpg.Alignment = Element.ALIGN_LEFT;
+
+
+            tableLayout.AddCell(new PdfPCell(jpg)
+            {
+                Colspan = 1,
+                Rowspan = 3,
+                Border = 0,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+
+            tableLayout.AddCell(new PdfPCell(new Phrase("PAYROLL FOR JOB PERSONNEL", new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
+            {
+                Colspan = 17,
+                Border = 0,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_CENTER
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("DOH-RO7", new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
+            {
+                Colspan = 17,
+                Border = 0,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_CENTER
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(filter_range1, new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
+            {
+                Colspan = 17,
+                Border = 0,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                VerticalAlignment = Element.ALIGN_CENTER
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("We acknowledge receipt of the sum shown opposite our names as full renumeration for services rendered for the period started:", new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
+            {
+                Colspan = 14,
+                Border = 0,
+                Padding = 3,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("*NO WORK NO PAY POLICY", new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
+            {
+                Colspan = 4,
+                Border = 0,
+                Padding = 3,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            AddCellToHeader(tableLayout, "TIN");
+            AddCellToHeader(tableLayout, "Name");
+            AddCellToHeader(tableLayout, "Position");
+            AddCellToHeader(tableLayout, "MO. RATE");
+            AddCellToHeader(tableLayout, "HALF MO.");
+            AddCellToHeader(tableLayout, "Tardiness");
+            AddCellToHeader(tableLayout, "Net Amount");
+            AddCellToHeader(tableLayout, "Deductions");
+            AddCellToHeader(tableLayout, "Total Amt.");
+            AddCellToHeader(tableLayout, "Remarks");
+            AddCellToHeader(tableLayout, "");
+            AddCellToHeader(tableLayout, "Firstname");
+            AddCellToHeader(tableLayout, "");
+            AddCellToHeader(tableLayout, "");
+            AddCellToHeader(tableLayout, "");
+            AddCellToHeader(tableLayout, "Absences");
+            AddCellToHeader(tableLayout, "W/Tax 10%");
+            AddCellToHeader(tableLayout, "W/Tax 3%");
+            AddCellToHeader(tableLayout, "Coop");
+            AddCellToHeader(tableLayout, "Disallow.");
+            AddCellToHeader(tableLayout, "Pag-Ibig");
+            AddCellToHeader(tableLayout, "PHIC");
+            AddCellToHeader(tableLayout, "GSIS");
+            AddCellToHeader(tableLayout, "Excess Mobile");
+            AddCellToHeader(tableLayout, "");
+            AddCellToHeader(tableLayout, "");
+        }
+
+        private static void addSection(PdfPTable tableLayout,String section) {
+            AddCellToBody(tableLayout, "", "left");
+            tableLayout.AddCell(new PdfPCell(new Phrase(section, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+            {
+                BorderWidth = 0.2f,
+                Colspan = 2,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+            });
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+        }
+
+        private static void addOverall(PdfPTable tableLayout, String overall)
+        {
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            tableLayout.AddCell(new PdfPCell(new Phrase(overall, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD,BaseColor.RED))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+        }
+
+        private static void addGrandOverall(PdfPTable tableLayout, String month,String half,String absent,String net
+            ,String tax_10,String tax_3,String coop,String disallow,String pagibig,String phic,String gsis,String excess,
+            String total)
+        {
+            AddCellToBody(tableLayout, "", "left");
+            AddCellToBody(tableLayout, "", "left");
+            tableLayout.AddCell(new PdfPCell(new Phrase("Grand Total", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_LEFT,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+            });
+            AddCellToBody(tableLayout, "", "left");
+            tableLayout.AddCell(new PdfPCell(new Phrase(month, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(half, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(absent, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(net, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.RED))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(tax_10, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(tax_3, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(coop, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(disallow, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(pagibig, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(phic, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(gsis, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(excess, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(total, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                BorderWidth = 0.2f,
+                VerticalAlignment = Element.ALIGN_RIGHT,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+            });
+            AddCellToBody(tableLayout, "", "right");
+        }
+
+
+        private static void addFooter(PdfPTable tableLayout) {
+            tableLayout.AddCell(new PdfPCell(new Phrase("1) Certified: Supporting documents complete and proper, Cash available ", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_LEFT,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                Padding = 3
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("2) Approved Payment:", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("3) Each employee whose name appears above has been", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3
+            });
+
+            tableLayout.AddCell(new PdfPCell(new Phrase("   Subject to ADA (where applicable)", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_LEFT,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                Padding = 3
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("    ", new Font(Font.FontFamily.HELVETICA, 8, 0, BaseColor.BLACK)))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("   paid the amount indicated opposite his/her name", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3
+            });
+
+            //NAMES
+            tableLayout.AddCell(new PdfPCell(new Phrase("Angieline T. Adlaon, CPA, MBA", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+            {
+
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3,
+                PaddingTop = 8
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("Sophia M. Mancao, MD, DPSP", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3,
+                PaddingTop = 8
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("Josephine D. Vergara", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3,
+                PaddingTop = 8
+            });
+
+            tableLayout.AddCell(new PdfPCell(new Phrase("Accountant III", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("OIC- Director III", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase("Administrative Officer V", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
+            {
+                Border = 0,
+                Colspan = 6,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Padding = 3
+            });
+        }
+
         // Method to add single cell to the Header  
         private static void AddCellToHeader(PdfPTable tableLayout, string cellText)
         {
+            switch (cellText) {
+                case "Net Amount":
+                    tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+                    {
+                        BorderWidth = 0.2f,
+                        Rowspan =2,
+                        VerticalAlignment = Element.ALIGN_CENTER,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                    });
+                    break;
+                case "Name":
+                    tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+                    {
+                        BorderWidth = 0.2f,
+                        Colspan = 2,
+                        VerticalAlignment = Element.ALIGN_CENTER,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                    });
+                    break;
+                case "Firstname":
+                    tableLayout.AddCell(new PdfPCell(new Phrase("", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+                    {
+                        BorderWidth = 0.2f,
+                        Colspan = 2,
+                        VerticalAlignment = Element.ALIGN_CENTER,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                    });
+                    break;
+                case "Tardiness":
+                case "Absences":
+                case "W/Tax 10%":
+                case "W/Tax 3%":
+                case "MO. RATE":
+                case "HALF MO.":
+                case "Coop":
+                case "Disallow.":
+                case "Pag-Ibig":
+                case "PHIC":
+                case "Position":
+                case "GSIS":
+                case "Excess Mobile":
+                case "TIN":
+                case "Total Amt.":
+                case "Remarks":
+                case "":
+                    tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+                    {
+                        BorderWidth = 0.2f,
+                        VerticalAlignment = Element.ALIGN_CENTER,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                    });
+                    break;
+                case "Deductions":
+                    tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+                    {
+                        BorderWidth = 0.2f,
+                        Colspan = 8,
+                        VerticalAlignment = Element.ALIGN_CENTER,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
 
-            tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 7, 3, BaseColor.BLACK)))
-            {
-                VerticalAlignment = Element.ALIGN_CENTER,
-                HorizontalAlignment = Element.ALIGN_CENTER, Padding = 3
-                
-    });
+                    });
+                    break;
+            }
         }
-
-     
         // Method to add single cell to the body  
         private static void AddCellToBody(PdfPTable tableLayout, string cellText,string position)
         {
 
             if (position.Equals("left"))
             {
-                tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 7, 1, BaseColor.BLACK)))
+                tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
                 {
+                    BorderWidth = 0.2f,
                     HorizontalAlignment = Element.ALIGN_LEFT,
-                    Padding = 3
                 });
             }
             else {
-                tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 7, 1, BaseColor.BLACK)))
+                tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
                 {
+                    BorderWidth = 0.2f,
                     HorizontalAlignment = Element.ALIGN_RIGHT,
-                    Padding = 3
                 });
             }
         }

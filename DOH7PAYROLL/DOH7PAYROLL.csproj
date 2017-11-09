@@ -249,6 +249,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Payroll.cs" />
+    <Compile Include="Models\PdfFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repo\DatabaseConnect.cs" />
     <Compile Include="Startup.cs" />
@@ -272,6 +273,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="public\img\payroll_banner.png" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -330,9 +332,11 @@
     <Content Include="Views\Payroll\Job_Order.cshtml" />
     <Content Include="Views\Payroll\Regular.cshtml" />
     <Content Include="Views\Shared\modals.cshtml" />
+    <Content Include="Views\Payroll\Payroll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="public\Pdf\" />
     <Folder Include="Views\modals\" />
   </ItemGroup>
   <ItemGroup>
