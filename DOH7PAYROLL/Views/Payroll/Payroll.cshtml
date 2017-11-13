@@ -1,5 +1,12 @@
 ﻿@{
     ViewBag.Title = "Payroll";
+    if (TempData["pdf"] != null)
+    {
+        <div class="alert alert-success">
+            <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span>@TempData["pdf"]</span>
+        </div>
+
+    }
 }
 <div class="row">
     <div class="col-md-3">
@@ -16,12 +23,14 @@
                         <div class="input-group-addon">
                             <i class="fa fa-calendar"></i>
                         </div>
-                        <input type="text" class="form-control active" id="filter_dates" name="filter_dates" placeholder="Filter date range here..." required>
+                        <input type="text" class="form-control active" id="filter_dates" name="filter_dates" placeholder="Filter date range here..." required readonly>
                     </div>
                 </div>
+                <center>
                     <div class="form-group">
                         <button type="submit" role="button" class="btn btn-success">Generate Payroll</button>
                     </div>
+                </center>
             }
             </div>
         </div>
@@ -36,9 +45,9 @@
                     <div class="col-md-12">
                             <form class="form-inline" method="POST" action="">
                                 <div class="form-group">
-                                    <input type="text" name="search" id="search" placeholder="Search here.." class="inline form-control margin-top margin-bottom" value="@ViewBag.Search" />
+                                    <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" value="@ViewBag.Search" readonly />
                                     <button type="submit" class="btn btn-success pull-left  margin-top margin-bottom">Search</button>
-                                        <input type="text" name="id" value="3" style="visibility:hidden" />
+                                    <input type="text" name="id" value="3" style="visibility:hidden" />
                                 </div>
                             </form>
                         </div>
@@ -49,21 +58,20 @@
                             <thead>
                                 <tr>
                                     <th>Date Created</th>
-                                    <th>File Name</th>
+                                    <th>Date Range</th>
                                     <th></th>
                                 </tr>
                             </thead>
-                            @using (Html.BeginForm("ViewPdf", "Payroll", FormMethod.Post))
-                            {
-                                foreach (var list in ViewBag.List)
+                           
+                                @foreach (var list in ViewBag.List)
                                 {
                                     <tr>
                                         <td>@list.Date</td>
-                                        <td>@list.FileName</td>
-                                        <td><button type="submit" name="pdf" value="@list.FileName" class="btn btn-primary btn_view">VIEW</button></td>
+                                        <td>@list.DisplayName</td>
+                                        <td><a href="@Url.Action("ViewPdf","Payroll", new { pdf=@list.FileName})" target="_blank" class="btn btn-primary">View</a></td>
                                     </tr>
                                 }
-                            }
+                           
                         </table>
                     </div>
                 </div>

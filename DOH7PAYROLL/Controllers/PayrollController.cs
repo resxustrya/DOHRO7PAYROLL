@@ -20,7 +20,7 @@ namespace DOH7PAYROLL.Controllers
         // GET: Payroll
         public ActionResult Job_Order(string id,string search)
         {
-            ViewBag.List = connection.Select(id,search);
+            ViewBag.List = connection.GetEmployee(id,search);
             ViewBag.Prev = DatabaseConnect.start;
             ViewBag.Next= DatabaseConnect.end;
             ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -62,9 +62,10 @@ namespace DOH7PAYROLL.Controllers
 
 
         [HttpPost]
-        public String GetMins(String id,String from, String to) {
-            return connection.GetMins("0001", from, to);
-        }
+        public String GetMins(String id,String from, String to,String am_in,String am_out,String pm_in,String pm_out) {
+            return connection.GetMins(id, from, to,am_in,am_out,pm_in,pm_out);
+            
+;        }
 
         public String ifWeekend(String date) {
             return connection.ifWeekend(date) ?"WEEKEND":"NOT WEEKEND";
@@ -156,48 +157,30 @@ namespace DOH7PAYROLL.Controllers
             }
         }
 
-        public String getMonthName(int number) {
-            String month = "";
-            switch (number) {
-                case 1:
-                    month = "January";
-                    break;
-                case 2:
-                    month = "February";
-                    break;
-                case 3:
-                    month = "March";
-                    break;
-                case 4:
-                    month = "April";
-                    break;
-                case 5:
-                    month = "May";
-                    break;
-                case 6:
-                    month = "June";
-                    break;
-                case 7:
-                    month = "July";
-                    break;
-                case 8:
-                    month = "August";
-                    break;
-                case 9:
-                    month = "September";
-                    break;
-                case 10:
-                    month = "October";
-                    break;
-                case 11:
-                    month = "November";
-                    break;
-                case 12:
-                    month = "December";
-                    break;
+        public class MyPageEvent : PdfPageEventHelper {
+            public void OnStartPage(PdfWriter writer, Document document)
+            {
+                float fontSize = 80;
+                float xPosition = 300;
+                float yPosition = 400;
+                float angle = 45;
+                try
+                {
+                    PdfContentByte under = writer.DirectContentUnder;
+                    BaseFont baseFont = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
+                    under.BeginText();
+                    under.SetColorFill(BaseColor.LIGHT_GRAY);
+                    under.SetFontAndSize(baseFont, fontSize);
+                    under.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "WATERMARK", xPosition, yPosition, angle);
+                    under.EndText();
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex.Message);
+                }
             }
-            return month;
         }
+        
 
         public ActionResult CreatePdf(String filter_dates)
         {
@@ -206,43 +189,64 @@ namespace DOH7PAYROLL.Controllers
             int day_from = int.Parse(filter_dates.Split('/')[1]);
             int day_to= int.Parse(filter_dates.Split('/')[3]);
             int year = int.Parse(filter_dates.Split('/')[4]);
-            filter_dates = getMonthName(month) + " " + day_from + "-" + day_to+","+year;
+            filter_dates = DatabaseConnect.getMonthName(month) + " " + day_from + "-" + day_to+","+year;
             
             MemoryStream workStream = new MemoryStream();
             StringBuilder status = new StringBuilder("");
-            string strPDFFileName = String.Format("Payroll_" + getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year + ".pdf");
+            string strPDFFileName = String.Format("Payroll_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year + ".pdf");
 
             Document doc = new Document();
             doc.SetMargins(20f, 20f, 20f, 20f);
-            doc.SetPageSize(PageSize.A4.Rotate());
-         
-            PdfPTable tableLayout = new PdfPTable(18);
+            doc.SetPageSize(PageSize.LEGAL.Rotate());
+
+            PdfPTable outer = new PdfPTable(1);
+            outer.TotalWidth = 400;
+            outer.WidthPercentage = 100;
+            outer.SplitRows = true;
+            outer.SplitLate = true;
+
+            PdfPTable body = new PdfPTable(18);
+            float[] headers = { 5, 5, 5, 6, 7, 7, 7, 7, 5, 5, 5, 5, 5, 5, 5, 5, 7, 6 };
+            body.SetWidths(headers);
+            body.TotalWidth = 400;
+            body.WidthPercentage = 100;
+            body.SplitRows = true;
+            body.SplitLate = true;
+            body.HeaderRows = 6;
+
+            PdfPTable footer = new PdfPTable(18);
+            footer.SetWidths(headers);
+            footer.TotalWidth = 400;
+            footer.WidthPercentage = 100;
+
             String strAttachment = Server.MapPath(Url.Content("~/public/Pdf/"+strPDFFileName));
             String imageURL = Server.MapPath(Url.Content("~/public/img/logo.png"));
             PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(strAttachment,FileMode.Create));
-
             doc.Open();
-            doc.Add(Add_Content_To_PDF(writer,doc,tableLayout, filter_dates,imageURL));
+            body = Add_Content_To_PDF(writer, doc, body, filter_dates, imageURL);
+            footer = addFooter(footer);
+            outer.AddCell(new PdfPCell(body)
+            {
+                Border=0,
+            });
+            outer.AddCell(new PdfPCell(footer)
+            {
+                Border = 0,
+            });
+            doc.Add(outer);
             doc.Close();
 
             message = connection.InsertPDF(strPDFFileName);
             TempData["pdf"] = message;
-         
-            return File(strAttachment, "application/pdf");
+            ViewBag.List = connection.FetchPdf("3", "");
+           // return File(strAttachment, "application/pdf");
+
+            return RedirectToAction("Payroll", new { id = 3, search = "" });
         }
 
      
         protected PdfPTable Add_Content_To_PDF(PdfWriter writer,Document document,PdfPTable tableLayout,String filter_range1,String imageURL)
         {
-            float[] headers = {7,7,7,6,5,5,6,6,5,5,5,5,5,5,5,5,5,7};
-            
-            tableLayout.SetWidths(headers);
-            tableLayout.TotalWidth = 400;
-            tableLayout.WidthPercentage = 100;
-            tableLayout.SplitRows = true;
-            tableLayout.SplitLate= true;
-            tableLayout.HeaderRows = 6;
-
             List<Employee> employees = connection.GeneratePayroll();
             addHeader(tableLayout, filter_range1, imageURL);
             String description = "";
@@ -351,7 +355,6 @@ namespace DOH7PAYROLL.Controllers
                 grand_absences.ToString("#,##0.00"), grand_overall_net.ToString("#,##0.00"), grand_tax_10.ToString("#,##0.00"),
                 grand_tax_3.ToString("#,##0.00"), grand_coop.ToString("#,##0.00"), grand_disallow.ToString("#,##0.00"),
                 grand_pagibig.ToString("#,##0.00"), grand_phic.ToString("#,##0.00"), grand_gsis.ToString("#,##0.00"),grand_excess.ToString("#,##0.00"), grand_total_amount.ToString("#,##0.00"));
-            addFooter(tableLayout);
             return tableLayout;
         }
         protected static void addHeader(PdfPTable tableLayout, String filter_range1, String imageURL)
@@ -500,11 +503,11 @@ namespace DOH7PAYROLL.Controllers
             AddCellToBody(tableLayout, "", "left");
             tableLayout.AddCell(new PdfPCell(new Phrase("Grand Total", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
             {
+                Colspan = 2,
                 BorderWidth = 0.2f,
-                VerticalAlignment = Element.ALIGN_LEFT,
-                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            AddCellToBody(tableLayout, "", "left");
             tableLayout.AddCell(new PdfPCell(new Phrase(month, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
             {
                 BorderWidth = 0.2f,
@@ -587,7 +590,8 @@ namespace DOH7PAYROLL.Controllers
         }
 
 
-        private static void addFooter(PdfPTable tableLayout) {
+        private static PdfPTable addFooter(PdfPTable tableLayout) {
+            tableLayout.HeaderRows = 0;
             tableLayout.AddCell(new PdfPCell(new Phrase("1) Certified: Supporting documents complete and proper, Cash available ", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
             {
 
@@ -693,6 +697,7 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 Padding = 3
             });
+            return tableLayout;
         }
 
         // Method to add single cell to the Header  

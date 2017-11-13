@@ -32,6 +32,7 @@
                             <th>Firstname</th>
                             <th>Lastname</th>
                             <th>Position</th>
+                            <th>Updated Date</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -55,6 +56,11 @@
                             <td class="hidden">@list.Payroll.Flag</td>
                             <td class="hidden">@list.Payroll.WorkDays</td>
                             <td class="hidden">@list.Payroll.PayrollDate</td>
+                            <td class="hidden">@list.Am_In</td>
+                            <td class="hidden">@list.Am_Out</td>
+                            <td class="hidden">@list.Pm_In</td>
+                            <td class="hidden">@list.Pm_Out</td>
+                            <td>@list.Payroll.PayrollDate</td>
                             @if (list.Payroll.Flag.Equals("0"))
                             {
                                 <td><button type="button" class="btn btn-primary btn_view" data-toggle="modal" data-target="#modal">CREATE</button></td>

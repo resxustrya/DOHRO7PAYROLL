@@ -1,7 +1,10 @@
 //tracking history of the document
 var id = 0, salary = 0, half_salary = 0, minutes_late = 0, deduction = 0, net_amount = 0, tax_10 = 0, tax_3 = 0, coop = 0,
-    phic = 0, disallowance = 0, gsis = 0, pagibig = 0, excess = 0, total_amount = 0, working_days = 0;
+    phic = 0, disallowance = 0, gsis = 0, pagibig = 0, excess = 0, total_amount = 0, working_days = 0,am_in=0,am_out=0,pm_in=0,pm_out=0;
 $(document).ready(function () {
+    var nowDate = new Date();
+    var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1, 0, 0, 0, 0);
+    var maxLimitDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), daysInMonth((nowDate.getMonth()+1), nowDate.getFullYear()), 0, 0, 0, 0);
 
     $('.input-data').keypress(function (event) {
         return isNumber(event, this)
@@ -10,6 +13,39 @@ $(document).ready(function () {
     $('.input-daterange input').each(function () {
         $(this).datepicker("clearDates");
     });
+
+    /* $('#filter_dates').daterangepicker({
+      "autoApply": true,
+      "autoUpdateInput": false,
+      "minDate": today,
+      "maxDate": maxLimitDate
+  });
+  */
+    /*$('#filter_dates').daterangepicker().change(function (event, picker) {
+        alert($(this).val());
+    });
+    
+
+    $('#filter_dates').daterangepicker().on('apply.daterangepicker', function (ev, picker) {
+        alert(picker.startDate.val() + "HAHA");
+        var data = $(this).val();
+        var from_year = data.split("/")[2].split(' ')[0];
+        var from_month = data.split("/")[0];
+        var from_day = data.split("/")[1];
+
+        var to_day = data.split("/")[3];
+
+        var today = new Date(from_year,from_month, from_day, 0, 0, 0, 0);
+        var maxLimitDate = new Date(from_year, from_month, daysInMonth(from_month, from_year), 0, 0, 0, 0);
+        $(this).daterangepicker({
+            "autoApply": true,
+            "autoUpdateInput": false,
+            "maxDate": maxLimitDate
+        });
+    });
+    */
+
+
     $('#inclusive3').daterangepicker();
     $('#filter_dates').daterangepicker();
     $('#search').daterangepicker();
@@ -54,6 +90,10 @@ $(document).ready(function () {
                 {
                     "id": id,
                     "from": mFrom,
+                    "am_in": am_in,
+                    "am_out": am_out,
+                    "pm_in": pm_in,
+                    "pm_out": pm_out,
                     "to": mTo
                 },
             success: function (data) {
@@ -176,7 +216,6 @@ $(document).ready(function () {
         computeAbsentRate();
         netAmount();
         computeTotal();
-
     });
 
 
@@ -193,6 +232,10 @@ $(document).ready(function () {
         var position = $(this).closest('tr').find('td:eq(3)').text();
         var range = $(this).closest('tr').find('td:eq(14)').text();
 
+         am_in= $(this).closest('tr').find('td:eq(15)').text();
+         am_out = $(this).closest('tr').find('td:eq(16)').text();
+         pm_in = $(this).closest('tr').find('td:eq(17)').text();
+         pm_out = $(this).closest('tr').find('td:eq(18)').text();
 
         salary = $(this).closest('tr').find('td:eq(4)').text();
         half_salary = (salary / 2).toFixed(2);
@@ -250,18 +293,18 @@ function clearFeld() {
 
 function computeAbsentRate() {
     deduction = (minutes_late * (((salary / working_days) / 8) / 60)).toFixed(2);
-    if (isNaN(deduction) == true) {
-        deduction = "0";
+    if (isNaN(deduction) || !isFinite(deduction)) {
+        deduction = "0.00";
     }
     $("#deduction").val(formatComma(deduction));
 }
 
 function netAmount() {
-    net_amount = 0.00;
+    net_amount = "0.00";
     if (working_days != 0 && salary != 0) {
         net_amount = half_salary;
         if (minutes_late > 0) {
-            net_amount = (half_salary - deduction).toFixed(2);
+            net_amount = (half_salary - deduction);
         }
     }
     tax_10 = (net_amount * 0.10).toFixed(2);
@@ -291,5 +334,9 @@ function isNumber(evt, element) {
         return false;
 
     return true;
+}
+
+function daysInMonth(month,year) {
+    return new Date(year, month, 0).getDate();
 }
 
