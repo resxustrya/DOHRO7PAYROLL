@@ -1,4 +1,247 @@
-﻿<div class="modal fade" id="modal">
+﻿<!--JOB ORDER - FILL UP-->
+<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="span-align-medium-size">Employee Information</span>
+                <button type="button" style="display:inline;" class="btn btn-danger pull-right" id="button_close" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+             @using (Html.BeginForm("Insert", "Payroll", FormMethod.Post)) {
+
+                    <input type="text" class="hidden" id="id" name="id" readonly />
+                    <input type="text" class="hidden" id="payroll_id" name="payroll_id" readonly />
+                  
+                    <!-- PERSONEL -->
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Month</label>
+                                <select name="month" id="month" class="form-control" required>
+                                    <option value="1">January</option>
+                                    <option value="2">Februrary</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Year</label>
+                                <input type="text" name="month_range_value" id="month_range_value" class="hidden" readonly />
+                                <select name="year" id="year" class="form-control" required>
+                                    @for (int i = 2017; i <= DateTime.Now.Year; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Options</label>
+                                    <select name="month_range" id="month_range" class="form-control" required>
+                                        <option value="1">First Half of Month</option>
+                                        <option value="2">Second Half of Month</option>
+                                        <option value="3">Whole Month</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Adjustment</label>
+                                    <input type="text" class="form-control input-data" id="adjustment" name="adjustment" value="0.00" required />
+                                </div>
+                            </div>
+                    </div>
+                    <!--HIDDEN-->
+                    <div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Monthly Rate</label>
+                                    <input type="text" name="salary_original" id="salary_original" class="hidden" value="@Session["Salary"]" required readonly />
+                                    <input type="text" name="salary" id="salary" class="form-control input-data" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label id="half_month_text" name="half_month_text">Half Month Pay</label>
+                                    <input type="text" class="form-control" name="half_salary" id="half_salary" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Working Days</label>
+                                    <input type="text" class="form-control input-data" id="working_days" name="working_days" required readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Adjustment</label>
+                                    <input type="text" class="form-control input-data" readonly/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Minutes (Late/Undertime)</label>
+                                    <input type="text" id="minutes_late" name="minutes_late" class="form-control input-data" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>No. Days Absent</label>
+                                    <input type="text" class="hidden" id="absent_date" name="absent_date" placeholder="Choose Date" readonly />
+                                    <input type="text" class="hidden" id="absent_date_list" name="absent_date_list" />
+                                    <input type="text" class="form-control" id="no_days_absent" name="no_days_absent" readonly required />
+                                </div>
+                                <div class="form-group">
+                                    <table id="date-list" name="date-list" class="table table-hover"></table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Deduction(Late/Undertime/Absent)</label>
+                                    <input type="text" class="form-control" id="deduction" name="deduction" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Net Amount</label>
+                                    <input type="text" class="form-control" id="net_amount" name="net_amount" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <hr />
+
+
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>With Tax 10%</label>
+                                    <input type="tel" class="form-control" id="tax_10" name="tax_10" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>With Tax 3%</label>
+                                    <input type="text" class="form-control" id="tax_3" name="tax_3" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>With Tax 2%</label>
+                                    <input type="text" class="form-control" id="tax_2" name="tax_2" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Coop</label>
+                                    <input type="text" name="coop_original" id="coop_original" class="hidden" value="@Session["Coop"]" required readonly />
+                                    <input type="text" class="form-control input-data" id="coop" name="coop" required readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Disallowance</label>
+                                    <input type="text" name="disallowance_original" id="disallowance_original" class="hidden" value="@Session["Disallowance"]" required readonly />
+                                    <input type="text" class="form-control input-data" id="disallowance" name="disallowance" required readonly />
+                                    <input type="text" class="hidden" id="type_request" name="type_request" value="0" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Pag-Ibig</label>
+                                    <input type="text" name="pagibig_original" id="pagibig_original" class="hidden" value="@Session["PagIbig"]" required readonly />
+                                    <input type="text" class="form-control input-data" id="pagibig" name="pagibig" required readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>PHIC</label>
+                                    <input type="text" name="phic_original" id="phic_original" class="hidden" value="@Session["Phic"]" required readonly />
+                                    <input type="text" class="form-control input-data" id="phic" name="phic" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>GSIS</label>
+                                    <input type="text" name="gsis_original" id="gsis_original" class="hidden" value="@Session["Gsis"]" required readonly />
+                                    <input type="text" class="form-control input-data" id="gsis" name="gsis" required readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Excess Mobile Plan</label>
+                                    <input type="text" name="excess_original" id="excess_original" class="hidden" value="@Session["Excess"]" required readonly />
+                                    <input type="text" class="form-control input-data" id="excess" name="excess" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Total Amount</label>
+                                    <input type="text" class="form-control" id="total_amount" name="total_amount" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <textarea rows="7" id="remarks" name="remarks" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                   </div>
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                            <button type="submit" class="btn btn-primary form-control margin-top btn_save" value="Save">Save</button> 
+                        </div>
+                    </div>
+                
+}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--END OF MODAL JO PAYROLL-->
+<!--REGULAR ORDER - FILL UP-->
+<div class="modal fade" id="modal_regular">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -48,7 +291,7 @@
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Half Month Pay</label>
-                                <input type="text" class="form-control" name="half_salary" id="half_salary" readonly />
+                                <input type="text" class="form-control" name="half_salary" id="half_salary"/>
                             </div>
                         </div>
                     </div>
@@ -61,8 +304,26 @@
                         </div>
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Minutes (Late/Undertime/Absent)</label>
+                                <label>Adjustment</label>
+                                <input type="text" class="form-control input-data" id="adjustment" name="adjustment" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Minutes (Late/Undertime)</label>
                                 <input type="text" id="minutes_late" name="minutes_late" class="form-control input-data" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Absent Date</label>
+                                <input type="text" class="form-control" id="absent_date" name="absent_date" placeholder="Choose Date" readonly />
+                                <input type="text" class="hidden" id="absent_date_list" name="absent_date_list" />
+                            </div>
+                            <div class="form-group">
+                                <table id="date-list" name="date-list" class="table table-hover"></table>
                             </div>
                         </div>
                     </div>
@@ -82,6 +343,8 @@
                             </div>
                         </div>
                     </div>
+
+
                     <hr />
 
 
@@ -102,10 +365,18 @@
                     <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
+                                <label>With Tax 2%</label>
+                                <input type="text" class="form-control" id="tax_2" name="tax_2" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
                                 <label>Coop</label>
                                 <input type="text" class="form-control input-data" id="coop" name="coop" required />
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Disallowance</label>
@@ -113,38 +384,35 @@
                                 <input type="text" class="hidden" id="type_request" name="type_request" />
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Pag-Ibig</label>
                                 <input type="text" class="form-control input-data" id="pagibig" name="pagibig" required />
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>PHIC</label>
                                 <input type="text" class="form-control input-data" id="phic" name="phic" required />
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>GSIS</label>
                                 <input type="text" class="form-control input-data" id="gsis" name="gsis" required />
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Excess Mobile Plan</label>
                                 <input type="text" class="form-control input-data" id="excess" name="excess" required />
                             </div>
                         </div>
-                    </div>
-                    <hr />
-                    <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Total Amount</label>
@@ -152,13 +420,81 @@
                             </div>
                         </div>
                     </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea rows="7" id="remarks" name="remarks" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row" id="modal_date_range_container" style="visibility:hidden;">
+                        <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Date Range</label>
+                                <input type="text" name="filter_dates" id="filter_dates" placeholder="Choose Date Range" class="form-control" readonly required />
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
-                            <input type="submit" class="btn btn-primary form-control margin-top" id="btn_save" value="Save" />
+                            <button type="submit" class="btn btn-primary form-control margin-top" id="btn_save" value="Save">Save</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+</div>
+
+<!--END OF MODAL JO PAYROLL-->
+<div class="modal" id="modal_remit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="span-align-medium-size" id="remit_info">Information</span>
+                <button type="button" style="display:inline;" class="btn btn-danger pull-right" id="button_close" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body" id="modal_content">
+                <center>
+                    <form action="../Remittance/InsertRemittance" method="POST">
+                        <table class="table">
+                            <tr>
+                                <td><label>Personnel ID</label></td>
+                                <td><input type="text" name="remit_empID" id="remit_empID" class="form-control" required /></td>
+                            </tr>
+                            <tr>
+                                <td><label class="pull-left">Max Count</label></td>
+                                <td><input type="text" name="remit_maxCount" id="remit_maxCount" class="form-control" required /></td>
+                            </tr>
+                            <tr>
+                                <td><label class="pull-left">Counter</label></td>
+                                <td><input type="text" name="remit_count" id="remit_count" class="form-control" required /></td>
+                            </tr>
+                            <tr>
+                                <td><label class="pull-left">Amount</label></td>
+                                <td><input type="text" name="remit_amount" id="remit_amount" class="form-control" required /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><center><button type="submit" class="btn btn-success">SAVE</button></center></td>
+                            </tr>
+                        </table>
+                    </form>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<!--SPINNER MODAL-->
+<div class="modal fade" tabindex="-1" role="dialog" id="payslip_print" style="overflow-y:scroll;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+                <div class="modal_content"><center><img src="@Url.Content("/public/img/spin.gif")" width="150" style="padding:20px;"></center></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div>

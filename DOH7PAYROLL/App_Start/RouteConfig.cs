@@ -13,11 +13,18 @@ namespace DOH7PAYROLL
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            /*
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Payroll", action = "Job_Order",  id = 3, search = "" }
+                defaults: new { controller = "Payroll", action = "Job_Order",  id = 3, search = "",submit="Refresh" }
             );
+           */
+            routes.MapRoute(
+               name: "Default",
+               url: "{controller}/{action}/{id}",
+               defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional}
+           );
         }
     }
 }

@@ -14,8 +14,10 @@ namespace DOH7PAYROLL.Repo
         public static MySqlConnection sql_payroll=null;
         public static MySqlConnection pis = null;
         public static MySqlConnection dts = null;
+        public static MySqlConnection dtr = null;
         public static int start=0;
         public static int end= 0;
+        public static String message = "";
         public static string search= "";
         private string server;
         private string database;
@@ -68,6 +70,18 @@ namespace DOH7PAYROLL.Repo
 
                 dts = new MySqlConnection(connectionString);
             }
+            if (dtr == null)
+            {
+                server = "localhost";
+                database = "dohdtr";
+                uid = "root";
+                password = "";
+                string connectionString;
+                connectionString = "SERVER=" + server + ";" + "DATABASE=" +
+                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+
+                dtr = new MySqlConnection(connectionString);
+            }
         }
 
         //open connection to database
@@ -78,6 +92,7 @@ namespace DOH7PAYROLL.Repo
                 sql_payroll.Open();
                 dts.Open();
                 pis.Open();
+                dtr.Open();
                 return true;
             }
             catch (MySqlException ex)
@@ -109,6 +124,7 @@ namespace DOH7PAYROLL.Repo
                 sql_payroll.Close();
                 dts.Close();
                 pis.Close();
+                dtr.Close();
                 return true;
             }
             catch (MySqlException ex)
@@ -122,12 +138,12 @@ namespace DOH7PAYROLL.Repo
 
         //Insert Record
 
-        public String InsertPDF(String filePath)
+        public String InsertPDF(String filePath,String type,String userid,String start_date,String end_date)
         {
             String message = "";
-            if (!checkPdf(filePath))
+            if (!checkPdf(filePath,userid))
             {
-                String query = "INSERT INTO payroll_pdf VALUES('0',now(),'" + filePath + "',NULL,NULL)";
+                String query = "INSERT INTO payroll_pdf VALUES('0',now(),'"+start_date+"','"+end_date+"','" + userid + "','" + filePath + "','" + type + "',NULL,NULL)";
 
                 if (this.OpenConnection() == true)
                 {
@@ -138,10 +154,9 @@ namespace DOH7PAYROLL.Repo
                 }
                 message = "PDF Successfully Generated";
             }
-            else {
-                message = "PDF Successfully Updated";
-            }
-            return message;
+            else { message = "PDF Successfully Updated"; }
+               
+           return message;
         }
 
         public static String getMonthName(int number)
@@ -189,10 +204,10 @@ namespace DOH7PAYROLL.Repo
             return month;
         }
 
-        public Boolean checkPdf(String filpath) {
+        public Boolean checkPdf(String filpath,String userid) {
 
             Boolean found = false;
-            String query = "SELECT * FROM payroll_pdf WHERE file_path = '"+filpath+"'";
+            String query = "SELECT * FROM payroll_pdf WHERE userid = '"+userid+"' AND file_path = '"+filpath+"'";
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
@@ -214,10 +229,32 @@ namespace DOH7PAYROLL.Repo
             return found;
         }
 
+
+
         public String Update(Payroll payroll)
         {
 
-            String query = "UPDATE payroll SET date_range = now(), working_days = '" + payroll.WorkDays + "', month_salary = '" + payroll.Salary + "',minutes_late = '" + payroll.MinutesLate + "',coop = '" + payroll.Coop + "',phic = '" + payroll.Phic + "',disallowance = '" + payroll.Disallowance + "',gsis = '" + payroll.Gsis + "',pagibig = '" + payroll.Pagibig + "',excess_mobile = '" + payroll.ExcessMobile + "' WHERE userid = '" + payroll.UserId + "'";
+           String query = "UPDATE payroll SET start_date = '"+payroll.StartDate+"', end_date = '"+payroll.EndDate+"' , absent_days = '"+payroll.DaysAbsent+"',remarks = '"+payroll.Remarks+"',adjustment = '"+payroll.Adjustment+"' ,working_days = '" + payroll.WorkDays + "', month_salary = '" + payroll.Salary + "',minutes_late = '" + payroll.MinutesLate + "',coop = '" + payroll.Coop + "',phic = '" + payroll.Phic + "',disallowance = '" + payroll.Disallowance + "',gsis = '" + payroll.Gsis + "',pagibig = '" + payroll.Pagibig + "',excess_mobile = '" + payroll.ExcessMobile + "' WHERE id = '" + payroll.Id+ "'";
+            if (!checkPayroll(payroll.Employee.PersonnelID, payroll.StartDate, payroll.EndDate)) {
+                if (this.OpenConnection() == true)
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                    //Create a data reader and Execute the command
+                    cmd.ExecuteNonQuery();
+                    this.CloseConnection();
+                    DatabaseConnect.start = 0;
+                }
+                return "Update Successfully";
+            }
+
+            return "Date Range Already Exists";
+           
+        }
+
+        public String UpdateOnInsert(Payroll payroll)
+        {
+                
+            String query = "UPDATE payroll SET start_date = '" + payroll.StartDate + "', end_date = '" + payroll.EndDate + "' , absent_days = '" + payroll.DaysAbsent + "',remarks = '" + payroll.Remarks + "',adjustment = '" + payroll.Adjustment + "' ,working_days = '" + payroll.WorkDays + "', month_salary = '" + payroll.Salary + "',minutes_late = '" + payroll.MinutesLate + "',coop = '" + payroll.Coop + "',phic = '" + payroll.Phic + "',disallowance = '" + payroll.Disallowance + "',gsis = '" + payroll.Gsis + "',pagibig = '" + payroll.Pagibig + "',excess_mobile = '" + payroll.ExcessMobile + "' WHERE userid = '" + payroll.Employee.PersonnelID+ "' AND start_date = '"+payroll.StartDate+"' AND end_date = '"+payroll.EndDate+"'";
 
             if (this.OpenConnection() == true)
             {
@@ -230,23 +267,107 @@ namespace DOH7PAYROLL.Repo
             return "Update Successfully";
         }
 
-
         public String Insert(Payroll payroll)
         {
+            if (!checkPayroll(payroll.Employee.PersonnelID, payroll.StartDate, payroll.EndDate))
+            {
+                String query = "INSERT INTO payroll VALUES('0','" + payroll.Employee.PersonnelID + "','" + payroll.StartDate + "','" + payroll.EndDate + "','" + payroll.DaysAbsent + "','" + payroll.WorkDays + "','" + payroll.Salary + "','" + payroll.Adjustment + "','" + payroll.MinutesLate + "','" + payroll.Coop + "','" + payroll.Phic + "','" + payroll.Disallowance + "','" + payroll.Gsis + "','" + payroll.Pagibig + "','" + payroll.ExcessMobile + "','" + payroll.Remarks + "',NULL,NULL)";
 
-            String query = "INSERT INTO payroll VALUES('0','" + payroll.UserId + "',now(),'" + payroll.WorkDays + "','" + payroll.Salary + "','" + payroll.MinutesLate + "','" + payroll.Coop + "','" + payroll.Phic + "','" + payroll.Disallowance + "','" + payroll.Gsis + "','" + payroll.Pagibig + "','" + payroll.ExcessMobile + "',NULL,NULL)";
+                if (this.OpenConnection() == true)
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                    //Create a data reader and Execute the command
+                    cmd.ExecuteNonQuery();
+                    this.CloseConnection();
+                    DatabaseConnect.start = 0;
+                }
+                if (decimal.Parse(payroll.Pagibig) > 0)
+                {
+                    IncrementRemittance("pagibig_remittance", payroll.Employee.PersonnelID);
+                }
+                if (decimal.Parse(payroll.Coop) > 0)
+                {
+                    IncrementRemittance("coop_remittance", payroll.Employee.PersonnelID);
+                }
+                if (decimal.Parse(payroll.Phic) > 0)
+                {
+                    IncrementRemittance("phic_remittance", payroll.Employee.PersonnelID);
+                }
+                if (decimal.Parse(payroll.Disallowance) > 0)
+                {
+                    IncrementRemittance("disallowance_remittance", payroll.Employee.PersonnelID);
+                }
+                if (decimal.Parse(payroll.Gsis) > 0)
+                {
+                    IncrementRemittance("gsis_remittance", payroll.Employee.PersonnelID);
+                }
+                if (decimal.Parse(payroll.ExcessMobile) > 0)
+                {
+                    IncrementRemittance("excess_remittance", payroll.Employee.PersonnelID);
+                }
+                return "Insert Successfully";
+            }
+            else {
+                return "Date Range Already Exists";
+            }
+        }
+        public Boolean checkPayroll(String userid, String start_date,String end_date)
+        {
 
+            Boolean found = false;
+            String query = "SELECT * FROM payroll WHERE userid = '" + userid + "' AND start_date = '"+start_date+"' AND end_date = '"+end_date+"'";
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
                 //Create a data reader and Execute the command
-                cmd.ExecuteNonQuery();
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+
+                    found = true;
+                    break;
+                }
+                //Create a data reader and Execute the command
+                dataReader.Close();
                 this.CloseConnection();
-                DatabaseConnect.start = 0;
+
             }
-            return "Insert Successfully";
+            return found;
         }
-        public List<PdfFile> FetchPdf(String type, String search)
+
+        public Employee Login(String userid)
+        {
+
+            Employee employee = null;
+            String query = "SELECT i.userid,i.fname,i.lname,i.mname,i.employee_status,s.description FROM pis.personal_information i LEFT JOIN dtsv3_0.section s ON i.section_id= s.id WHERE i.userid= '" + userid + "'";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, dts);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    String PersonnelID = dataReader["userid"].ToString();
+                    String Firstname = dataReader["fname"].ToString();
+                    String Lastname = dataReader["lname"].ToString();
+                    String MiddleName = dataReader["mname"].ToString();
+                    String JobType = dataReader["employee_status"].ToString();
+                    String Tin = "";
+                    String Section = dataReader["description"].ToString();
+                    employee = new Employee(PersonnelID,Firstname,Lastname,MiddleName,JobType,Tin,Section);   
+                }
+                //Create a data reader and Execute the command
+                dataReader.Close();
+                this.CloseConnection();
+            }
+            return employee;
+        }
+
+
+        public List<PdfFile> FetchPdf(String type, String search,String mId)
         {
             int temp_start = start;
             int temp_end = end;
@@ -275,14 +396,29 @@ namespace DOH7PAYROLL.Repo
             String query = "";
             if (!search.Equals(""))
             {
-                search = "Payroll_" + getMonthName(int.Parse(search.Split('/')[0]))+"_"+ int.Parse(search.Split('/')[1])+"_"+ int.Parse(search.Split('/')[3])+"_"+ int.Parse(search.Split('/')[4])+".pdf";
-                query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE file_path = '"+search+ "') as 'MAX_SIZE',id,date_created,file_path FROM payroll_pdf WHERE file_path = '" + search + "'";
+                String start_date = search.Split(' ')[0];
+                String end_date = search.Split(' ')[2];
+                if (!mId.Equals("0"))
+                {
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE userid = '"+mId+"' AND start_date = '" + start_date + "' AND end_date = '" + end_date + "') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "'";
+                    query = query + " AND userid = '" + mId + "'";
+                }
+                else {
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "'";
+                }
             }
             else
             {
-                query = "SELECT (SELECT COUNT(id) FROM payroll_pdf) as 'MAX_SIZE',id,date_created,file_path FROM payroll_pdf";
+                if (!mId.Equals("0"))
+                {
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE userid = '"+mId+"') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf";
+                    query = query + " WHERE userid = '" + mId + "'";
+                }
+                else {
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf) as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf";
+                }
             }
-            query = query + " ORDER BY date_created,id DESC LIMIT 10 OFFSET " + DatabaseConnect.start;
+            query = query + " ORDER BY id DESC LIMIT 10 OFFSET " + DatabaseConnect.start;
 
             if (this.OpenConnection() == true)
             {
@@ -296,10 +432,13 @@ namespace DOH7PAYROLL.Repo
                     max_size = dataReader["MAX_SIZE"].ToString();
                     count += 1;
                     String id = dataReader["id"].ToString();
+                    String userid = dataReader["userid"].ToString();
                     String date = dataReader["date_created"].ToString().Split(' ')[0];
+                    String start_date = dataReader["start_date"].ToString();
+                    String end_date = dataReader["end_date"].ToString();
                     String path = dataReader["file_path"].ToString();
-                    String displayName = path.Split('_')[1]+" "+ path.Split('_')[2]+"-"+ path.Split('_')[3]+", "+ path.Split('_')[4].Split('.')[0];
-                    PdfFile pdf = new PdfFile(id,displayName,path,date);
+                    String pay_type = dataReader["type"].ToString();
+                    PdfFile pdf = new PdfFile(id, userid,start_date,end_date, path,date, pay_type);
                     list.Add(pdf);
                 }
                 //Create a data reader and Execute the command
@@ -318,44 +457,171 @@ namespace DOH7PAYROLL.Repo
        
 
         //Select statement
-        public List<Employee> GetEmployee(String type,String search)
+        public List<Employee> GetEmployee(String type,String search,String desc)
         {
-            int temp_start = start;
+            int temp_start = DatabaseConnect.start;
             int temp_end = end;
             int count = 0;
             if (type.Equals("1"))
             {
-                if (start - 10 <= 0)
+                if (DatabaseConnect.start - 10 <= 0)
                 {
-                    start = 0;
+                    DatabaseConnect.start = 0;
                 }
                 else
                 {
-                    start -= 10;
+                    DatabaseConnect.start -= 10;
                 }
             }
             else if (type.Equals("0"))
             {
-                start = end;
+                DatabaseConnect.start = end;
             }
             else {
-                start = 0;
+                DatabaseConnect.start = 0;
+            }
+            string query = "";
+            if (!search.Equals(""))
+            {
+                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (fname LIKE '" + search + "%' OR lname LIKE '" + search + "%')) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active'";
+                //query = "SELECT u.mname,(SELECT COUNT(username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"' AND (u.fname LIKE '" + search + "%' OR u.lname LIKE '" + search + "%')) as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
+                query = query + " AND (fname LIKE '" + search + "%' OR lname LIKE '"+search+"%')";
+            }
+            else {
+                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active') as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active'";
+                // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
+            }
+            query = query +" ORDER BY fname,lname LIMIT 10 OFFSET "+ DatabaseConnect.start;
+
+            //Create a list to store the result
+            List<Employee> list = new List<Employee>();
+           
+
+            //Open connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, pis);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    DatabaseConnect.max_size = dataReader["MAX_SIZE"].ToString();
+                    count += 1;
+                 
+
+                    String userid = dataReader["userid"].ToString();
+                    String fname = dataReader["fname"].ToString();
+                    String lname = dataReader["lname"].ToString();
+                    String mname = dataReader["mname"].ToString();
+                    String emptype = dataReader["position"].ToString();
+                    String tin = dataReader["tin_no"].ToString();
+                  
+                    Employee employee = new Employee(userid,fname,lname,mname,emptype,tin,"");
+                    list.Add(employee);
+                }
+
+                //close Data Reader
+                dataReader.Close();
+                DatabaseConnect.end = (DatabaseConnect.start + count);
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+                
+            }
+            if (count == 0) {
+                DatabaseConnect.start = 0;
+                DatabaseConnect.end = 0;
+                DatabaseConnect.max_size = "0";
+            }
+            return list;
+        }
+
+        public String GetLoans(String id)
+        {
+            String salary = "0";
+            String query = "SELECT monthly_salary FROM work_experience WHERE userid = '" + id + "' ORDER BY date_from DESC LIMIT 1";
+                // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
+           
+            //Create a list to store the result
+            List<Employee> list = new List<Employee>();
+
+
+            //Open connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, pis);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    salary = dataReader["monthly_salary"].ToString();
+                    if (salary.Equals("")) {
+                        salary = "0";
+                    }
+                }
+
+                //close Data Reader
+                dataReader.Close();
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+
+            }
+            return salary;
+        }
+
+        public List<Payroll> GetPayroll(String id,String type, String search)
+        {
+            int temp_start = DatabaseConnect.start;
+            int temp_end = end;
+            int count = 0;
+            if (type.Equals("1"))
+            {
+                if (DatabaseConnect.start - 10 <= 0)
+                {
+                    DatabaseConnect.start = 0;
+                }
+                else
+                {
+                    DatabaseConnect.start -= 10;
+                }
+            }
+            else if (type.Equals("0"))
+            {
+                DatabaseConnect.start = end;
+            }
+            else
+            {
+                DatabaseConnect.start = 0;
             }
 
             string query = "";
             if (!search.Equals(""))
             {
-                query = "SELECT w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = 'Job Order' AND (u.fname LIKE '" + search + "%' OR u.lname LIKE '" + search + "%')) as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = 'Job Order'";
-                query = query + " AND (u.fname LIKE '" + search + "%' OR u.lname LIKE '"+search+"%')";
+                String start_date = search.Split(' ')[0];
+                String end_date = search.Split(' ')[2];
+                query = "SELECT (SELECT COUNT(p.userid) FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '"+id+ "' AND p.start_date = '"+start_date+"' AND p.end_date = '"+end_date+ "') as 'MAX_SIZE' ,p.id,CAST(p.start_date as char) as 'start_date',CAST(p.end_date as char) as 'end_date',i.position,i.tin_no,p.userid,p.adjustment,p.remarks,p.absent_days,i.fname,i.lname,i.mname,i.job_status,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '" + id + "' AND p.start_date = '"+start_date+"' AND p.end_date = '"+end_date+"'";
+
+                //query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE o(u.fname LIKE '" + search + "%' OR u.lname LIKE '" + search + "%')) as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid";
             }
-            else {
-                query = "SELECT w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = 'Job Order') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = 'Job Order'";
+            else
+            {
+                query = "SELECT (SELECT COUNT(p.userid) FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '"+id+ "') as 'MAX_SIZE' ,p.id, i.position,i.tin_no,CAST(p.start_date as char) as 'start_date',cAST(p.end_date as char) as 'end_date',p.userid,p.adjustment,p.remarks,p.absent_days,i.fname,i.lname,i.mname,i.job_status,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '" + id+"'";
+                //query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '" + desc + "') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '" + desc + "'";
             }
-            query = query +" ORDER BY u.fname,u.lname LIMIT 10 OFFSET "+ DatabaseConnect.start;
+            query = query + " ORDER BY p.id DESC LIMIT 10 OFFSET " + DatabaseConnect.start;
 
             //Create a list to store the result
-            List<Employee> list = new List<Employee>();
-           
+            List<Payroll> list = new List<Payroll>();
+
 
             //Open connection
             if (this.OpenConnection() == true)
@@ -368,50 +634,21 @@ namespace DOH7PAYROLL.Repo
                 //Read the data and store them in the list
                 while (dataReader.Read())
                 {
-                    max_size = dataReader["MAX_SIZE"].ToString();
+                    DatabaseConnect.max_size = dataReader["MAX_SIZE"].ToString();
                     count += 1;
-                 
 
-                    String userid = dataReader["username"].ToString();
+                    String payroll_id = dataReader["id"].ToString();
+                    String userid = dataReader["userid"].ToString();
                     String fname = dataReader["fname"].ToString();
                     String lname = dataReader["lname"].ToString();
+                    String mname = dataReader["mname"].ToString();
                     String emptype = dataReader["position"].ToString();
+                    //String start_date = dataReader.GetDateTime(dataReader.GetOrdinal("start_date")).ToString("YYYY-MM-DD");
+                    //String end_date = dataReader.GetDateTime(dataReader.GetOrdinal("end_date")).ToString("YYYY-MM-DD");
+                    String start_date = dataReader["start_date"].ToString();
+                    String end_date = dataReader["end_date"].ToString();
                     String tin = dataReader["tin_no"].ToString();
                     String flag = "1";
-
-                    String am_in = dataReader["am_in"].ToString();
-                    if (am_in.Equals("") || am_in.Equals("NULL"))
-                    {
-                        am_in = "08:00:00";
-                    }
-                    String am_out = dataReader["am_out"].ToString();
-                    if (am_out.Equals("") || am_out.Equals("NULL"))
-                    {
-                        am_out = "12:00:00";
-                    }
-                    String pm_in = dataReader["pm_in"].ToString();
-                    if (pm_in.Equals("") || pm_in.Equals("NULL"))
-                    {
-                        pm_in = "13:00:00";
-                    }
-                    String pm_out = dataReader["pm_out"].ToString();
-                    if (pm_out.Equals("") || pm_out.Equals("NULL"))
-                    {
-                        pm_out = "17:00:00";
-                    }
-                    String date_range = dataReader["date_range"].ToString();
-                    if (date_range.Equals("") || date_range.Equals("NULL"))
-                    {
-                        date_range = "";
-                    }
-                    else {
-                        String year = date_range.Split('-')[0];
-                        String month = getMonthName(int.Parse(date_range.Split('-')[1]));
-                        String day = date_range.Split('-')[2].Split(' ')[0];
-                        String time = date_range.Split('-')[2].Split(' ')[1];
-                        date_range = month + " " + day + " ," + year + " " + time;
-                    }
-
 
                     String minutes_late = dataReader["minutes_late"].ToString();
                     if (minutes_late.Equals("") || minutes_late.Equals("NULL"))
@@ -428,6 +665,21 @@ namespace DOH7PAYROLL.Repo
                     {
                         flag = "0";
                         monthly_salary = "0.00";
+                    }
+                    String adjustment = dataReader["adjustment"].ToString();
+                    if (adjustment.Equals("") || adjustment.Equals("NULL"))
+                    {
+                        adjustment = "0.00";
+                    }
+                    String remarks = dataReader["remarks"].ToString();
+                    if (remarks.Equals("") || remarks.Equals("NULL"))
+                    {
+                        remarks = "";
+                    }
+                    String absent_days = dataReader["absent_days"].ToString();
+                    if (absent_days.Equals("") || absent_days.Equals("NULL"))
+                    {
+                        absent_days = "";
                     }
                     String coop = dataReader["coop"].ToString();
                     if (coop.Equals("") || coop.Equals("NULL"))
@@ -460,35 +712,156 @@ namespace DOH7PAYROLL.Repo
                         excess_mobile = "0.00";
                     }
 
-                    Payroll payroll = new Payroll(userid, date_range,working_days, monthly_salary,minutes_late,coop,phic
-                        ,disallowance,gsis,pagibig,excess_mobile,flag);
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, "");
 
-                    Employee employee = new Employee(userid,fname,lname,emptype,tin,"",am_in,am_out,pm_in,pm_out,payroll);
-                    list.Add(employee);
+                    Payroll payroll = new Payroll(payroll_id, employee, start_date , end_date,adjustment, working_days, absent_days, monthly_salary, minutes_late, coop, phic
+                        , disallowance, gsis, pagibig, excess_mobile, remarks, flag);
+
+                    
+                    list.Add(payroll);
+                }
+
+                //close Data Reader
+                dataReader.Close();
+                DatabaseConnect.end = (DatabaseConnect.start + count);
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+
+            }
+            if (count == 0)
+            {
+                DatabaseConnect.start = 0;
+                DatabaseConnect.end = 0;
+                DatabaseConnect.max_size = "0";
+            }
+            return list;
+        }
+        public List<Payroll> GeneratePayroll(String start_date,String end_date,String selection)
+        {
+            List<Payroll> payroll = new List<Payroll>();
+            string query = "SELECT p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section d ON i.section_id= d.id) ON p.userid = i.userid WHERE p.start_date = '"+start_date+"' AND p.end_date = '"+end_date+"'";
+            switch (selection) {
+                case "2":
+                    query = query + " AND pagibig <> '0.00'";
+                    break;
+                case "3":
+                    query = query + " AND coop <> '0.00'";
+                    break;
+                case "4":
+                    query = query + " AND phic <> '0.00'";
+                    break;
+                case "5":
+                    query = query + " AND gsis <> '0.00'";
+                    break;
+                case "6":
+                    query = query + " AND excess_mobile <> '0.00'";
+                    break;
+            }
+            if (selection.Equals("2")) {
+                
+            }
+            query = query + " ORDER BY d.description,i.fname,i.lname ASC";
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    String tin = dataReader["tin_no"].ToString();
+                    String desc = dataReader["description"].ToString().ToUpper();
+                    String userid = dataReader["userid"].ToString();
+                    String fname = dataReader["fname"].ToString();
+                    String mname = dataReader["mname"].ToString();
+                    String lname = dataReader["lname"].ToString();
+                    String emptype = dataReader["position"].ToString();
+
+                    String minutes_late = dataReader["minutes_late"].ToString();
+                    if (minutes_late.Equals("") || minutes_late.Equals("NULL"))
+                    {
+                        minutes_late = "0";
+                    }
+                    String working_days = dataReader["working_days"].ToString();
+                    if (working_days.Equals("") || working_days.Equals("NULL"))
+                    {
+                        working_days = "0";
+                    }
+                    String monthly_salary = dataReader["month_salary"].ToString();
+                    if (monthly_salary.Equals("") || monthly_salary.Equals("NULL") || monthly_salary.Equals("Null") || monthly_salary.Equals(null))
+                    {
+                        monthly_salary = "0";
+                    }
+                    String coop = dataReader["coop"].ToString();
+                    if (coop.Equals("") || coop.Equals("NULL"))
+                    {
+                        coop = "0";
+                    }
+                    String adjustment = dataReader["adjustment"].ToString();
+                    if (adjustment.Equals("") || adjustment.Equals("NULL"))
+                    {
+                        adjustment = "0.00";
+                    }
+                    String remarks = dataReader["remarks"].ToString();
+                    if (remarks.Equals("") || remarks.Equals("NULL"))
+                    {
+                        remarks = "";
+                    }
+                    String absent_days = dataReader["absent_days"].ToString();
+                    if (absent_days.Equals("") || absent_days.Equals("NULL"))
+                    {
+                        absent_days = "";
+                    }
+                    String phic = dataReader["phic"].ToString();
+                    if (phic.Equals("") || phic.Equals("NULL"))
+                    {
+                        phic = "0";
+                    }
+                    String disallowance = dataReader["disallowance"].ToString();
+                    if (disallowance.Equals("") || disallowance.Equals("NULL"))
+                    {
+                        disallowance = "0";
+                    }
+                    String gsis = dataReader["gsis"].ToString();
+                    if (gsis.Equals("") || gsis.Equals("NULL"))
+                    {
+                        gsis = "0";
+                    }
+                    String pagibig = dataReader["pagibig"].ToString();
+                    if (pagibig.Equals("") || pagibig.Equals("NULL"))
+                    {
+                        pagibig = "0";
+                    }
+                    String excess_mobile = dataReader["excess_mobile"].ToString();
+                    if (excess_mobile.Equals("") || excess_mobile.Equals("NULL"))
+                    {
+                        excess_mobile = "0";
+                    }
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc);
+                    Payroll roll = new Payroll("0", employee, "", "", adjustment, working_days, absent_days
+                         , monthly_salary, minutes_late, coop, phic, disallowance, gsis, pagibig, excess_mobile, remarks, "");
+                    payroll.Add(roll);
                 }
 
                 //close Data Reader
                 dataReader.Close();
 
-                end = (start + count);
                 //close Connection
                 this.CloseConnection();
 
                 //return list to be displayed
-                
-            }
-            if (count == 0) {
-                start = 0;
-                end = 0;
-                max_size = "0";
-            }
-            return list;
-        }
-        
 
+            }
+            return payroll;
+        }
+        /*
         public List<Employee> GeneratePayroll(){
             List<Employee> list = new List<Employee>();
-            string query = "SELECT d.description,u.username,u.fname,u.lname,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (dtsv3_0.users u LEFT JOIN dtsv3_0.division d ON u.division = d.id) ON p.userid = u.username LEFT JOIN pis.personal_information i ON p.userid = i.userid ORDER BY d.description,u.fname,u.lname ASC";
+            string query = "SELECT  p.absent_days,p.adjustment,p.remarks,d.description,u.username,u.fname,u.mname,u.lname,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (dtsv3_0.users u LEFT JOIN dtsv3_0.division d ON u.division = d.id) ON p.userid = u.username LEFT JOIN pis.personal_information i ON p.userid = i.userid ORDER BY d.description,u.fname,u.lname ASC";
             if (this.OpenConnection() == true)
             {
                 //Create Command
@@ -503,6 +876,7 @@ namespace DOH7PAYROLL.Repo
                     String desc = dataReader["description"].ToString().ToUpper();
                     String userid = dataReader["username"].ToString();
                     String fname = dataReader["fname"].ToString();
+                    String mname = dataReader["mname"].ToString();
                     String lname = dataReader["lname"].ToString();
                     String emptype = dataReader["position"].ToString();
                     String flag = "1";
@@ -527,6 +901,21 @@ namespace DOH7PAYROLL.Repo
                     if (coop.Equals("") || coop.Equals("NULL"))
                     {
                         coop = "0";
+                    }
+                    String adjustment = dataReader["adjustment"].ToString();
+                    if (adjustment.Equals("") || adjustment.Equals("NULL"))
+                    {
+                        adjustment = "0.00";
+                    }
+                    String remarks = dataReader["remarks"].ToString();
+                    if (remarks.Equals("") || remarks.Equals("NULL"))
+                    {
+                        remarks = "";
+                    }
+                    String absent_days = dataReader["absent_days"].ToString();
+                    if (absent_days.Equals("") || absent_days.Equals("NULL"))
+                    {
+                        absent_days = "";
                     }
                     String phic = dataReader["phic"].ToString();
                     if (phic.Equals("") || phic.Equals("NULL"))
@@ -554,10 +943,10 @@ namespace DOH7PAYROLL.Repo
                         excess_mobile = "0";
                     }
 
-                    Payroll payroll = new Payroll(userid,"", working_days, monthly_salary, minutes_late, coop, phic
-                        , disallowance, gsis, pagibig, excess_mobile, flag);
+                    //Payroll payroll = new Payroll(userid,"",adjustment,working_days,absent_days, monthly_salary, minutes_late, coop, phic
+                      //  , disallowance, gsis, pagibig, excess_mobile,remarks, flag);
 
-                    Employee employee = new Employee(userid, fname, lname, emptype,tin,desc,"","","","", payroll);
+                    Employee employee = new Employee(userid, fname, lname,mname, emptype,tin,desc);
                     list.Add(employee);
                 }
 
@@ -572,6 +961,112 @@ namespace DOH7PAYROLL.Repo
             }
             return list;
         }
+        */
+        public Payroll GeneratePayslip(String id,String start_date,String end_date)
+        {
+            Payroll payroll = null;
+            string query = "SELECT p.absent_days,p.adjustment,p.remarks,s.description,i.userid,i.mname,i.fname,i.lname,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section s ON i.section_id = s.id) ON p.userid = i.userid WHERE p.userid = '"+id+"'";
+            if (!start_date.Equals("") && !end_date.Equals("")) {
+                query = query + " AND p.start_date = '" + start_date + "' AND p.end_date = '" + end_date + "'";
+            }
+            query = query + " ORDER BY s.description,i.fname,i.lname ASC LIMIT 1";
+
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    String tin = dataReader["tin_no"].ToString();
+                    String desc = dataReader["description"].ToString().ToUpper();
+                    String userid = dataReader["userid"].ToString();
+                    String fname = dataReader["fname"].ToString();
+                    String mname = dataReader["mname"].ToString();
+                    String lname = dataReader["lname"].ToString();
+                    String emptype = dataReader["position"].ToString();
+
+                    String minutes_late = dataReader["minutes_late"].ToString();
+                    if (minutes_late.Equals("") || minutes_late.Equals("NULL"))
+                    {
+                        minutes_late = "0";
+                    }
+                    String working_days = dataReader["working_days"].ToString();
+                    if (working_days.Equals("") || working_days.Equals("NULL"))
+                    {
+                        working_days = "0";
+                    }
+                    String monthly_salary = dataReader["month_salary"].ToString();
+                    if (monthly_salary.Equals("") || monthly_salary.Equals("NULL") || monthly_salary.Equals("Null") || monthly_salary.Equals(null))
+                    {
+                        monthly_salary = "0";
+                    }
+                    String coop = dataReader["coop"].ToString();
+                    if (coop.Equals("") || coop.Equals("NULL"))
+                    {
+                        coop = "0";
+                    }
+                    String adjustment = dataReader["adjustment"].ToString();
+                    if (adjustment.Equals("") || adjustment.Equals("NULL"))
+                    {
+                        adjustment = "0.00";
+                    }
+                    String remarks = dataReader["remarks"].ToString();
+                    if (remarks.Equals("") || remarks.Equals("NULL"))
+                    {
+                        remarks = "";
+                    }
+                    String absent_days = dataReader["absent_days"].ToString();
+                    if (absent_days.Equals("") || absent_days.Equals("NULL"))
+                    {
+                        absent_days = "";
+                    }
+                    String phic = dataReader["phic"].ToString();
+                    if (phic.Equals("") || phic.Equals("NULL"))
+                    {
+                        phic = "0";
+                    }
+                    String disallowance = dataReader["disallowance"].ToString();
+                    if (disallowance.Equals("") || disallowance.Equals("NULL"))
+                    {
+                        disallowance = "0";
+                    }
+                    String gsis = dataReader["gsis"].ToString();
+                    if (gsis.Equals("") || gsis.Equals("NULL"))
+                    {
+                        gsis = "0";
+                    }
+                    String pagibig = dataReader["pagibig"].ToString();
+                    if (pagibig.Equals("") || pagibig.Equals("NULL"))
+                    {
+                        pagibig = "0";
+                    }
+                    String excess_mobile = dataReader["excess_mobile"].ToString();
+                    if (excess_mobile.Equals("") || excess_mobile.Equals("NULL"))
+                    {
+                        excess_mobile = "0";
+                    }
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc);
+                   payroll =  new Payroll("0", employee, start_date, end_date, adjustment,working_days, absent_days
+                        , monthly_salary, minutes_late, coop, phic,disallowance, gsis, pagibig, excess_mobile, remarks, "");
+
+                }
+
+                //close Data Reader
+                dataReader.Close();
+
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+
+            }
+            return payroll;
+        }
+
         public Boolean IsHolilday(String date)
         {
             Boolean found = false;
@@ -586,7 +1081,7 @@ namespace DOH7PAYROLL.Repo
             //Create Command
             if (this.OpenConnection() == true)
             {
-                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                MySqlCommand cmd = new MySqlCommand(query, dtr);
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -594,7 +1089,6 @@ namespace DOH7PAYROLL.Repo
                 while (dataReader.Read())
                 {
                     found = true;
-                    break;
                 }
                 dataReader.Close();
                 this.CloseConnection();
@@ -623,22 +1117,23 @@ namespace DOH7PAYROLL.Repo
             int from_days = int.Parse(from.Split('-')[2]);
             int to_days = int.Parse(to.Split('-')[2]);
             int no_days = DateTime.DaysInMonth(year, month);
-            int counter = 0;
+            int working_days = 0;
             int mins = 0;
-            
+            int no_absent = 0;
+
+
             for (int i=0; i <= (to_days-from_days); i++) {
                 days.Add((i + from_days)+"");
             }
 
 
-            //string query = "SELECT datein,time,event FROM dtr_file WHERE userid = '"+id+"' AND datein BETWEEN '"+from+ "' AND '"+to+"'";
             String query = "SELECT DISTINCT e.userid, datein,holiday,remark, (SELECT  CONCAT(t1.time, '_', t1.edited) FROM dtr_file t1 WHERE userid = d.userid and datein = d.datein and t1.time < '"+am_out+"' AND t1.event = 'IN' ORDER BY time ASC LIMIT 1) as am_in, (SELECT CONCAT(t2.time,'_',t2.edited) FROM dtr_file t2 WHERE userid = d.userid and datein = d.datein and (SELECT CONCAT(t1.time,'_',t1.edited) FROM dtr_file t1 WHERE userid = d.userid and datein = d.datein and t1.time < '"+am_out+"' AND t1.event = 'IN' ORDER BY time ASC LIMIT 1) and t2.time < '"+pm_in+"' AND t2.event = 'OUT' AND t2.time > '"+am_in+"' ORDER BY t2.time DESC LIMIT 1 ) as am_out,(SELECT CONCAT(t3.time,'_',t3.edited) FROM dtr_file t3 WHERE userid = d.userid AND datein = d.datein and t3.time > '"+am_out+"' and t3.time < '"+pm_out+"' AND t3.event = 'IN' ORDER BY t3.time ASC LIMIT 1) as pm_in,(SELECT CONCAT(t4.time,'_',t4.edited) FROM dtr_file t4 WHERE userid = d.userid AND datein = d.datein and t4.time >= '"+pm_in+"' AND t4.event = 'OUT' ORDER BY time DESC LIMIT 1) as pm_out FROM dtr_file d LEFT JOIN users e ON d.userid = e.userid and datein = d.datein or (datein between '"+from+"' AND '"+to+"' and holiday = '001') or (datein between '"+from+"' AND '"+to+"' and holiday = '002' and d.userid = e.userid) or (datein between '"+from+"' AND '"+to+"' and holiday = '003' and d.userid = e.userid) or (datein between '"+from+"' AND '"+to+"' and holiday = '004' and d.userid = e.userid) or (datein between '"+from+"' AND '"+to+"' and holiday = '005' and d.userid = e.userid) or (datein between '"+from+"' AND '"+to+"' and holiday = '006' and d.userid = e.userid) WHERE d.datein BETWEEN '"+from+"' AND '"+to+"' AND e.userid = '"+id+"' group by d.datein ORDER BY datein ASC";
             if (this.OpenConnection() == true)
             {
                 //Create Command
                 try
                 {
-                        MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                        MySqlCommand cmd = new MySqlCommand(query, dtr);
                         //format = "CALL GETLOGS('8:00:00','12:00:00','13:00:00','17:00:00','0001','2017-05-02','2017-05-02')";
                         //Create a data reader and Execute the command
                         MySqlDataReader dataReader = cmd.ExecuteReader();
@@ -646,100 +1141,262 @@ namespace DOH7PAYROLL.Repo
                         //Read the data and store them in the list
                         while (dataReader.Read())
                         {
+
                         //int day = int.Parse(dataReader["datein"].ToString().Split('-')[2]);
-                        String day = dataReader["datein"].ToString().Split('/')[1];                        
+                        String holiday = dataReader["holiday"].ToString();
+                        String day = dataReader["datein"].ToString().Split('/')[1];
                         String am_in1 = dataReader["am_in"].ToString();
-                        if (!am_in1.Equals("NULL")) { am_in1 = am_in1.Split('_')[0]; }
+                        if (!am_in1.Equals("")) { am_in1 = am_in1.Split('_')[0]; }
                         String am_out1 = dataReader["am_out"].ToString();
-                        if (!am_out1.Equals("NULL")) { am_out1 = am_out1.Split('_')[0]; }
+                        if (!am_out1.Equals("")) { am_out1 = am_out1.Split('_')[0]; }
                         String pm_in1 = dataReader["pm_in"].ToString();
-                        if (!pm_in1.Equals("NULL")) { pm_in1 = pm_in1.Split('_')[0]; }
+                        if (!pm_in1.Equals("")) { pm_in1 = pm_in1.Split('_')[0]; }
                         String pm_out1 = dataReader["pm_out"].ToString();
-                        if (!pm_out1.Equals("NULL")) { pm_out1 = pm_out1.Split('_')[0]; }
+                        if (!pm_out1.Equals("")) { pm_out1 = pm_out1.Split('_')[0]; }
+                        if (holiday.Equals("")) {
 
-                        if (!am_in1.Equals("NULL") && !am_in1.Equals(""))
-                        {
-                            TimeSpan timeSpan = TimeSpan.Parse(am_in1);
-                            TimeSpan subtrahend = TimeSpan.Parse("08:00:00");
-                            int seconds_subtrahend = (int)subtrahend.TotalSeconds;
-                            int seconds_timeSpan = (int)timeSpan.TotalSeconds;
-                            int result = (seconds_timeSpan - seconds_subtrahend) / 60;
-                            if (result > 0)
+                            ///CASE 1 
+                            if (!am_in1.Equals("") && !am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
-                                mins += result;
+
+                                //AM IN
+                                TimeSpan am_in_span = TimeSpan.Parse(am_in1);
+                                TimeSpan am_in_subtrahend = TimeSpan.Parse("08:00:00");
+                                int am_in_second_subtrahend = (int)am_in_subtrahend.TotalSeconds;
+                                int am_in_second_timespan = (int)am_in_span.TotalSeconds;
+                                int result_am_in = (am_in_second_timespan - am_in_second_subtrahend) / 60;
+                                if (result_am_in > 0)
+                                {
+                                    mins += result_am_in;
+                                }
+                                //AM OUT
+                                TimeSpan am_out_span = TimeSpan.Parse(am_out1);
+                                TimeSpan am_out_subtrahend = TimeSpan.Parse("12:00:00");
+                                int am_out_second_subtrahend = (int)am_out_subtrahend.TotalSeconds;
+                                int am_out_second_timespan = (int)am_out_span.TotalSeconds;
+                                int result_am_out = (am_out_second_subtrahend - am_out_second_timespan) / 60;
+                                if (result_am_out > 0)
+                                {
+                                    mins += result_am_out;
+                                }
+                                //PM IN
+                                TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
+                                TimeSpan pm_in_subtrahend = TimeSpan.Parse("13:00:00");
+                                int pm_in_second_subtrahend = (int)pm_in_subtrahend.TotalSeconds;
+                                int pm_in_second_timespan = (int)pm_in_span.TotalSeconds;
+                                int result_pm_in = (pm_in_second_timespan - pm_in_second_subtrahend) / 60;
+                                if (result_pm_in > 0)
+                                {
+                                    mins += result_pm_in;
+                                }
+                                // PM OUT
+                                TimeSpan pm_out_span = TimeSpan.Parse(pm_out1);
+                                TimeSpan pm_out_subtrahend = TimeSpan.Parse("17:00:00");
+                                int pm_out_second_subtrahend = (int)pm_out_subtrahend.TotalSeconds;
+                                int pm_out_second_timespan = (int)pm_out_span.TotalSeconds;
+                                int result_pm_out = (pm_out_second_subtrahend - pm_out_second_timespan) / 60;
+                                if (result_pm_out > 0)
+                                {
+                                    mins += result_pm_out;
+                                }
                             }
+                            ///CASE 2 
+                            else if (!am_in1.Equals("") && !am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
+                            {
+
+                                //AM IN
+                                TimeSpan am_in_span = TimeSpan.Parse(am_in1);
+                                TimeSpan am_in_subtrahend = TimeSpan.Parse("08:00:00");
+                                int am_in_second_subtrahend = (int)am_in_subtrahend.TotalSeconds;
+                                int am_in_second_timespan = (int)am_in_span.TotalSeconds;
+                                int result_am_in = (am_in_second_timespan - am_in_second_subtrahend) / 60;
+                                if (result_am_in > 0)
+                                {
+                                    mins += result_am_in;
+                                }
+                                //AM OUT
+                                TimeSpan am_out_span = TimeSpan.Parse(am_out1);
+                                TimeSpan am_out_subtrahend = TimeSpan.Parse("12:00:00");
+                                int am_out_second_subtrahend = (int)am_out_subtrahend.TotalSeconds;
+                                int am_out_second_timespan = (int)am_out_span.TotalSeconds;
+                                int result_am_out = (am_out_second_subtrahend - am_out_second_timespan) / 60;
+                                if (result_am_out > 0)
+                                {
+                                    mins += result_am_out;
+                                }
+                                //PM IN
+                                TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
+                                TimeSpan pm_in_subtrahend = TimeSpan.Parse("13:00:00");
+                                int pm_in_second_subtrahend = (int)pm_in_subtrahend.TotalSeconds;
+                                int pm_in_second_timespan = (int)pm_in_span.TotalSeconds;
+                                int result_pm_in = (pm_in_second_timespan - pm_in_second_subtrahend) / 60;
+                                if (result_pm_in > 0)
+                                {
+                                    mins += result_pm_in;
+                                }
+                                // PM OUT
+                                TimeSpan pm_out_span = TimeSpan.Parse(pm_in1);
+                                TimeSpan pm_out_subtrahend = TimeSpan.Parse("17:00:00");
+                                int pm_out_second_subtrahend = (int)pm_out_subtrahend.TotalSeconds;
+                                int pm_out_second_timespan = (int)pm_out_span.TotalSeconds;
+                                int result_pm_out = (pm_out_second_subtrahend - pm_out_second_timespan) / 60;
+                                if (result_pm_out > 0)
+                                {
+                                    mins += result_pm_out;
+                                }
+
+                            }
+                            ///CASE 3 
+                            else if (!am_in1.Equals("") && !am_out1.Equals("") && pm_in1.Equals("") && pm_out1.Equals(""))
+                            {
+
+                                //AM IN
+                                TimeSpan am_in_span = TimeSpan.Parse(am_in1);
+                                TimeSpan am_in_subtrahend = TimeSpan.Parse("08:00:00");
+                                int am_in_second_subtrahend = (int)am_in_subtrahend.TotalSeconds;
+                                int am_in_second_timespan = (int)am_in_span.TotalSeconds;
+                                int result_am_in = (am_in_second_timespan - am_in_second_subtrahend) / 60;
+                                if (result_am_in > 0)
+                                {
+                                    mins += result_am_in;
+                                }
+                                //AM OUT
+                                TimeSpan am_out_span = TimeSpan.Parse(am_out1);
+                                TimeSpan am_out_subtrahend = TimeSpan.Parse("12:00:00");
+                                int am_out_second_subtrahend = (int)am_out_subtrahend.TotalSeconds;
+                                int am_out_second_timespan = (int)am_out_span.TotalSeconds;
+                                int result_am_out = (am_out_second_subtrahend - am_out_second_timespan) / 60;
+                                if (result_am_out > 0)
+                                {
+                                    mins += result_am_out;
+                                }
+                                mins += 240;
+
+                            }
+                            ///CASE 4 
+                            else if (!am_in1.Equals("") && am_out1.Equals("") && pm_in1.Equals("") && pm_out1.Equals(""))
+                            {
+
+                                //AM IN
+                                TimeSpan am_in_span = TimeSpan.Parse(am_in1);
+                                TimeSpan am_in_subtrahend = TimeSpan.Parse("08:00:00");
+                                int am_in_second_subtrahend = (int)am_in_subtrahend.TotalSeconds;
+                                int am_in_second_timespan = (int)am_in_span.TotalSeconds;
+                                int result_am_in = (am_in_second_timespan - am_in_second_subtrahend) / 60;
+                                if (result_am_in > 0)
+                                {
+                                    mins += result_am_in;
+                                }
+                                mins += 240;
+
+                            }
+                            ///CASE 5
+                            else if (!am_in1.Equals("") && am_out1.Equals("") && pm_in1.Equals("") && !pm_out1.Equals(""))
+                            {
+
+                                //AM IN
+                                TimeSpan am_in_span = TimeSpan.Parse(am_in1);
+                                TimeSpan am_in_subtrahend = TimeSpan.Parse("08:00:00");
+                                int am_in_second_subtrahend = (int)am_in_subtrahend.TotalSeconds;
+                                int am_in_second_timespan = (int)am_in_span.TotalSeconds;
+                                int result_am_in = (am_in_second_timespan - am_in_second_subtrahend) / 60;
+                                if (result_am_in > 0)
+                                {
+                                    mins += result_am_in;
+                                }
+                                // PM OUT
+                                TimeSpan pm_out_span = TimeSpan.Parse(pm_out1);
+                                TimeSpan pm_out_subtrahend = TimeSpan.Parse("17:00:00");
+                                int pm_out_second_subtrahend = (int)pm_out_subtrahend.TotalSeconds;
+                                int pm_out_second_timespan = (int)pm_out_span.TotalSeconds;
+                                int result_pm_out = (pm_out_second_subtrahend - pm_out_second_timespan) / 60;
+                                if (result_pm_out > 0)
+                                {
+                                    mins += result_pm_out;
+                                }
+
+                            }
+                            ///CASE 6
+                            else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
+                            {
+
+                                mins += 240;
+                                //PM IN
+                                TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
+                                TimeSpan pm_in_subtrahend = TimeSpan.Parse("13:00:00");
+                                int pm_in_second_subtrahend = (int)pm_in_subtrahend.TotalSeconds;
+                                int pm_in_second_timespan = (int)pm_in_span.TotalSeconds;
+                                int result_pm_in = (pm_in_second_timespan - pm_in_second_subtrahend) / 60;
+                                if (result_pm_in > 0)
+                                {
+                                    mins += result_pm_in;
+                                }
+                                // PM OUT
+                                TimeSpan pm_out_span = TimeSpan.Parse(pm_out1);
+                                TimeSpan pm_out_subtrahend = TimeSpan.Parse("17:00:00");
+                                int pm_out_second_subtrahend = (int)pm_out_subtrahend.TotalSeconds;
+                                int pm_out_second_timespan = (int)pm_out_span.TotalSeconds;
+                                int result_pm_out = (pm_out_second_subtrahend - pm_out_second_timespan) / 60;
+                                if (result_pm_out > 0)
+                                {
+                                    mins += result_pm_out;
+                                }
+
+                            }
+                            ///CASE 7
+                            else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
+                            {
+
+                                //PM IN
+                                TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
+                                TimeSpan pm_in_subtrahend = TimeSpan.Parse("13:00:00");
+                                int pm_in_second_subtrahend = (int)pm_in_subtrahend.TotalSeconds;
+                                int pm_in_second_timespan = (int)pm_in_span.TotalSeconds;
+                                int result_pm_in = (pm_in_second_timespan - pm_in_second_subtrahend) / 60;
+                                if (result_pm_in > 0)
+                                {
+                                    mins += result_pm_in;
+                                }
+                                // PM OUT
+                                TimeSpan pm_out_span = TimeSpan.Parse(pm_in1);
+                                TimeSpan pm_out_subtrahend = TimeSpan.Parse("17:00:00");
+                                int pm_out_second_subtrahend = (int)pm_out_subtrahend.TotalSeconds;
+                                int pm_out_second_timespan = (int)pm_out_span.TotalSeconds;
+                                int result_pm_out = (pm_out_second_subtrahend - pm_out_second_timespan) / 60;
+                                if (result_pm_out > 0)
+                                {
+                                    mins += result_pm_out;
+                                }
+                            }  
                         }
-                            if (!am_out1.Equals("NULL") && !am_out1.Equals(""))
-                            {
-                                TimeSpan timeSpan = TimeSpan.Parse(am_out1);
-                                TimeSpan subtrahend = TimeSpan.Parse("12:00:00");
-                                int seconds_subtrahend = (int)subtrahend.TotalSeconds;
-                                int seconds_timeSpan = (int)timeSpan.TotalSeconds;
-                                int result = (seconds_subtrahend - seconds_timeSpan) / 60;
-                                if (result > 0)
-                                {
-                                    mins += result;
-                                }
-                            }
-                        if (!pm_in1.Equals("NULL") && !pm_in1.Equals(""))
-                            {
-                                TimeSpan timeSpan = TimeSpan.Parse(pm_in1);
-                                TimeSpan subtrahend = TimeSpan.Parse("13:00:00");
-                                int seconds_subtrahend = (int)subtrahend.TotalSeconds;
-                                int seconds_timeSpan = (int)timeSpan.TotalSeconds;
-                                int result = (seconds_timeSpan - seconds_subtrahend) / 60;
-                                if (result > 0)
-                                {
-                                    mins += result;
-                                }
-                            }
-                        if (!pm_out1.Equals("NULL") && !pm_out1.Equals(""))
-                            {
-                                TimeSpan timeSpan = TimeSpan.Parse(pm_out1);
-                                TimeSpan subtrahend = TimeSpan.Parse("17:00:00");
-                                int seconds_subtrahend = (int)subtrahend.TotalSeconds;
-                                int seconds_timeSpan = (int)timeSpan.TotalSeconds;
-                                int result = (seconds_subtrahend - seconds_timeSpan) / 60;
-                                if (result > 0)
-                                {
-                                    mins += result;
-                                }
-                            }
-
-                        if (am_in.Equals("NULL") && am_out.Equals("NULL")) mins += 240;
-
-                        if (pm_in.Equals("NULL") && pm_out.Equals("NULL")) mins += 240;
-
                         if (days.Contains(day + ""))
-                          {
-                              days.Remove(day + "");
-                          }
+                        {
+                            days.Remove(day + "");
+                        }
                     }
-                      
                       
                         //close Data Reader
                         dataReader.Close();
-
                         //close Connection
                         this.CloseConnection();
-
-                    for (int i = 0; i < days.Count; i++)
+                  
+                   for (int i = 0; i < days.Count; i++)
                     {
                         String format = month + "/" + days[i] + "/" + year;
                         if (!ifWeekend(format) && !IsHolilday(format))
                         {
-                            mins += 480;
+                           // mins += 480;
+                            no_absent++;
                         }
                     }
-                    for (int i = 0; i < no_days; i++)
+                  for (int i = 0; i < no_days; i++)
                     {
                         String format = month + "/" + (i + 1) + "/" + year;
                         if (!ifWeekend(format) && !IsHolilday(format))
                         {
-                            counter++;
+                            working_days++;
                         }
                     }
-
                     //return list to be displayed
                 }
                 catch (Exception e)
@@ -747,8 +1404,232 @@ namespace DOH7PAYROLL.Repo
                     return e.Message.ToString();
                 }
             }
-          
-            return mins +" "+ counter;
+
+            return mins+" "+working_days+" "+no_absent;
+        }
+
+        public String CheckUserRemittance(String table, String id) {
+            String query = "SELECT amount FROM "+table+" WHERE userid = '"+id+"' LIMIT 1";
+            String amount = "00";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    amount = dataReader["amount"].ToString();
+                }
+                dataReader.Close();
+                this.CloseConnection();
+            }
+            return amount;
+        }
+
+        public String GetAmount(String table, String id)
+        {
+            String query = "SELECT amount FROM " + table + " WHERE userid = '" + id + "' AND max > count LIMIT 1";
+            String amount = "00";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    amount = dataReader["amount"].ToString();
+                }
+                dataReader.Close();
+                this.CloseConnection();
+            }
+            return amount;
+        }
+
+        public String DeleteRemittance(String table, String id)
+        {
+            String query = "DELETE FROM " + table + " WHERE userid = '" + id + "'";
+            String message = "";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+                message = "Successfully Deleted";
+            }
+            return message;
+        }
+        public String DeletePayroll(String id)
+        {
+            String query = "DELETE FROM payroll WHERE id = '" + id + "'";
+            String message = "";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+                message = "Successfully Deleted";
+            }
+            return message;
+        }
+        public String DeletePayrollPDF(String id)
+        {
+            String query = "DELETE FROM payroll_pdf WHERE id = '" + id + "'";
+            String message = "";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+                message = "Successfully Deleted";
+            }
+            return message;
+        }
+
+        public String InsertRemittance(String table,Remittance reimttance)
+        {
+            if (decimal.Parse(reimttance.Amount) > 0)
+            {
+                if (CheckUserRemittance(table, reimttance.UserID).Equals("00"))
+                {
+                    if (GeneratePayslip(reimttance.UserID, "", "") != null)
+                    {
+                        String query = "INSERT INTO " + table + " VALUES('0','" + reimttance.UserID + "','" + reimttance.MaxCount + "','" + reimttance.Count + "','" + reimttance.Amount + "')";
+
+                        if (this.OpenConnection() == true)
+                        {
+                            MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                            //Create a data reader and Execute the command
+                            cmd.ExecuteNonQuery();
+                            this.CloseConnection();
+                        }
+                        return "Insert Successfully";
+                    }
+                    else {
+                        return "User ID dont exists.";
+                    }
+                  
+                }
+                else {
+                    return "User ID already exists.";
+                }
+            }
+            else {
+                return "Amount must be greater than 0";
+            }
+         
+        }
+        public String IncrementRemittance(String table,String id)
+        {
+
+            String query = "UPDATE "+ table + " SET count = (count + 1) WHERE userid = '"+id+"'";
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+            }
+            return "Incremented Successfully";
+        }
+
+        public int GetRemittanceCount(String table,String id) {
+            int count = 0;
+            String query = "SELECT count FROM "+table+" WHERE userid = '"+id+"' LIMIT 1";
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    count = int.Parse(dataReader["count"].ToString());
+                }
+                dataReader.Close();
+                this.CloseConnection();
+            }
+            return count;
+        }
+
+        public List<Remittance> GetRemittance(String table,String type, String search)
+        {
+            int temp_start = start;
+            int temp_end = end;
+            int count = 0;
+            if (type.Equals("1"))
+            {
+                if (start - 10 <= 0)
+                {
+                    start = 0;
+                }
+                else
+                {
+                    start -= 10;
+                }
+            }
+            else if (type.Equals("0"))
+            {
+                start = end;
+            }
+            else
+            {
+                start = 0;
+            }
+
+            List<Remittance> list = new List<Remittance>();
+            String query = "";
+            if (!search.Equals(""))
+            {
+                query = "SELECT (SELECT COUNT(id) FROM "+table+" WHERE userid = '"+search+ "') as 'MAX_SIZE',id,userid,max,count,amount FROM "+table+" WHERE userid = '" + search+"'";
+            }
+            else
+            {
+                query = "SELECT (SELECT COUNT(id) FROM "+table+ ") as 'MAX_SIZE',id,userid,max,count,amount FROM "+table+"";
+            }
+            query = query + " ORDER BY id DESC LIMIT 10 OFFSET " + DatabaseConnect.start;
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    max_size = dataReader["MAX_SIZE"].ToString();
+                    count += 1;
+                    String id = dataReader["id"].ToString();
+                    String userid = dataReader["userid"].ToString();
+                    String max = dataReader["max"].ToString().Split(' ')[0];
+                    String counter = dataReader["count"].ToString();
+                    String amount = dataReader["amount"].ToString();
+
+                    Remittance remmitance = new Remittance(id,userid,max,counter,amount);
+                    list.Add(remmitance);
+                }
+                //Create a data reader and Execute the command
+                end = (start + count);
+                dataReader.Close();
+                this.CloseConnection();
+            }
+            if (count == 0)
+            {
+                start = 0;
+                end = 0;
+                max_size = "0";
+            }
+            return list;
         }
     }
 }

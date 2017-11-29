@@ -239,8 +239,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PayrollController.cs" />
+    <Compile Include="Controllers\RemittanceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -249,6 +251,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Payroll.cs" />
+    <Compile Include="Models\Remittance.cs" />
     <Compile Include="Models\PdfFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repo\DatabaseConnect.cs" />
@@ -300,7 +303,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -333,6 +338,15 @@
     <Content Include="Views\Payroll\Regular.cshtml" />
     <Content Include="Views\Shared\modals.cshtml" />
     <Content Include="Views\Payroll\Payroll.cshtml" />
+    <Content Include="Views\Payroll\payroll_period.cshtml" />
+    <Content Include="Views\Payroll\Payroll_List.cshtml" />
+    <Content Include="Views\Remittance\Pagibig.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Remittance\Coop.cshtml" />
+    <Content Include="Views\Remittance\Phic.cshtml" />
+    <Content Include="Views\Remittance\Disallowance.cshtml" />
+    <Content Include="Views\Remittance\Excess.cshtml" />
+    <Content Include="Views\Remittance\Gsis.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

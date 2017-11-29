@@ -1,11 +1,9 @@
 //tracking history of the document
-var id = 0, salary = 0, half_salary = 0, minutes_late = 0, deduction = 0, net_amount = 0, tax_10 = 0, tax_3 = 0, coop = 0,
-    phic = 0, disallowance = 0, gsis = 0, pagibig = 0, excess = 0, total_amount = 0, working_days = 0,am_in=0,am_out=0,pm_in=0,pm_out=0;
+var id = 0, salary = 0, half_salary = 0, minutes_late = 0, deduction = 0, net_amount = 0, tax_10 = 0, tax_3 = 0, tax_2 = 0, coop = 0,
+    phic = 0, disallowance = 0, gsis = 0, pagibig = 0, excess = 0, total_amount = 0, working_days = 0, am_in = 0, am_out = 0, pm_in = 0, pm_out = 0,
+    adjustment = 0, array_date = [], no_days_absent=0;
 $(document).ready(function () {
-    var nowDate = new Date();
-    var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1, 0, 0, 0, 0);
-    var maxLimitDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), daysInMonth((nowDate.getMonth()+1), nowDate.getFullYear()), 0, 0, 0, 0);
-
+  
     $('.input-data').keypress(function (event) {
         return isNumber(event, this)
     });
@@ -14,40 +12,349 @@ $(document).ready(function () {
         $(this).datepicker("clearDates");
     });
 
-    /* $('#filter_dates').daterangepicker({
-      "autoApply": true,
-      "autoUpdateInput": false,
-      "minDate": today,
-      "maxDate": maxLimitDate
-  });
-  */
-    /*$('#filter_dates').daterangepicker().change(function (event, picker) {
-        alert($(this).val());
+    $("#month").change(function () {
+
+        var chosen_month = $(this).val();
+        var chosen_year = $("#year").val();
+        if (+chosen_month <= 9) chosen_month = "0" + chosen_month;
+        var chosen_options = $("#month_range").val();
+        var from_date = "";
+        var to_date = "";
+        switch (chosen_options) {
+            case "1":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-01",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month + "-15"
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                        $("#remarks").text(minutes_late+"(mins)/"+no_days_absent+"(days)");
+                    }
+                });
+                $("#half_month_text").text("Half Month");
+                from_date = chosen_month + "/01/" + chosen_year;
+                to_date = chosen_month + "/15/" + chosen_year;
+                half_salary = (salary / 2).toFixed(2);
+
+                break;
+            case "2":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-16",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Half Month");
+                from_date = chosen_month + "/16/" + chosen_year;
+                to_date = chosen_month + "/" + daysInMonth(parseInt(chosen_month), chosen_year) + "/" + chosen_year;
+                half_salary = (salary / 2).toFixed(2);
+                break;
+            case "3":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-01",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Whole Month");
+                from_date = chosen_month + "/01/" + chosen_year;
+                to_date = chosen_month + "/" + daysInMonth(parseInt(chosen_month), chosen_year) + "/" + chosen_year;
+                half_salary = salary;
+                break;
+        }
+        $("#month_range_value").val(from_date + " " + to_date);
+        if (+salary != 0) {
+            $("#half_salary").val(formatComma(half_salary));
+        }
     });
-    
 
-    $('#filter_dates').daterangepicker().on('apply.daterangepicker', function (ev, picker) {
-        alert(picker.startDate.val() + "HAHA");
-        var data = $(this).val();
-        var from_year = data.split("/")[2].split(' ')[0];
-        var from_month = data.split("/")[0];
-        var from_day = data.split("/")[1];
-
-        var to_day = data.split("/")[3];
-
-        var today = new Date(from_year,from_month, from_day, 0, 0, 0, 0);
-        var maxLimitDate = new Date(from_year, from_month, daysInMonth(from_month, from_year), 0, 0, 0, 0);
-        $(this).daterangepicker({
-            "autoApply": true,
-            "autoUpdateInput": false,
-            "maxDate": maxLimitDate
-        });
+    $("#year").change(function () {
+        
+        var chosen_year = $(this).val();
+        var chosen_options = $("#month_range").val();
+        var chosen_month = $("#month").val();
+        if (+chosen_month <= 9) chosen_month = "0" + chosen_month;
+        var from_date = "";
+        var to_date = "";
+        switch (chosen_options) {
+            case "1":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-01",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month + "-15"
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Half Month");
+                from_date = chosen_month + "/01/" + chosen_year;
+                to_date = chosen_month + "/15/" + chosen_year;
+                half_salary = (salary / 2).toFixed(2);
+                break;
+            case "2":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-16",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Half Month");
+                from_date = chosen_month + "/16/" + chosen_year;
+                to_date = chosen_month + "/" + daysInMonth(parseInt(chosen_month), chosen_year) + "/" + chosen_year;
+                half_salary = (salary / 2).toFixed(2);
+                break;
+            case "3":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-01",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Whole Month");
+                from_date = chosen_month + "/01/" + chosen_year;
+                to_date = chosen_month + "/" + daysInMonth(parseInt(chosen_month), chosen_year) + "/" + chosen_year;
+                half_salary = salary;
+                break;
+        }
+        $("#month_range_value").val(from_date + " " + to_date);
+        if (+salary != 0) {
+            $("#half_salary").val(formatComma(half_salary));
+        }
     });
-    */
 
+    $("#month_range").change(function () {
+        var chosen_options = $(this).val();
+        var chosen_year = $("#year").val();
+        var chosen_month = $("#month").val();
+        if (+chosen_month <= 9) chosen_month = "0" + chosen_month;
+        var from_date = "";
+        var to_date = "";
+        switch (chosen_options) {
+            case "1":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-01",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month + "-15"
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Half Month");
+                from_date = chosen_month + "/01/" + chosen_year;
+                to_date = chosen_month + "/15/" + chosen_year;
+                half_salary = (salary / 2).toFixed(2);
+                break;
+            case "2":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-16",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month + "-" + daysInMonth(parseInt(chosen_month), chosen_year)
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Half Month");
+                from_date = chosen_month + "/16/" + chosen_year;
+                to_date = chosen_month + "/" + daysInMonth(parseInt(chosen_month), chosen_year) + "/" + chosen_year;
+                half_salary = (salary / 2).toFixed(2);
+                break;
+            case "3":
+                $.ajax({
+                    url: "../Payroll/GetMins",
+                    type: 'POST',
+                    data:
+                        {
+                            "id": id,
+                            "from": chosen_year + "-" + chosen_month + "-01",
+                            "am_in": "08:00:00",
+                            "am_out": "12:00:00",
+                            "pm_in": "13:00:00",
+                            "pm_out": "17:00:00",
+                            "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
+                        },
+                    success: function (data) {
+                        minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                        no_days_absent = data.split(" ")[2];
+                        $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                        $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                    }
+                });
+                $("#half_month_text").text("Whole Month");
+                from_date = chosen_month + "/01/" + chosen_year;
+                to_date = chosen_month + "/" + daysInMonth(parseInt(chosen_month), chosen_year) + "/" + chosen_year;
+                half_salary = salary;
+                break;
+        }
+        $("#month_range_value").val(from_date + " " + to_date);
+        if (+salary != 0) {
+            $("#half_salary").val(formatComma(half_salary));
+        }
+    });
 
+/*
+    $('#absent_date').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true
+    },
+    function (start, end, label) {
+        var item = $('#absent_date').val();
+        var date_item = "<tr id = '"+count+"'><td>";
+        date_item += $('#absent_date').val();
+        date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='"+ count +"'></span></td>";
+        $("#date-list").append(date_item);
+        count++;
+        array_date.push(item);
+        $("#absent_date_list").val(array_date);
+        computeAbsentRate();
+        netAmount();
+        $('#absent_date').val("");
+    });
+   
+    $('body').on('click', '.remove-data', function () {
+        var value =  $(this).closest('tr').find('td:eq(0)').text();
+        var id = $(this).data('id');
+        $('#' + id).remove();
+        removeItem(value);
+        count--;
+        $("#absent_date_list").val(array_date);
+        computeAbsentRate();
+        netAmount();
+    });
+   */    
     $('#inclusive3').daterangepicker();
     $('#filter_dates').daterangepicker();
+    $('#pay_dates').daterangepicker();
     $('#search').daterangepicker();
     $('#print_pdf').submit(function () {
         $('#upload').button('loading');
@@ -58,75 +365,84 @@ $(document).ready(function () {
         });
     });
 
-    $('#filter_dates').change(function () {
-        var mFrom = $("#filter_dates").val().split("-")[0];
-        var mTo = $("#filter_dates").val().split("-")[1];
-
-        var from_year = mFrom.split("/")[2].trimRight();
-        from_year = from_year.replace(/\s+/g,'');
-
-        var from_day = mFrom.split("/")[1].trimRight();
-        from_day = from_day.replace(/\s+/g, '');
-
-        var from_month = mFrom.split("/")[0].trimRight();
-        from_month = from_month.replace(/\s+/g, '');
-
-        var to_year = mTo.split("/")[2].trimRight();
-        to_year = to_year.replace(/\s+/g, '');
-
-        var to_day = mTo.split("/")[1].trimRight();
-        to_day = to_day.replace(/\s+/g, '');
-
-        var to_month = mTo.split("/")[0].trimRight();
-        to_month = to_month.replace(/\s+/g, '');
-
-        mFrom = from_year + "-" + from_month + "-" + from_day;
-        mTo =   to_year + "-" + to_month + "-" + to_day;
-        
+    $(".btn_print").click(function () {
+        var id = $(this).closest('tr').find('td:eq(0)').text();
+        var start_date = $(this).closest('tr').find('td:eq(3)').text();
+        var end_date = $(this).closest('tr').find('td:eq(4)').text();
+        $('#payslip_print').modal('show');
+        $("#update_payroll_container").addClass('hidden');
         $.ajax({
-            url: "Payroll/GetMins",
+            url: "../Payroll/CreatePayslip",
             type: 'POST',
             data:
                 {
                     "id": id,
-                    "from": mFrom,
-                    "am_in": am_in,
-                    "am_out": am_out,
-                    "pm_in": pm_in,
-                    "pm_out": pm_out,
-                    "to": mTo
+                    "start_date": start_date,
+                    "end_date": end_date
+                },
+            success: function (data) {
+                $('#payslip_print').modal('hide');
+                $("#payroll_list_msg_container").removeClass('hidden');
+                $("#payroll_list_msg").text(data);
+            }
+        });
+    });
+    $(".btn_add").click(function () {
+        id = $(this).data('id');
+        $(".modal-body #id").val(id);
+        salary = parseFloat($("#salary_original").val()).toFixed(2);
+        $("#salary").val(formatComma(salary));
+        half_salary = (+salary / 2).toFixed(2);
+        $("#half_salary").val(formatComma(half_salary));
+        coop = parseFloat($("#coop_original").val()).toFixed(2);
+        $("#coop").val(formatComma(coop));
+        disallowance = parseFloat($("#disallowance_original").val()).toFixed(2);
+        $("#disallowance").val(formatComma(disallowance));
+        pagibig = parseFloat($("#pagibig_original").val()).toFixed(2);
+        $("#pagibig").val(formatComma(pagibig));
+        phic = parseFloat($("#phic_original").val()).toFixed(2);
+        $("#phic").val(formatComma(phic));
+        gsis = parseFloat($("#gsis_original").val()).toFixed(2);
+        $("#gsis").val(formatComma(gsis));
+        excess = parseFloat($("#excess_original").val()).toFixed(2);
+        $("#excess").val(formatComma(excess));
+        var start_date = "01/01/2017";
+        var end_date = "01/15/2017";
+        $("#month_range_value").val(start_date + " " + end_date);
+        $.ajax({
+            url: "../Payroll/GetMins",
+            type: 'POST',
+            data:
+                {
+                    "id": id,
+                    "from": "2017-01-01",
+                    "am_in": "08:00:00",
+                    "am_out": "12:00:00",
+                    "pm_in": "13:00:00",
+                    "pm_out": "17:00:00",
+                    "to": "2017-01-15"
                 },
             success: function (data) {
                 minutes_late = data.split(" ")[0];
                 working_days = data.split(" ")[1];
+                no_days_absent = data.split(" ")[2];
                 $("#minutes_late").val(minutes_late);
                 $("#working_days").val(working_days);
-                computeAbsentRate();
-                netAmount();
-                computeTotal();
+                $("#no_days_absent").val(no_days_absent);
+                Compute();
             }
         });
     });
+   
 
-
-
-
-    $("a[href='#track']").on('click', function () {
-        $('.track_history').html(loadingState);
-        var route_no = $(this).data('route');
-        var url = $(this).data('link');
-
-        $('#track_route_no').val('Loading...');
-        setTimeout(function () {
-            $('#track_route_no').val(route_no);
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (data) {
-                    $('.track_history').html(data);
-                }
-            });
-        }, 1000);
+    $("#adjustment").change(function () {
+        adjustment = $(this).val();
+        if (adjustment == '') {
+            adjustment = "0.00";
+        }
+        adjustment = parseFloat(adjustment.replace(/,/g, '')).toFixed(2);
+        $("#adjustment").val(formatComma(adjustment))
+        Compute();
     });
 
     $("#coop").change(function () {        
@@ -136,7 +452,7 @@ $(document).ready(function () {
         }
         coop = parseFloat(coop.replace(/,/g, '')).toFixed(2);
         $("#coop").val(formatComma(coop))
-        computeTotal();
+        
     });
 
     $("#phic").change(function () {
@@ -146,7 +462,7 @@ $(document).ready(function () {
         }
         phic = parseFloat(phic.replace(/,/g, '')).toFixed(2);
         $("#phic").val(formatComma(phic))
-        computeTotal();
+       
     });
 
     $("#disallowance").change(function () {
@@ -156,7 +472,7 @@ $(document).ready(function () {
         }
         disallowance = parseFloat(disallowance.replace(/,/g, '')).toFixed(2);
         $("#disallowance").val(formatComma(disallowance))
-        computeTotal();
+        
     });
 
     $("#gsis").change(function () {
@@ -166,7 +482,7 @@ $(document).ready(function () {
         }
         gsis = parseFloat(gsis.replace(/,/g, '')).toFixed(2);
         $("#gsis").val(formatComma(gsis))
-        computeTotal();
+        
     });
 
     $("#pagibig").change(function () {
@@ -176,7 +492,7 @@ $(document).ready(function () {
         }
         pagibig = parseFloat(pagibig.replace(/,/g, '')).toFixed(2);
         $("#pagibig").val(formatComma(pagibig))
-        computeTotal();
+        
     });
 
     $("#excess").change(function () {
@@ -186,7 +502,7 @@ $(document).ready(function () {
         }
         excess = parseFloat(excess.replace(/,/g, '')).toFixed(2);
         $("#excess").val(formatComma(excess))
-        computeTotal();
+        
     });
 
     $("#salary").change(function () {
@@ -196,26 +512,25 @@ $(document).ready(function () {
         }
         salary = parseFloat(salary.replace(/,/g, '')).toFixed(2);
         half_salary = (salary / 2).toFixed(2);
+        var id = $("#month_range").val();
+        if (id == "3") {  
+            half_salary = salary;
+        } 
+        
         $("#salary").val(formatComma(salary))
         $("#half_salary").val(formatComma(half_salary));
-        computeAbsentRate();
-        netAmount();
-        computeTotal();
+    
     });
 
     $("#minutes_late").change(function () {
         minutes_late = $(this).val();
-        computeAbsentRate();
-        netAmount();
-        computeTotal();
+       
 
     });
 
     $("#working_days").change(function () {
         working_days = $(this).val();
-        computeAbsentRate();
-        netAmount();
-        computeTotal();
+       
     });
 
 
@@ -223,41 +538,61 @@ $(document).ready(function () {
         clearFeld();
     });
 
+    $('#modal').on('hidden.bs.modal', function () {
+        clearFeld();
+    })
 
-
-    $(".btn_view").click(function () {
+    $(".btn_edit").click(function () {
         id= $(this).closest('tr').find('td:eq(0)').text();
         var firstname = $(this).closest('tr').find('td:eq(1)').text();
         var surname = $(this).closest('tr').find('td:eq(2)').text();
-        var position = $(this).closest('tr').find('td:eq(3)').text();
-        var range = $(this).closest('tr').find('td:eq(14)').text();
 
-         am_in= $(this).closest('tr').find('td:eq(15)').text();
-         am_out = $(this).closest('tr').find('td:eq(16)').text();
-         pm_in = $(this).closest('tr').find('td:eq(17)').text();
-         pm_out = $(this).closest('tr').find('td:eq(18)').text();
-
-        salary = $(this).closest('tr').find('td:eq(4)').text();
+        var start_date = $(this).closest('tr').find('td:eq(3)').text();
+        var end_date = $(this).closest('tr').find('td:eq(4)').text();
+        $("#month").val(parseInt(start_date.split("/")[0]));
+        var chosen_month = parseInt(start_date.split("/")[0]);
+        salary = $(this).closest('tr').find('td:eq(5)').text();
         half_salary = (salary / 2).toFixed(2);
-        minutes_late = $(this).closest('tr').find('td:eq(5)').text();
+        if (parseInt(start_date.split("/")[1]) == 1 && parseInt(end_date.split("/")[1]) == 15) {
+            $("#half_month_text").text("Half Month");
+            $("#month_range").val("1");
+         
+        } else if (parseInt(start_date.split("/")[1]) == 16) {
+            $("#half_month_text").text("Half Month");
+            $("#month_range").val("2");
+        } else {
+            $("#half_month_text").text("Whole Month");
+            $("#month_range").val("3");
+            half_salary = salary;
+        }
+
+        $("#month_range_value").val(start_date + " " + end_date);
+
+        //var position = $(this).closest('tr').find('td:eq(3)').text();
+       
+        minutes_late = $(this).closest('tr').find('td:eq(6)').text();
         working_days = $(this).closest('tr').find('td:eq(13)').text();
-        computeAbsentRate();
-        netAmount();
-        coop = $(this).closest('tr').find('td:eq(6)').text();
-        phic= $(this).closest('tr').find('td:eq(7)').text();
-        disallowance = $(this).closest('tr').find('td:eq(8)').text();
-        gsis = $(this).closest('tr').find('td:eq(9)').text();
-        pagibig = $(this).closest('tr').find('td:eq(10)').text();
-        excess = $(this).closest('tr').find('td:eq(11)').text();
-        var flag = $(this).closest('tr').find('td:eq(12)').text();
-        
-        $("#type_request").val(flag);
+        no_days_absent = $(this).closest('tr').find('td:eq(14)').text();
+       
+        coop = $(this).closest('tr').find('td:eq(7)').text();
+        phic = $(this).closest('tr').find('td:eq(8)').text();
+        disallowance = $(this).closest('tr').find('td:eq(9)').text();
+        gsis = $(this).closest('tr').find('td:eq(10)').text();
+        pagibig = $(this).closest('tr').find('td:eq(11)').text();
+        excess = $(this).closest('tr').find('td:eq(12)').text();
+        Compute();
+        var remarks = $(this).closest('tr').find('td:eq(15)').text();
+        var payroll_id = $(this).closest('tr').find('td:eq(16)').text();
+        adjustment = $(this).closest('tr').find('td:eq(17)').text();
+
+       
         $("#id").val(id);
+        $("#payroll_id").val(payroll_id);
         $("#fname").val(firstname);
-        $("#lname").val(surname);
-        $("#type").val(position);
-        $("#filter_dates").val(range);
+        $("#lname").val(surname);        
         $("#working_days").val(working_days);
+        $("#no_days_absent").val(no_days_absent);
+        $("#adjustment").val(adjustment);
         $("#salary").val(formatComma(salary))
         $("#half_salary").val(formatComma(half_salary));
         $("#minutes_late").val(minutes_late);
@@ -268,55 +603,96 @@ $(document).ready(function () {
         $("#pagibig").val(formatComma(pagibig));
         $("#excess").val(formatComma(excess));
 
-        computeTotal();
+        var request_type = $(this).val();
+        switch(request_type){
+            case "update":
+                $("#btn_save").html("Update");
+                break;
+            case "create":
+                $("#btn_save").html("Save");
+                break;
+            case "print":
+                $("#modal_date_range_container").css("visibility","");
+                $("#btn_save").html("Print");
+        }
     });
 });
 
+
+
 function clearFeld() {
-    $("#salary").val("");
-    $("#half_salary").val("");
+    $("#month").val("1");
+    $("#month_range").val("1");
+    $("#type_request").val("0");
     $("#working_days").val("");
     $("#minutes_late").val("");
-    $("#filter_dates").val("");
+    $("#absent_date").val("");
+    $("#date-list").empty();
+    $("#absent_date_list").val("");
+    $("#adjustment").val("");
     $("#deduction").val("");
     $("#net_amount").val("");
     $("#tax_10").val("");
     $("#tax_3").val("");
-    $("#coop").val("");
-    $("#phic").val("");
-    $("#disallowance").val("");
-    $("#gsis").val("");
-    $("#pagibig").val("");
-    $("#excess").val("");
+    $("#tax_2").val("");
     $("#total_amount").val("");
-}
+    $("#remarks").text("");
 
-function computeAbsentRate() {
-    deduction = (minutes_late * (((salary / working_days) / 8) / 60)).toFixed(2);
+    id = 0;
+    salary = 0;
+    half_salary = 0;
+    minutes_late = 0;
+    deduction = 0;
+    net_amount = 0;
+    tax_10 = 0;
+    tax_3 = 0;
+    tax_2 = 0;
+    coop = 0;
+    phic = 0;
+    disallowance = 0;
+    gsis = 0;
+    pagibig = 0;
+    excess = 0;
+    total_amount = 0;
+    working_days = 0;
+    am_in = 0;
+    am_out = 0;
+    pm_in = 0;
+    pm_out = 0;
+    adjustment = 0;
+    no_days_absent = 0;
+}
+function Compute() {
+    $("#remarks").text(minutes_late + "(mins)/" + no_days_absent + "(days)");
+    if (no_days_absent > 0) {
+        deduction = ((+minutes_late + (480 * +no_days_absent)) * (((salary / working_days) / 8) / 60)).toFixed(2);
+    } else {
+        deduction = (minutes_late * (((salary / working_days) / 8) / 60)).toFixed(2);   
+    }
     if (isNaN(deduction) || !isFinite(deduction)) {
-        deduction = "0.00";
+        deduction = "0";
     }
     $("#deduction").val(formatComma(deduction));
-}
 
-function netAmount() {
     net_amount = "0.00";
     if (working_days != 0 && salary != 0) {
-        net_amount = half_salary;
-        if (minutes_late > 0) {
-            net_amount = (half_salary - deduction);
+        net_amount = (parseFloat(half_salary)).toFixed(2);
+        if (deduction > 0) {
+            net_amount = (parseFloat(half_salary) - parseFloat(deduction)).toFixed(2);
         }
     }
+    net_amount = (parseFloat(net_amount) + parseFloat(adjustment)).toFixed(2);
     tax_10 = (net_amount * 0.10).toFixed(2);
     tax_3 = (net_amount * 0.03).toFixed(2);
+    tax_2 = (net_amount * 0.02).toFixed(2);
     $("#net_amount").val(formatComma(net_amount));
     $("#tax_10").val(formatComma(tax_10));
     $("#tax_3").val(formatComma(tax_3));
-}
+    $("#tax_2").val(formatComma(tax_2));
 
-function computeTotal() {
     total_amount = (net_amount - tax_10 - tax_3 - coop - disallowance - pagibig - phic - gsis - excess).toFixed(2);
     $("#total_amount").val(formatComma(total_amount));
+
 }
 
 function formatComma(number) {
@@ -338,5 +714,13 @@ function isNumber(evt, element) {
 
 function daysInMonth(month,year) {
     return new Date(year, month, 0).getDate();
+}
+function removeItem(name){
+    for (var i = array_date.length - 1; i >= 0; i--) {
+        if (array_date[i] === name) {
+            array_date.splice(i, 1);
+            // break;       //<-- Uncomment  if only the first term has to be removed
+        }
+    }
 }
 

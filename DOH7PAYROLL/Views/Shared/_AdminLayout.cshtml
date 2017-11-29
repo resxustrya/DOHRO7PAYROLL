@@ -40,10 +40,14 @@
     <script src="@Url.Content("/public/assets/js/jquery.min.js")"></script>
      <style>  
         body {
-            background-color:#dddddd;
+             background: url("/public/img/backdrop.png"), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
         }
          .panel-text-color {
-             color:#f0ad4e;
+             color:#fff;
+         }
+          .panel-text-size-24 {
+             color:#000;
+             font-size:24px;
          }
          .modal-header{
              background-color:#9C8AA5;
@@ -51,6 +55,9 @@
         .container-padding {
             padding:50px;
         }
+         textarea {
+         resize:none;
+         }
         .card-view {
             border-style:solid;
             border-color:#d0d0d0;
@@ -106,24 +113,23 @@
          }
           .panel-header-background {
             background-color:rgb(200, 129, 255);
-
-         }
+         } 
      </style>
 </head>
 
 <body class="ng-cloak ">
-    <div class="loading"></div>
-
+        <div class="loading">
+        </div>
     <!-- Fixed navbar -->
 
     <nav class="navbar navbar-default navbar-static-top">
         <div class="header" style="background-color:#2F4054;padding:10px;">
             <div class="col-md-4">
-                <span class="title-info">Welcome,</span> <span class="title-desc">Asnaui Pangcata</span>
+                <span class="title-info">Welcome,</span> <span class="title-desc">@Session["Name"]</span>
             </div>
             <div class="col-md-4">
                 <span class="title-info">Section:</span>
-                <span class="title-desc">Accounting
+                <span class="title-desc">@Session["Section"]
                 </span>
             </div>
             <div class="col-md-4">
@@ -131,7 +137,7 @@
             </div>
             <div class="clearfix"></div>
         </div>
-        <div class="header" style="background-color:#9C8AA5	;padding:15px;">
+        <div class="header" style="background-color:#8BC34A	;padding:15px;">
             <div class="container">
                 <img src="@Url.Content("/public/img/payroll_banner.png")" class="img-responsive" />
             </div>
@@ -157,7 +163,7 @@
             <div class="clearfix"></div>
             @Html.Partial("modals")
         </div> <!-- /container -->
-<footer class="footer">
+<footer class="footer" style="background:#33691E">
     <div class="container">
         <p>Copyright &copy; 2017 DOH-RO7 All rights reserved</p>
     </div>

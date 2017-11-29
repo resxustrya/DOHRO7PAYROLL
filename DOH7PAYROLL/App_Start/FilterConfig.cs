@@ -3,6 +3,7 @@ using System.Web.Mvc;
 
 namespace DOH7PAYROLL
 {
+   
     public class FilterConfig
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -10,4 +11,5 @@ namespace DOH7PAYROLL
             filters.Add(new HandleErrorAttribute());
         }
     }
+
 }
