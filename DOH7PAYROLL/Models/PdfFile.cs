@@ -12,17 +12,20 @@ namespace DOH7PAYROLL.Models
         public String StartDate { get; set; }
         public String EndDate { get; set; }
         public String FileName { get; set; }
-        public String PayType { get; set; }
+        public String Disbursement { get; set; }
+        public String InCharge { get; set; }
         public String Date { get; set; }
 
-        public PdfFile(String ID,String UserID,String StartDate,String EndDate,String FileName,String Date,String PayType) {
+        public PdfFile(String ID,String UserID,String StartDate,String EndDate,String FileName,
+            String Date,String Disbursement,String InCharge) {
             this.ID = ID;
             this.UserID = UserID;
             this.StartDate = StartDate;
             this.EndDate = EndDate;
             this.FileName = FileName;
             this.Date = Date;
-            this.PayType = PayType;
+            this.Disbursement = Disbursement;
+            this.InCharge = InCharge;
         }
     }
 }

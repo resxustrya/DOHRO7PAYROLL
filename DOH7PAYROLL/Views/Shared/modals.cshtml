@@ -78,18 +78,19 @@
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
-                                    <label id="half_month_text" name="half_month_text">Half Month Pay</label>
-                                    <input type="text" class="form-control" name="half_salary" id="half_salary" readonly />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
                                     <label>Working Days</label>
                                     <input type="text" class="form-control input-data" id="working_days" name="working_days" required readonly>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row hidden">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label id="half_month_text" name="half_month_text">Half Month Pay</label>
+                                    <input type="text" class="form-control" name="half_salary" id="half_salary" readonly />
+                                </div>
+                            </div>
+
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>Adjustment</label>
@@ -101,15 +102,15 @@
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>Minutes (Late/Undertime)</label>
-                                    <input type="text" id="minutes_late" name="minutes_late" class="form-control input-data" required readonly />
+                                    <input type="text" id="minutes_late" name="minutes_late" class="form-control input-data" required />
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
-                                    <label>No. Days Absent</label>
-                                    <input type="text" class="hidden" id="absent_date" name="absent_date" placeholder="Choose Date" readonly />
-                                    <input type="text" class="hidden" id="absent_date_list" name="absent_date_list" />
-                                    <input type="text" class="form-control" id="no_days_absent" name="no_days_absent" readonly required />
+                                    <label>Absent Days</label>
+                                    <input type="text" class="form-control" id="absent_date" name="absent_date" placeholder="Choose Date" readonly />
+                                    <input type="text" class="form-control hidden" id="absent_date_list" name="absent_date_list" />
+                                    <input type="text" class="form-control hidden" id="no_days_absent" name="no_days_absent" readonly required />
                                 </div>
                                 <div class="form-group">
                                     <table id="date-list" name="date-list" class="table table-hover"></table>
@@ -161,8 +162,8 @@
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>Coop</label>
-                                    <input type="text" name="coop_original" id="coop_original" class="hidden" value="@Session["Coop"]" required readonly />
-                                    <input type="text" class="form-control input-data" id="coop" name="coop" required readonly />
+                                    <input type="text" name="coop_original" id="coop_original" class="hidden" value="@Session["Coop"]" required />
+                                    <input type="text" class="form-control input-data" id="coop" name="coop" required  />
                                 </div>
                             </div>
                         </div>
@@ -170,16 +171,16 @@
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>Disallowance</label>
-                                    <input type="text" name="disallowance_original" id="disallowance_original" class="hidden" value="@Session["Disallowance"]" required readonly />
-                                    <input type="text" class="form-control input-data" id="disallowance" name="disallowance" required readonly />
+                                    <input type="text" name="disallowance_original" id="disallowance_original" class="hidden" value="@Session["Disallowance"]" required  />
+                                    <input type="text" class="form-control input-data" id="disallowance" name="disallowance" required  />
                                     <input type="text" class="hidden" id="type_request" name="type_request" value="0" />
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>Pag-Ibig</label>
-                                    <input type="text" name="pagibig_original" id="pagibig_original" class="hidden" value="@Session["PagIbig"]" required readonly />
-                                    <input type="text" class="form-control input-data" id="pagibig" name="pagibig" required readonly />
+                                    <input type="text" name="pagibig_original" id="pagibig_original" class="hidden" value="@Session["PagIbig"]" required  />
+                                    <input type="text" class="form-control input-data" id="pagibig" name="pagibig" required  />
                                 </div>
                             </div>
                         </div>
@@ -189,15 +190,15 @@
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>PHIC</label>
-                                    <input type="text" name="phic_original" id="phic_original" class="hidden" value="@Session["Phic"]" required readonly />
-                                    <input type="text" class="form-control input-data" id="phic" name="phic" required readonly />
+                                    <input type="text" name="phic_original" id="phic_original" class="hidden" value="@Session["Phic"]" required  />
+                                    <input type="text" class="form-control input-data" id="phic" name="phic" required  />
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>GSIS</label>
-                                    <input type="text" name="gsis_original" id="gsis_original" class="hidden" value="@Session["Gsis"]" required readonly />
-                                    <input type="text" class="form-control input-data" id="gsis" name="gsis" required readonly />
+                                    <input type="text" name="gsis_original" id="gsis_original" class="hidden" value="@Session["Gsis"]" required  />
+                                    <input type="text" class="form-control input-data" id="gsis" name="gsis" required  />
                                 </div>
                             </div>
                         </div>
@@ -205,8 +206,8 @@
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label>Excess Mobile Plan</label>
-                                    <input type="text" name="excess_original" id="excess_original" class="hidden" value="@Session["Excess"]" required readonly />
-                                    <input type="text" class="form-control input-data" id="excess" name="excess" required readonly />
+                                    <input type="text" name="excess_original" id="excess_original" class="hidden" value="@Session["Excess"]" required  />
+                                    <input type="text" class="form-control input-data" id="excess" name="excess" required  />
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
@@ -467,18 +468,18 @@
                             </tr>
                             <tr>
                                 <td><label class="pull-left">Max Count</label></td>
-                                <td><input type="text" name="remit_maxCount" id="remit_maxCount" class="form-control" required /></td>
+                                <td><input type="text" name="remit_maxCount" id="remit_maxCount" class="form-control input-data" required /></td>
                             </tr>
                             <tr>
                                 <td><label class="pull-left">Counter</label></td>
-                                <td><input type="text" name="remit_count" id="remit_count" class="form-control" required /></td>
+                                <td><input type="text" name="remit_count" id="remit_count" class="form-control input-data" required /></td>
                             </tr>
                             <tr>
                                 <td><label class="pull-left">Amount</label></td>
-                                <td><input type="text" name="remit_amount" id="remit_amount" class="form-control" required /></td>
+                                <td><input type="text" name="remit_amount" id="remit_amount" class="form-control input-data" value="0" required /></td>
                             </tr>
                             <tr>
-                                <td colspan="2"><center><button type="submit" class="btn btn-success">SAVE</button></center></td>
+                                <td colspan="2"><center><button type="submit" name="remit_submit" id="remit_submit" class="btn btn-success" value="0">SAVE</button></center></td>
                             </tr>
                         </table>
                     </form>
@@ -488,13 +489,6 @@
     </div>
 </div>
 <!--SPINNER MODAL-->
-<div class="modal fade" tabindex="-1" role="dialog" id="payslip_print" style="overflow-y:scroll;">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header"></div>
-            <div class="modal-body">
-                <div class="modal_content"><center><img src="@Url.Content("/public/img/spin.gif")" width="150" style="padding:20px;"></center></div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
+<center class="modal fade" tabindex="-1" role="dialog" id="payslip_print" style="overflow-y:scroll;">
+    <div class="modal_content"><center><img src="@Url.Content("/public/img/spin.gif")" width="150" style="padding:20px;"></center></div>
+</center>

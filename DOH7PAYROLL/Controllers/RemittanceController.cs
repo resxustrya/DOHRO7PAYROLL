@@ -246,25 +246,68 @@ namespace DOH7PAYROLL.Controllers
             String max = Request["remit_maxCount"];
             String count = Request["remit_count"];
             String amount = Request["remit_amount"];
+            String submit = Request["remit_submit"];
             Remittance remmitance = new Remittance("0", empID, max, count, amount);
             switch (Session["RemitType"].ToString()) {
                 case "Pagibig":
-                    TempData["message"] =  connection.InsertRemittance("pagibig_remittance", remmitance);
+                    if (submit.Equals("0"))
+                    {
+                        TempData["message"] = connection.InsertRemittance("pagibig_remittance", remmitance);
+                    }
+                    else {
+                        TempData["message"] = connection.UpdateRemittance("pagibig_remittance", remmitance);
+                    }
+
                     return RedirectToAction("Pagibig");
                 case "Coop":
-                    TempData["message"] = connection.InsertRemittance("coop_remittance", remmitance);
+                    if (submit.Equals("0"))
+                    {
+                        TempData["message"] = connection.InsertRemittance("coop_remittance", remmitance);
+                    }
+                    else
+                    {
+                        TempData["message"] = connection.UpdateRemittance("coop_remittance", remmitance);
+                    }
                     return RedirectToAction("Coop");
                 case "Excess":
-                    TempData["message"] = connection.InsertRemittance("excess_remittance", remmitance);
+                    if (submit.Equals("0"))
+                    {
+                        TempData["message"] = connection.InsertRemittance("excess_remittance", remmitance);
+                    }
+                    else
+                    {
+                        TempData["message"] = connection.UpdateRemittance("excess_remittance", remmitance);
+                    }
                     return RedirectToAction("Excess");
                 case "Phic":
-                    TempData["message"] = connection.InsertRemittance("phic_remittance", remmitance);
+                    if (submit.Equals("0"))
+                    {
+                        TempData["message"] = connection.InsertRemittance("phic_remittance", remmitance);
+                    }
+                    else
+                    {
+                        TempData["message"] = connection.UpdateRemittance("phic_remittance", remmitance);
+                    }
                     return RedirectToAction("Phic");
                 case "Disallowance":
-                    TempData["message"] = connection.InsertRemittance("disallowance_remittance", remmitance);
+                    if (submit.Equals("0"))
+                    {
+                        TempData["message"] = connection.InsertRemittance("disallowance_remittance", remmitance);
+                    }
+                    else
+                    {
+                        TempData["message"] = connection.UpdateRemittance("disallowance_remittance", remmitance);
+                    }
                     return RedirectToAction("Disallowance");
                 case "Gsis":
-                    TempData["message"] = connection.InsertRemittance("gsis_remittance", remmitance);
+                    if (submit.Equals("0"))
+                    {
+                        TempData["message"] = connection.InsertRemittance("gsis_remittance", remmitance);
+                    }
+                    else
+                    {
+                        TempData["message"] = connection.UpdateRemittance("gsis_remittance", remmitance);
+                    }
                     return RedirectToAction("Gsis");
             }
             return RedirectToAction("Pagibig");

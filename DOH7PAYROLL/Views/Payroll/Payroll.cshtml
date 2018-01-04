@@ -2,56 +2,94 @@
     ViewBag.Title = "Payroll";
     if (TempData["pdf"] != null)
     {
-        <div class="alert alert-success">
-            <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span>@TempData["pdf"]</span>
-        </div>
+        if (TempData["pdf"].Equals("Data Range must be specified") || TempData["pdf"].Equals("Nothing to generate"))
+        {
+            <div class="alert alert-danger">
+                <strong><span class="glyphicon glyphicon-remove"></span> </strong> <span>@TempData["pdf"]</span>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success">
+                <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span>@TempData["pdf"]</span>
+            </div>
+        }
+
 
     }
 }
 <div class="row">
     @if (Session["LoginType"].Equals("1"))
     {
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="panel panel-default">
-                <div class="panel-heading" style="background:#689F38">
-                    <strong class="panel-text-color">Print Payroll</strong>
+                <div class="panel-heading" style="background:#607D8B">
+                    <strong class="panel-text-size-24">Print Payroll</strong>
                 </div>
                 <div class="panel-body">
                     @using (Html.BeginForm("CreatePdf", "Payroll", FormMethod.Post))
                     {
-                        <table class="table">
-                            <tr>
-                                <td>Date Range</td>
-                                <td><input type="text" name="filter_dates" id="filter_dates" placeholder="Date Range" class="inline form-control" style="border-radius:0px;background:#fff" readonly /></td>
-                            </tr>
-                            <tr>
-                                <td>Document</td>
-                                <td>
-                                    <select name="selection" id="selection" class="form-control pull-left" style="border-radius:0px;">
-                                        <option value="1">ALL</option>
-                                        <option value="2">Pag-Ibig</option>
-                                        <option value="3">Coop</option>
-                                        <option value="4">PHIC</option>
-                                        <option value="5">GSIS</option>
-                                        <option value="6">EXCESS</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <button type="submit" name="submit" class="btn-lg btn-success pull-left margin-top margin-bottom form-control" style="min-height:65px;" value="Search">Generate Payroll</button>
-                                </td>
-                            </tr>
-
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <td class="col-sm-3"><strong>Date Range</strong></td>
+                                    <td class="col-sm-1">: </td>
+                                    <td class="col-sm-9">
+                                        <input type="text" name="filter_dates" id="filter_dates" placeholder="Date Range" class="inline form-control" style="border-radius:0px;background:#fff" readonly required/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3"><strong>Document</strong></td>
+                                    <td class="col-sm-1"> :</td>
+                                    <td class="col-sm-9">
+                                        <select name="selection" id="selection" class="form-control pull-left" style="border-radius:0px;" required>
+                                            <option value="1">ALL</option>
+                                            <option value="2">Pag-Ibig</option>
+                                            <option value="3">Coop</option>
+                                            <option value="4">PHIC</option>
+                                            <option value="5">GSIS</option>
+                                            <option value="6">EXCESS</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3"><strong>Disbursement</strong></td>
+                                    <td class="col-sm-1"> :</td>
+                                    <td class="col-sm-9">
+                                        <select name="disbursment" id="disbursment" class="form-control pull-left" style="border-radius:0px;" required>
+                                            <option value="ATM">ATM</option>
+                                            <option value="CASH_CARD">Cashcard</option>
+                                            <option value="NO_CARD">W/O LBP Cards</option>
+                                            <option value="UNDER_VTF">Under VTF</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class="hidden">
+                                    <td class="col-sm-3"><strong>In-Charge</strong></td>
+                                    <td class="col-sm-1"> :</td>
+                                    <td class="col-sm-9">
+                                        <select name="in_charge" id="in_charge" class="form-control pull-left" style="border-radius:0px;" required>
+                                            @foreach (var list in ViewBag.InCharge)
+                                            {
+                                                <option value="@list.DivisionID">@list.Description</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <button type="submit" name="submit" class="btn-lg btn-success center-block col-sm-12 btn_payroll_print" value="Search">
+                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Print
+                        </button>
+                       <!---->
                     }
                 </div>
             </div>
         </div>
-    <div class="col-md-9">
+    <div class="col-md-8">
         <div class="panel panel-default">
-            <div class="panel-heading" style="background:#689F38">
-                <strong class="panel-text-color">Payroll(PDF)</strong>
+            <div class="panel-heading" style="background:#607D8B">
+                <strong class="panel-text-size-24">PDF List</strong>
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -71,12 +109,12 @@
                         <table class="table table-hover" id="table_list">
                             <thead>
                                 <tr>
-                                    <th>Date Created</th>
                                     <th>Users</th>
                                     <th>From</th>
                                     <th>To</th>
-                                    <th>Type</th>
                                     <th>Documents</th>
+                                    <th>Disbursement Type</th>
+                                    
                                     <th></th>
                                 </tr>
                             </thead>
@@ -85,7 +123,6 @@
                             foreach (var list in ViewBag.List)
                             {
                                 <tr>
-                                    <td>@list.Date</td>
                                     @if (list.UserID.Equals("0"))
                                     {
                                         <td>ALL</td>
@@ -96,14 +133,6 @@
                                     }
                                     <td>@list.StartDate</td>
                                     <td>@list.EndDate</td>
-                                    @if (list.PayType.Equals("0"))
-                                    {
-                                        <td>Payslip</td>
-                                    }
-                                    else
-                                    {
-                                        <td>Payroll</td>
-                                    }
                                     @if (list.FileName.Split('_')[0].Equals("1"))
                                     {
                                         <td>ALL</td>
@@ -132,11 +161,12 @@
                                     {
                                         <td>PaySlip</td>
                                     }
+                                    <td>@list.Disbursement</td>
                                     <td>
-                                        <a href="@Url.Action("ViewPdf", "Payroll", new { pdf = @list.FileName })" target="_blank" class="btn btn-primary">View</a>
+                                        <a href="@Url.Action("ViewPdf", "Payroll", new { pdf = @list.FileName })" target="_blank" class="btn btn-primary"><span class="glyphicon glyphicon-book"></span></a>
                                         @if (Session["LoginType"].Equals("1"))
                                         {
-                                            <button type="submit" name="submit" class="btn btn-danger" value="@list.ID"><span class="glyphicon glyphicon-remove"></span></button>
+                                            <button type="submit" name="submit" class="btn btn-danger" value="@list.ID"><span class="glyphicon glyphicon-trash"></span></button>
                                         }
                                     </td>
                                 </tr>
@@ -147,30 +177,22 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <div class="row">
-                    <div class="col-md-5 col-md-offset-5">
+              
                         <!--navigation-->
                         <form method="POST" action="">
                             <input type="hidden" name="search" value="@ViewBag.Search" />
-                            <div class="col-md-3">
-                                @if (ViewBag.Prev != 0)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="id" value="1"><span class="glyphicon glyphicon-arrow-left"> </span></button>
-                                }
-                            </div>
-                            <div class="col-md-3">
-                                <span class="span-align">@((ViewBag.Prev + 1) + " - " + ViewBag.Next)</span>
-                            </div>
-                            <div class="col-md-2">
-                                @if (ViewBag.Next != ViewBag.Max)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="id" value="0"><span class="glyphicon glyphicon-arrow-right"> </span></button>
-                                }
-                            </div>
+                                <center>
+                                    @if (ViewBag.Prev != 0)
+                                    {
+                                        <button type="submit" class="btn btn-primary" name="id" value="1"><span class="glyphicon glyphicon-arrow-left"> </span></button>
+                                    }
+                                    <span class="span-align">@((ViewBag.Prev + 1) + " - " + ViewBag.Next)</span>
+                                    @if (ViewBag.Next != ViewBag.Max)
+                                    {
+                                        <button type="submit" class="btn btn-primary" name="id" value="0"><span class="glyphicon glyphicon-arrow-right"> </span></button>
+                                    }
+                                </center>
                         </form>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -179,8 +201,8 @@
     {
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading" style="background:#689F38">
-                    <strong class="panel-text-color">Payroll(PDF)</strong>
+                <div class="panel-heading" style="background:#607D8B">
+                    <strong class="panel-text-size-24">PDF List</strong>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -200,68 +222,61 @@
                             <table class="table table-hover" id="table_list">
                                 <thead>
                                     <tr>
-                                        <th>Date Created</th>
                                         <th>Users</th>
                                         <th>From</th>
                                         <th>To</th>
-                                        <th>Type</th>
                                         <th>Documents</th>
+                                        <th>Disbursement Type</th>
                                         <th></th>
                                     </tr>
                                 </thead>
 
                                 @foreach (var list in ViewBag.List)
                                 {
-                                    <tr>
-                                        <td>@list.Date</td>
-                                        @if (list.UserID.Equals("0"))
-                                        {
-                                            <td>ALL</td>
-                                        }
-                                        else
-                                        {
-                                            <td>@list.UserID</td>
-                                        }
-                                        <td>@list.StartDate</td>
-                                        <td>@list.EndDate</td>
-                                        @if (list.PayType.Equals("0"))
-                                        {
-                                            <td>Payslip</td>
-                                        }
-                                        else
-                                        {
-                                            <td>Payroll</td>
-                                        }
-                                        @if (list.FileName.Split('_')[0].Equals("1"))
-                                        {
-                                            <td>ALL</td>
-                                        }
-                                        else if (list.FileName.Split('_')[0].Equals("2"))
-                                        {
-                                            <td>Pag-Ibig</td>
-                                        }
-                                        else if (list.FileName.Split('_')[0].Equals("3"))
-                                        {
-                                            <td>Coop</td>
-                                        }
-                                        else if (list.FileName.Split('_')[0].Equals("4"))
-                                        {
-                                            <td>PHIC</td>
-                                        }
-                                        else if (list.FileName.Split('_')[0].Equals("5"))
-                                        {
-                                            <td>GSIS</td>
-                                        }
-                                        else if (list.FileName.Split('_')[0].Equals("6"))
-                                        {
-                                            <td>Excess Mobile</td>
-                                        }
-                                        else
-                                        {
-                                            <td>PaySlip</td>
-                                        }
-                                        <td><a href="@Url.Action("ViewPdf", "Payroll", new { pdf = @list.FileName })" target="_blank" class="btn btn-primary">View</a></td>
-                                    </tr>
+                                <tr>
+                                    @if (list.UserID.Equals("0"))
+                                    {
+                                        <td>ALL</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@list.UserID</td>
+                                    }
+                                    <td>@list.StartDate</td>
+                                    <td>@list.EndDate</td>
+                                    @if (list.FileName.Split('_')[0].Equals("1"))
+                                    {
+                                        <td>ALL</td>
+                                    }
+                                    else if (list.FileName.Split('_')[0].Equals("2"))
+                                    {
+                                        <td>Pag-Ibig</td>
+                                    }
+                                    else if (list.FileName.Split('_')[0].Equals("3"))
+                                    {
+                                        <td>Coop</td>
+                                    }
+                                    else if (list.FileName.Split('_')[0].Equals("4"))
+                                    {
+                                        <td>PHIC</td>
+                                    }
+                                    else if (list.FileName.Split('_')[0].Equals("5"))
+                                    {
+                                        <td>GSIS</td>
+                                    }
+                                    else if (list.FileName.Split('_')[0].Equals("6"))
+                                    {
+                                        <td>Excess Mobile</td>
+                                    }
+                                    else
+                                    {
+                                        <td>PaySlip</td>
+                                    }
+                                    <td>@list.Disbursement</td>
+                                    <td>
+                                        <a href="@Url.Action("ViewPdf", "Payroll", new { pdf = @list.FileName })" target="_blank" class="btn btn-primary"><span class="glyphicon glyphicon-book"></span></a>
+                                    </td>
+                                </tr>
                                 }
 
                             </table>
@@ -269,30 +284,21 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-md-5 col-md-offset-5">
                             <!--navigation-->
-                            <form method="POST" action="">
-                                <input type="hidden" name="search" value="@ViewBag.Search" />
-                                <div class="col-md-3">
-                                    @if (ViewBag.Prev != 0)
-                                    {
-                                        <button type="submit" class="btn btn-primary" name="id" value="1"><span class="glyphicon glyphicon-arrow-left"> </span></button>
-                                    }
-                                </div>
-                                <div class="col-md-3">
-                                    <span class="span-align">@((ViewBag.Prev + 1) + " - " + ViewBag.Next)</span>
-                                </div>
-                                <div class="col-md-2">
-                                    @if (ViewBag.Next != ViewBag.Max)
-                                    {
-                                        <button type="submit" class="btn btn-primary" name="id" value="0"><span class="glyphicon glyphicon-arrow-right"> </span></button>
-                                    }
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
+                    <form method="POST" action="">
+                    <input type="hidden" name="search" value="@ViewBag.Search" />
+                    <center>
+                        @if (ViewBag.Prev != 0)
+                        {
+                            <button type="submit" class="btn btn-primary" name="id" value="1"><span class="glyphicon glyphicon-arrow-left"> </span></button>
+                        }        
+                        <span class="span-align">@((ViewBag.Prev + 1) + " - " + ViewBag.Next)</span>
+                        @if (ViewBag.Next != ViewBag.Max)
+                        {
+                        <button type="submit" class="btn btn-primary" name="id" value="0"><span class="glyphicon glyphicon-arrow-right"> </span></button>
+                        }     
+                    </center>
+                   </form>
                 </div>
             </div>
         </div>

@@ -41,13 +41,15 @@
      <style>  
         body {
              background: url("/public/img/backdrop.png"), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
+             font-family:sans-serif;
         }
          .panel-text-color {
              color:#fff;
          }
           .panel-text-size-24 {
-             color:#000;
-             font-size:24px;
+             color:#fff;
+             font-size:18px;
+             font-family:sans-serif;
          }
          .modal-header{
              background-color:#9C8AA5;
@@ -105,6 +107,13 @@
           font-family:sans-serif
          }
 
+         .fixed-td {
+              width: 30px;
+              overflow: hidden;
+              display: inline-block;
+              white-space: nowrap;
+         }
+
          .message {
             background-color:rgb(102, 255, 147);
             font-size:19px;
@@ -137,7 +146,7 @@
             </div>
             <div class="clearfix"></div>
         </div>
-        <div class="header" style="background-color:#8BC34A	;padding:15px;">
+        <div class="header" style="background-color:#607D8B;padding:15px;">
             <div class="container">
                 <img src="@Url.Content("/public/img/payroll_banner.png")" class="img-responsive" />
             </div>
@@ -163,7 +172,7 @@
             <div class="clearfix"></div>
             @Html.Partial("modals")
         </div> <!-- /container -->
-<footer class="footer" style="background:#33691E">
+<footer class="footer">
     <div class="container">
         <p>Copyright &copy; 2017 DOH-RO7 All rights reserved</p>
     </div>

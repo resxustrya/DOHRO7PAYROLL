@@ -138,12 +138,12 @@ namespace DOH7PAYROLL.Repo
 
         //Insert Record
 
-        public String InsertPDF(String filePath,String type,String userid,String start_date,String end_date)
+        public String InsertPDF(String filePath,String type,String userid,String start_date,String end_date,String disbursement,String in_charge)
         {
             String message = "";
-            if (!checkPdf(filePath,userid))
+            if (!checkPdf(filePath, userid))
             {
-                String query = "INSERT INTO payroll_pdf VALUES('0',now(),'"+start_date+"','"+end_date+"','" + userid + "','" + filePath + "','" + type + "',NULL,NULL)";
+                String query = "INSERT INTO payroll_pdf VALUES('0',now(),'" + start_date + "','" + end_date + "','" + userid + "','" + filePath + "','" + type + "','" + disbursement + "','" + in_charge + "',NULL,NULL)";
 
                 if (this.OpenConnection() == true)
                 {
@@ -153,9 +153,17 @@ namespace DOH7PAYROLL.Repo
                     this.CloseConnection();
                 }
                 message = "PDF Successfully Generated";
+            } else {
+                String query = "UPDATE payroll_pdf SET date_created = now() WHERE file_path = '"+filePath+"' ";
+                if (this.OpenConnection() == true)
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                    //Create a data reader and Execute the command
+                    cmd.ExecuteNonQuery();
+                    this.CloseConnection();
+                }
+                message = "PDF Successfully Updated";
             }
-            else { message = "PDF Successfully Updated"; }
-               
            return message;
         }
 
@@ -231,11 +239,11 @@ namespace DOH7PAYROLL.Repo
 
 
 
-        public String Update(Payroll payroll)
+        public String UpdatePayroll(Payroll payroll)
         {
 
            String query = "UPDATE payroll SET start_date = '"+payroll.StartDate+"', end_date = '"+payroll.EndDate+"' , absent_days = '"+payroll.DaysAbsent+"',remarks = '"+payroll.Remarks+"',adjustment = '"+payroll.Adjustment+"' ,working_days = '" + payroll.WorkDays + "', month_salary = '" + payroll.Salary + "',minutes_late = '" + payroll.MinutesLate + "',coop = '" + payroll.Coop + "',phic = '" + payroll.Phic + "',disallowance = '" + payroll.Disallowance + "',gsis = '" + payroll.Gsis + "',pagibig = '" + payroll.Pagibig + "',excess_mobile = '" + payroll.ExcessMobile + "' WHERE id = '" + payroll.Id+ "'";
-            if (!checkPayroll(payroll.Employee.PersonnelID, payroll.StartDate, payroll.EndDate)) {
+            if (!checkPayroll(payroll.Id,payroll.Employee.PersonnelID, payroll.StartDate, payroll.EndDate)) {
                 if (this.OpenConnection() == true)
                 {
                     MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
@@ -267,9 +275,9 @@ namespace DOH7PAYROLL.Repo
             return "Update Successfully";
         }
 
-        public String Insert(Payroll payroll)
+        public String InsertPayroll(Payroll payroll)
         {
-            if (!checkPayroll(payroll.Employee.PersonnelID, payroll.StartDate, payroll.EndDate))
+            if (!checkPayroll(payroll.Id,payroll.Employee.PersonnelID, payroll.StartDate, payroll.EndDate))
             {
                 String query = "INSERT INTO payroll VALUES('0','" + payroll.Employee.PersonnelID + "','" + payroll.StartDate + "','" + payroll.EndDate + "','" + payroll.DaysAbsent + "','" + payroll.WorkDays + "','" + payroll.Salary + "','" + payroll.Adjustment + "','" + payroll.MinutesLate + "','" + payroll.Coop + "','" + payroll.Phic + "','" + payroll.Disallowance + "','" + payroll.Gsis + "','" + payroll.Pagibig + "','" + payroll.ExcessMobile + "','" + payroll.Remarks + "',NULL,NULL)";
 
@@ -311,11 +319,11 @@ namespace DOH7PAYROLL.Repo
                 return "Date Range Already Exists";
             }
         }
-        public Boolean checkPayroll(String userid, String start_date,String end_date)
+        public Boolean checkPayroll(String payID,String userid, String start_date,String end_date)
         {
 
             Boolean found = false;
-            String query = "SELECT * FROM payroll WHERE userid = '" + userid + "' AND start_date = '"+start_date+"' AND end_date = '"+end_date+"'";
+            String query = "SELECT * FROM payroll WHERE userid = '" + userid + "' AND start_date = '"+start_date+"' AND end_date = '"+end_date+"' AND id <> '"+ payID + "'";
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
@@ -335,6 +343,30 @@ namespace DOH7PAYROLL.Repo
 
             }
             return found;
+        }
+
+        public String GetEmployeeNameByID(String divisionID)
+        {
+            String name = "";
+            String query = "SELECT p.fname,p.mname,p.lname FROM division d LEFT JOIN users p ON p.id = d.head WHERE d.id = '"+divisionID+"' GROUP BY d.head";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, dts);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    String Firstname = dataReader["fname"].ToString();
+                    String Lastname = dataReader["lname"].ToString();
+                    String MiddleName = dataReader["mname"].ToString();
+                    name = Firstname + " " + MiddleName + " " + Lastname;
+                }
+                //Create a data reader and Execute the command
+                dataReader.Close();
+                this.CloseConnection();
+            }
+            return name;
         }
 
         public Employee Login(String userid)
@@ -357,7 +389,7 @@ namespace DOH7PAYROLL.Repo
                     String JobType = dataReader["employee_status"].ToString();
                     String Tin = "";
                     String Section = dataReader["description"].ToString();
-                    employee = new Employee(PersonnelID,Firstname,Lastname,MiddleName,JobType,Tin,Section);   
+                    employee = new Employee(PersonnelID,Firstname,Lastname,MiddleName,JobType,Tin,Section,"","");   
                 }
                 //Create a data reader and Execute the command
                 dataReader.Close();
@@ -400,25 +432,25 @@ namespace DOH7PAYROLL.Repo
                 String end_date = search.Split(' ')[2];
                 if (!mId.Equals("0"))
                 {
-                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE userid = '"+mId+"' AND start_date = '" + start_date + "' AND end_date = '" + end_date + "') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "'";
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE userid = '"+mId+"' AND start_date = '" + start_date + "' AND end_date = '" + end_date + "') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,disbursement_type,in_charge,file_path FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "'";
                     query = query + " AND userid = '" + mId + "'";
                 }
                 else {
-                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "'";
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,disbursement_type,in_charge,file_path FROM payroll_pdf WHERE start_date = '" + start_date + "' AND end_date = '" + end_date + "'";
                 }
             }
             else
             {
                 if (!mId.Equals("0"))
                 {
-                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE userid = '"+mId+"') as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf";
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf WHERE userid = '"+mId+ "') as 'MAX_SIZE',userid,type,id,date_created,disbursement_type,in_charge,start_date,end_date,file_path FROM payroll_pdf";
                     query = query + " WHERE userid = '" + mId + "'";
                 }
                 else {
-                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf) as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path FROM payroll_pdf";
+                    query = "SELECT (SELECT COUNT(id) FROM payroll_pdf) as 'MAX_SIZE',userid,type,id,date_created,start_date,end_date,file_path,disbursement_type,in_charge FROM payroll_pdf";
                 }
             }
-            query = query + " ORDER BY id DESC LIMIT 10 OFFSET " + DatabaseConnect.start;
+            query = query + " ORDER BY date_created DESC LIMIT 10 OFFSET " + DatabaseConnect.start;
 
             if (this.OpenConnection() == true)
             {
@@ -437,8 +469,9 @@ namespace DOH7PAYROLL.Repo
                     String start_date = dataReader["start_date"].ToString();
                     String end_date = dataReader["end_date"].ToString();
                     String path = dataReader["file_path"].ToString();
-                    String pay_type = dataReader["type"].ToString();
-                    PdfFile pdf = new PdfFile(id, userid,start_date,end_date, path,date, pay_type);
+                    String disbursement = dataReader["disbursement_type"].ToString();
+                    String in_charge = dataReader["in_charge"].ToString();
+                    PdfFile pdf = new PdfFile(id, userid,start_date,end_date, path,date, disbursement,in_charge);
                     list.Add(pdf);
                 }
                 //Create a data reader and Execute the command
@@ -454,9 +487,53 @@ namespace DOH7PAYROLL.Repo
             }
             return list;
         }
-       
+
 
         //Select statement
+
+        public List<InCharge> GetInCharge(String id)
+        {
+
+            String query = "SELECT d.id,d.description,d.head,p.fname,p.mname,p.lname FROM division d LEFT JOIN users p ON p.id = d.head";
+            if (!id.Equals("")) {
+                query = query + " WHERE d.id = '" + id + "'";
+            }
+            query = query + " GROUP BY d.head";
+            List<InCharge> list = new List<InCharge>();
+
+
+            //Open connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, dts);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    String division_id = dataReader["id"].ToString();
+                    String description = dataReader["description"].ToString();
+                    String emp_ID = dataReader["head"].ToString();
+                    String fname = dataReader["fname"].ToString();
+                    String mname = dataReader["mname"].ToString();
+                    String lname = dataReader["lname"].ToString();
+                    InCharge myObject = new InCharge(emp_ID, fname, lname, mname, division_id, description);
+                    list.Add(myObject);
+                }
+
+                //close Data Reader
+                dataReader.Close();
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+
+            }
+            return list;
+        }
+
         public List<Employee> GetEmployee(String type,String search,String desc)
         {
             int temp_start = DatabaseConnect.start;
@@ -483,12 +560,12 @@ namespace DOH7PAYROLL.Repo
             string query = "";
             if (!search.Equals(""))
             {
-                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (fname LIKE '" + search + "%' OR lname LIKE '" + search + "%')) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active'";
+                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND position <> 'Health Aiders' AND employee_status = 'Active' AND (fname LIKE '" + search + "%' OR lname LIKE '" + search + "%')) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND position <> 'Health Aiders'";
                 //query = "SELECT u.mname,(SELECT COUNT(username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"' AND (u.fname LIKE '" + search + "%' OR u.lname LIKE '" + search + "%')) as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
                 query = query + " AND (fname LIKE '" + search + "%' OR lname LIKE '"+search+"%')";
             }
             else {
-                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active') as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active'";
+                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND position <> 'Health Aiders') as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND position <> 'Health Aiders'";
                 // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
             }
             query = query +" ORDER BY fname,lname LIMIT 10 OFFSET "+ DatabaseConnect.start;
@@ -519,7 +596,7 @@ namespace DOH7PAYROLL.Repo
                     String emptype = dataReader["position"].ToString();
                     String tin = dataReader["tin_no"].ToString();
                   
-                    Employee employee = new Employee(userid,fname,lname,mname,emptype,tin,"");
+                    Employee employee = new Employee(userid,fname,lname,mname,emptype,tin,"","","");
                     list.Add(employee);
                 }
 
@@ -538,6 +615,38 @@ namespace DOH7PAYROLL.Repo
                 DatabaseConnect.max_size = "0";
             }
             return list;
+        }
+        public String GetDivisionNameByID(String id)
+        {
+            String division = "";
+            String query = "SELECT description FROM division WHERE id = '"+id+"'";
+            // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
+
+            //Create a list to store the result
+
+            //Open connection
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, dts);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    division = dataReader["description"].ToString().Split('-')[0];
+                }
+
+                //close Data Reader
+                dataReader.Close();
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+
+            }
+            return division;
         }
 
         public String GetLoans(String id)
@@ -562,6 +671,7 @@ namespace DOH7PAYROLL.Repo
                 while (dataReader.Read())
                 {
                     salary = dataReader["monthly_salary"].ToString();
+                    salary = salary.Replace(",","");
                     if (salary.Equals("")) {
                         salary = "0";
                     }
@@ -712,7 +822,7 @@ namespace DOH7PAYROLL.Repo
                         excess_mobile = "0.00";
                     }
 
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, "");
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, "","","");
 
                     Payroll payroll = new Payroll(payroll_id, employee, start_date , end_date,adjustment, working_days, absent_days, monthly_salary, minutes_late, coop, phic
                         , disallowance, gsis, pagibig, excess_mobile, remarks, flag);
@@ -738,10 +848,11 @@ namespace DOH7PAYROLL.Repo
             }
             return list;
         }
-        public List<Payroll> GeneratePayroll(String start_date,String end_date,String selection)
+        public List<Payroll> GeneratePayroll(String start_date,String end_date,String selection, 
+            String disbursment, String in_charge)
         {
             List<Payroll> payroll = new List<Payroll>();
-            string query = "SELECT p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section d ON i.section_id= d.id) ON p.userid = i.userid WHERE p.start_date = '"+start_date+"' AND p.end_date = '"+end_date+"'";
+            string query = "SELECT p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.source_fund,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section d ON i.section_id= d.id) ON p.userid = i.userid WHERE p.start_date = '"+start_date+"' AND p.end_date = '"+end_date+"' AND i.disbursement_type = '"+disbursment+"'";
             switch (selection) {
                 case "2":
                     query = query + " AND pagibig <> '0.00'";
@@ -759,10 +870,7 @@ namespace DOH7PAYROLL.Repo
                     query = query + " AND excess_mobile <> '0.00'";
                     break;
             }
-            if (selection.Equals("2")) {
-                
-            }
-            query = query + " ORDER BY d.description,i.fname,i.lname ASC";
+            query = query + " ORDER BY d.description,i.source_fund,i.fname,i.lname ASC";
             if (this.OpenConnection() == true)
             {
                 //Create Command
@@ -774,7 +882,10 @@ namespace DOH7PAYROLL.Repo
                 while (dataReader.Read())
                 {
                     String tin = dataReader["tin_no"].ToString();
-                    String desc = dataReader["description"].ToString().ToUpper();
+                    String desc = dataReader["source_fund"].ToString().ToUpper();
+                    if (desc.Equals("") || desc.Equals("NULL")) {
+                        desc = dataReader["description"].ToString().ToUpper();
+                    }
                     String userid = dataReader["userid"].ToString();
                     String fname = dataReader["fname"].ToString();
                     String mname = dataReader["mname"].ToString();
@@ -841,7 +952,7 @@ namespace DOH7PAYROLL.Repo
                     {
                         excess_mobile = "0";
                     }
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc);
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc,"","");
                     Payroll roll = new Payroll("0", employee, "", "", adjustment, working_days, absent_days
                          , monthly_salary, minutes_late, coop, phic, disallowance, gsis, pagibig, excess_mobile, remarks, "");
                     payroll.Add(roll);
@@ -965,7 +1076,7 @@ namespace DOH7PAYROLL.Repo
         public Payroll GeneratePayslip(String id,String start_date,String end_date)
         {
             Payroll payroll = null;
-            string query = "SELECT p.absent_days,p.adjustment,p.remarks,s.description,i.userid,i.mname,i.fname,i.lname,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section s ON i.section_id = s.id) ON p.userid = i.userid WHERE p.userid = '"+id+"'";
+            string query = "SELECT p.absent_days,p.adjustment,p.remarks,s.description,i.userid,i.mname,i.fname,i.lname,i.disbursement_type,i.salary_charge,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section s ON i.section_id = s.id) ON p.userid = i.userid WHERE p.userid = '"+id+"'";
             if (!start_date.Equals("") && !end_date.Equals("")) {
                 query = query + " AND p.start_date = '" + start_date + "' AND p.end_date = '" + end_date + "'";
             }
@@ -1049,7 +1160,17 @@ namespace DOH7PAYROLL.Repo
                     {
                         excess_mobile = "0";
                     }
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc);
+                    String disbursement = dataReader["disbursement_type"].ToString();
+                    if (disbursement.Equals("") || disbursement.Equals("NULL"))
+                    {
+                        disbursement = "";
+                    }
+                    String divisionID = dataReader["salary_charge"].ToString();
+                    if (divisionID.Equals("") || divisionID.Equals("NULL"))
+                    {
+                        divisionID = "0";
+                    }
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc, disbursement,divisionID);
                    payroll =  new Payroll("0", employee, start_date, end_date, adjustment,working_days, absent_days
                         , monthly_salary, minutes_late, coop, phic,disallowance, gsis, pagibig, excess_mobile, remarks, "");
 
@@ -1408,9 +1529,9 @@ namespace DOH7PAYROLL.Repo
             return mins+" "+working_days+" "+no_absent;
         }
 
-        public String CheckUserRemittance(String table, String id) {
+        public Boolean CheckUserRemittance(String table, String id) {
             String query = "SELECT amount FROM "+table+" WHERE userid = '"+id+"' LIMIT 1";
-            String amount = "00";
+            Boolean found = false;
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
@@ -1420,12 +1541,34 @@ namespace DOH7PAYROLL.Repo
                 //Read the data and store them in the list
                 while (dataReader.Read())
                 {
-                    amount = dataReader["amount"].ToString();
+                    found = true;
                 }
                 dataReader.Close();
                 this.CloseConnection();
             }
-            return amount;
+            return found;
+        }
+
+
+        public Boolean CheckUserID(String id,String emp_status)
+        {
+            String query = "SELECT id FROM personal_information WHERE userid = '" + id + "' AND job_status = '"+emp_status+ "' AND employee_status = 'Active' LIMIT 1";
+            Boolean found = false;
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, pis);
+
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    found = true;
+                }
+                dataReader.Close();
+                this.CloseConnection();
+            }
+            return found;
         }
 
         public String GetAmount(String table, String id)
@@ -1496,9 +1639,9 @@ namespace DOH7PAYROLL.Repo
         {
             if (decimal.Parse(reimttance.Amount) > 0)
             {
-                if (CheckUserRemittance(table, reimttance.UserID).Equals("00"))
+                if (!CheckUserRemittance(table, reimttance.UserID))
                 {
-                    if (GeneratePayslip(reimttance.UserID, "", "") != null)
+                    if (CheckUserID(reimttance.UserID, "Job Order"))
                     {
                         String query = "INSERT INTO " + table + " VALUES('0','" + reimttance.UserID + "','" + reimttance.MaxCount + "','" + reimttance.Count + "','" + reimttance.Amount + "')";
 
@@ -1525,6 +1668,21 @@ namespace DOH7PAYROLL.Repo
             }
          
         }
+        public String UpdateRemittance(String table, Remittance remittance)
+        {
+
+            String query = "UPDATE " + table + " SET count = '"+ remittance.Count + "',max = '"+ remittance.MaxCount + "', amount = '"+ remittance.Amount + "' WHERE userid = '" + remittance.UserID+ "'";
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+                return "Updated Successfully";
+            }
+            return "Update Fail";
+        }
         public String IncrementRemittance(String table,String id)
         {
 
@@ -1540,9 +1698,9 @@ namespace DOH7PAYROLL.Repo
             return "Incremented Successfully";
         }
 
-        public int GetRemittanceCount(String table,String id) {
-            int count = 0;
-            String query = "SELECT count FROM "+table+" WHERE userid = '"+id+"' LIMIT 1";
+        public String GetRemittanceCount(String table,String id) {
+            String count = "0 0";
+            String query = "SELECT count,max FROM "+table+" WHERE userid = '"+id+"' LIMIT 1";
 
             if (this.OpenConnection() == true)
             {
@@ -1553,7 +1711,7 @@ namespace DOH7PAYROLL.Repo
                 //Read the data and store them in the list
                 while (dataReader.Read())
                 {
-                    count = int.Parse(dataReader["count"].ToString());
+                    count = dataReader["count"].ToString()+" "+ dataReader["max"].ToString();
                 }
                 dataReader.Close();
                 this.CloseConnection();

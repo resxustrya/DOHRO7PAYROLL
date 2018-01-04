@@ -1,7 +1,7 @@
 //tracking history of the document
 var id = 0, salary = 0, half_salary = 0, minutes_late = 0, deduction = 0, net_amount = 0, tax_10 = 0, tax_3 = 0, tax_2 = 0, coop = 0,
     phic = 0, disallowance = 0, gsis = 0, pagibig = 0, excess = 0, total_amount = 0, working_days = 0, am_in = 0, am_out = 0, pm_in = 0, pm_out = 0,
-    adjustment = 0, array_date = [], no_days_absent=0;
+    adjustment = 0, array_date = [], no_days_absent=0,count=0;
 $(document).ready(function () {
   
     $('.input-data').keypress(function (event) {
@@ -11,6 +11,8 @@ $(document).ready(function () {
     $('.input-daterange input').each(function () {
         $(this).datepicker("clearDates");
     });
+
+  
 
     $("#month").change(function () {
 
@@ -36,14 +38,14 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                       // minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                      //  no_days_absent = data.split(" ")[2];
+                     //   $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                      //  $("#no_days_absent").val(no_days_absent);
                         Compute();
-                        $("#remarks").text(minutes_late+"(mins)/"+no_days_absent+"(days)");
+                        
                     }
                 });
                 $("#half_month_text").text("Half Month");
@@ -67,12 +69,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                       // minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                      //  no_days_absent = data.split(" ")[2];
+                      //  $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                      //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -96,12 +98,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                      //  minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                      //  no_days_absent = data.split(" ")[2];
+                      //  $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                      //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -141,12 +143,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                      //  minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                      //  no_days_absent = data.split(" ")[2];
+                      //  $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                      //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -170,12 +172,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                       // minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                       // no_days_absent = data.split(" ")[2];
+                      //  $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                      //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -199,12 +201,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                     //   minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                    //    no_days_absent = data.split(" ")[2];
+                     //   $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                     //   $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -243,12 +245,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                      //  minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                     //   no_days_absent = data.split(" ")[2];
+                      //  $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                     //   $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -258,6 +260,8 @@ $(document).ready(function () {
                 half_salary = (salary / 2).toFixed(2);
                 break;
             case "2":
+                $("#pagibig").val("0.00");
+                $("#coop").val("0.00");
                 $.ajax({
                     url: "../Payroll/GetMins",
                     type: 'POST',
@@ -272,12 +276,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                      //  minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                       // no_days_absent = data.split(" ")[2];
+                      //  $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                    //    $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -287,6 +291,8 @@ $(document).ready(function () {
                 half_salary = (salary / 2).toFixed(2);
                 break;
             case "3":
+                $("#pagibig").val("0.00");
+                $("#coop").val("0.00");
                 $.ajax({
                     url: "../Payroll/GetMins",
                     type: 'POST',
@@ -301,12 +307,12 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                        minutes_late = data.split(" ")[0];
+                      //  minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                        no_days_absent = data.split(" ")[2];
-                        $("#minutes_late").val(minutes_late);
+                      //  no_days_absent = data.split(" ")[2];
+                    //    $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                        $("#no_days_absent").val(no_days_absent);
+                    //    $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -322,23 +328,27 @@ $(document).ready(function () {
         }
     });
 
-/*
+  
     $('#absent_date').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true
     },
     function (start, end, label) {
         var item = $('#absent_date').val();
-        var date_item = "<tr id = '"+count+"'><td>";
-        date_item += $('#absent_date').val();
-        date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='"+ count +"'></span></td>";
-        $("#date-list").append(date_item);
-        count++;
-        array_date.push(item);
-        $("#absent_date_list").val(array_date);
-        computeAbsentRate();
-        netAmount();
-        $('#absent_date').val("");
+        if (array_date.indexOf(item) === -1) {
+            var date_item = "<tr id = '" + count + "'><td>";
+            date_item += $('#absent_date').val();
+            date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + count + "'></span></td>";
+            $("#date-list").append(date_item);
+            count++;
+            array_date.push(item);
+            $("#absent_date_list").val(array_date);
+            $('#absent_date').val("");
+            no_days_absent = count;
+            Compute();
+        } else {
+            alert("Date already exists");
+        }
     });
    
     $('body').on('click', '.remove-data', function () {
@@ -348,10 +358,10 @@ $(document).ready(function () {
         removeItem(value);
         count--;
         $("#absent_date_list").val(array_date);
-        computeAbsentRate();
-        netAmount();
+        no_days_absent = count;
+        Compute();
     });
-   */    
+   
     $('#inclusive3').daterangepicker();
     $('#filter_dates').daterangepicker();
     $('#pay_dates').daterangepicker();
@@ -364,7 +374,10 @@ $(document).ready(function () {
             show: true
         });
     });
-
+    $(".btn_payroll_print").click(function (e) {
+        $('#payslip_print').modal('show');
+    });
+    
     $(".btn_print").click(function () {
         var id = $(this).closest('tr').find('td:eq(0)').text();
         var start_date = $(this).closest('tr').find('td:eq(3)').text();
@@ -391,9 +404,21 @@ $(document).ready(function () {
         id = $(this).data('id');
         $(".modal-body #id").val(id);
         salary = parseFloat($("#salary_original").val()).toFixed(2);
+        var orig_salary = $("#salary_original").val();
+        if (+orig_salary >= 17000) {
+            //   $(".tax_2_container").addClass("hidden");
+            //  $(".tax_10_container").removeClass("hidden");
+        } else {
+            // $(".tax_10_container").addClass("hidden");
+            // $(".tax_2_container").removeClass("hidden");
+        }
         $("#salary").val(formatComma(salary));
+        adjustment = parseFloat("0").toFixed(2);
+        $("#adjustment").val(formatComma(adjustment));
         half_salary = (+salary / 2).toFixed(2);
         $("#half_salary").val(formatComma(half_salary));
+        minutes_late = 0;
+        $("#minutes_late").val(minutes_late);
         coop = parseFloat($("#coop_original").val()).toFixed(2);
         $("#coop").val(formatComma(coop));
         disallowance = parseFloat($("#disallowance_original").val()).toFixed(2);
@@ -423,15 +448,16 @@ $(document).ready(function () {
                     "to": "2017-01-15"
                 },
             success: function (data) {
-                minutes_late = data.split(" ")[0];
+              //  minutes_late = data.split(" ")[0];
                 working_days = data.split(" ")[1];
-                no_days_absent = data.split(" ")[2];
-                $("#minutes_late").val(minutes_late);
+              //  no_days_absent = data.split(" ")[2];
+             //   $("#minutes_late").val(minutes_late);
                 $("#working_days").val(working_days);
-                $("#no_days_absent").val(no_days_absent);
+             //   $("#no_days_absent").val(no_days_absent);
                 Compute();
             }
         });
+       
     });
    
 
@@ -452,7 +478,7 @@ $(document).ready(function () {
         }
         coop = parseFloat(coop.replace(/,/g, '')).toFixed(2);
         $("#coop").val(formatComma(coop))
-        
+        Compute();
     });
 
     $("#phic").change(function () {
@@ -462,7 +488,7 @@ $(document).ready(function () {
         }
         phic = parseFloat(phic.replace(/,/g, '')).toFixed(2);
         $("#phic").val(formatComma(phic))
-       
+        Compute();
     });
 
     $("#disallowance").change(function () {
@@ -472,7 +498,7 @@ $(document).ready(function () {
         }
         disallowance = parseFloat(disallowance.replace(/,/g, '')).toFixed(2);
         $("#disallowance").val(formatComma(disallowance))
-        
+        Compute();
     });
 
     $("#gsis").change(function () {
@@ -482,7 +508,7 @@ $(document).ready(function () {
         }
         gsis = parseFloat(gsis.replace(/,/g, '')).toFixed(2);
         $("#gsis").val(formatComma(gsis))
-        
+        Compute();
     });
 
     $("#pagibig").change(function () {
@@ -492,7 +518,7 @@ $(document).ready(function () {
         }
         pagibig = parseFloat(pagibig.replace(/,/g, '')).toFixed(2);
         $("#pagibig").val(formatComma(pagibig))
-        
+        Compute();
     });
 
     $("#excess").change(function () {
@@ -502,7 +528,7 @@ $(document).ready(function () {
         }
         excess = parseFloat(excess.replace(/,/g, '')).toFixed(2);
         $("#excess").val(formatComma(excess))
-        
+        Compute();
     });
 
     $("#salary").change(function () {
@@ -524,7 +550,7 @@ $(document).ready(function () {
 
     $("#minutes_late").change(function () {
         minutes_late = $(this).val();
-       
+        Compute();
 
     });
 
@@ -540,7 +566,26 @@ $(document).ready(function () {
 
     $('#modal').on('hidden.bs.modal', function () {
         clearFeld();
+
     })
+    $(".remit_btn_add").click(function () {
+        $("#remit_empID").attr("readonly", false);
+        $("#remit_submit").val("0");
+    });
+
+    $(".btn_edit_remit").click(function () {
+        var id = $(this).closest('tr').find('td:eq(0)').text();
+        var max = $(this).closest('tr').find('td:eq(1)').text();
+        var count = $(this).closest('tr').find('td:eq(2)').text();
+        var amount = $(this).closest('tr').find('td:eq(3)').text();
+        $("#remit_empID").attr("readonly", true);
+        $("#remit_empID").val(id);
+        $("#remit_maxCount").val(max);
+        $("#remit_count").val(count);
+        $("#remit_amount").val(amount);
+        $("#remit_submit").val("1");
+
+    });
 
     $(".btn_edit").click(function () {
         id= $(this).closest('tr').find('td:eq(0)').text();
@@ -552,11 +597,19 @@ $(document).ready(function () {
         $("#month").val(parseInt(start_date.split("/")[0]));
         var chosen_month = parseInt(start_date.split("/")[0]);
         salary = $(this).closest('tr').find('td:eq(5)').text();
+
+        var orig_salary = salary.replace(",", "");
+        if (+orig_salary >= 17000) {
+         //   $(".tax_2_container").addClass("hidden");
+          //  $(".tax_10_container").removeClass("hidden");
+        } else {
+           // $(".tax_10_container").addClass("hidden");
+           // $(".tax_2_container").removeClass("hidden");
+        }
         half_salary = (salary / 2).toFixed(2);
         if (parseInt(start_date.split("/")[1]) == 1 && parseInt(end_date.split("/")[1]) == 15) {
             $("#half_month_text").text("Half Month");
             $("#month_range").val("1");
-         
         } else if (parseInt(start_date.split("/")[1]) == 16) {
             $("#half_month_text").text("Half Month");
             $("#month_range").val("2");
@@ -573,14 +626,26 @@ $(document).ready(function () {
         minutes_late = $(this).closest('tr').find('td:eq(6)').text();
         working_days = $(this).closest('tr').find('td:eq(13)').text();
         no_days_absent = $(this).closest('tr').find('td:eq(14)').text();
-       
+        count = 0;
+        for (; count < no_days_absent.split(",").length; count++) {
+            var item = no_days_absent.split(",")[count];
+            if (item !== "") {
+                var date_item = "<tr id = '" + count + "'><td>";
+                date_item += item;
+                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + count + "'></span></td>";
+                $("#date-list").append(date_item);
+                array_date.push(item);
+                $("#absent_date_list").val(array_date);
+                $('#absent_date').val("");
+            }   
+        }
+        no_days_absent = count;
         coop = $(this).closest('tr').find('td:eq(7)').text();
         phic = $(this).closest('tr').find('td:eq(8)').text();
         disallowance = $(this).closest('tr').find('td:eq(9)').text();
         gsis = $(this).closest('tr').find('td:eq(10)').text();
         pagibig = $(this).closest('tr').find('td:eq(11)').text();
         excess = $(this).closest('tr').find('td:eq(12)').text();
-        Compute();
         var remarks = $(this).closest('tr').find('td:eq(15)').text();
         var payroll_id = $(this).closest('tr').find('td:eq(16)').text();
         adjustment = $(this).closest('tr').find('td:eq(17)').text();
@@ -588,6 +653,7 @@ $(document).ready(function () {
        
         $("#id").val(id);
         $("#payroll_id").val(payroll_id);
+        $("#remarks").val(remarks);
         $("#fname").val(firstname);
         $("#lname").val(surname);        
         $("#working_days").val(working_days);
@@ -602,6 +668,7 @@ $(document).ready(function () {
         $("#gsis").val(formatComma(gsis));
         $("#pagibig").val(formatComma(pagibig));
         $("#excess").val(formatComma(excess));
+        Compute();
 
         var request_type = $(this).val();
         switch(request_type){
@@ -636,7 +703,8 @@ function clearFeld() {
     $("#tax_3").val("");
     $("#tax_2").val("");
     $("#total_amount").val("");
-    $("#remarks").text("");
+    $("#payroll_id").val("");
+    $("#remarks").val("");
 
     id = 0;
     salary = 0;
@@ -661,11 +729,12 @@ function clearFeld() {
     pm_out = 0;
     adjustment = 0;
     no_days_absent = 0;
+    count = 0
+    array_date = [];
 }
 function Compute() {
-    $("#remarks").text(minutes_late + "(mins)/" + no_days_absent + "(days)");
     if (no_days_absent > 0) {
-        deduction = ((+minutes_late + (480 * +no_days_absent)) * (((salary / working_days) / 8) / 60)).toFixed(2);
+        deduction = ((+minutes_late + (480 * + no_days_absent)) * (((salary / working_days) / 8) / 60)).toFixed(2);
     } else {
         deduction = (minutes_late * (((salary / working_days) / 8) / 60)).toFixed(2);   
     }
@@ -685,12 +754,17 @@ function Compute() {
     tax_10 = (net_amount * 0.10).toFixed(2);
     tax_3 = (net_amount * 0.03).toFixed(2);
     tax_2 = (net_amount * 0.02).toFixed(2);
+    if (+salary >= 17000) {
+        tax_2 = (0).toFixed(2);
+    } else {
+        tax_10 = (0).toFixed(2);
+    }
     $("#net_amount").val(formatComma(net_amount));
     $("#tax_10").val(formatComma(tax_10));
     $("#tax_3").val(formatComma(tax_3));
     $("#tax_2").val(formatComma(tax_2));
 
-    total_amount = (net_amount - tax_10 - tax_3 - coop - disallowance - pagibig - phic - gsis - excess).toFixed(2);
+    total_amount = (net_amount - tax_10 - tax_3-tax_2- coop - disallowance - pagibig - phic - gsis - excess).toFixed(2);
     $("#total_amount").val(formatComma(total_amount));
 
 }
@@ -723,4 +797,3 @@ function removeItem(name){
         }
     }
 }
-

@@ -5,32 +5,26 @@ using System.Web;
 
 namespace DOH7PAYROLL.Models
 {
-    public class Employee
+    public class InCharge
     {
         public String PersonnelID { get; set; }
         public String Firstname { get; set; }
         public String Lastname { get; set; }
         public String MiddleName { get; set; }
-        public String JobType { get; set; }
-        public String Tin { get; set; }
-        public String Section { get; set; }
-        public String Disbursement { get; set; }
         public String DivisionID { get; set; }
+        public String Description { get; set; }
 
 
 
-        public Employee(String PersonnelID, String Firstname, String Lastname,String MiddleName, String JobType,
-            String Tin, String Section,String Disbursement,String DivisionID) {
+        public InCharge(String PersonnelID, String Firstname, String Lastname,String MiddleName,
+            String DivisionID,String Description) {
             this.PersonnelID = PersonnelID;
             this.Firstname = Firstname;
             this.MiddleName = MiddleName;
             this.Lastname = Lastname;
-            this.JobType = JobType;
-            this.Tin = Tin;
-            this.Section = Section;
-            this.Disbursement = Disbursement;
             this.DivisionID = DivisionID;
+            this.Description = Description;
         }
-        public Employee() { }
+       
     }
 }

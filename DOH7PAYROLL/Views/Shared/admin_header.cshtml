@@ -4,7 +4,7 @@
     @if (Session["LoginType"].Equals("1"))
     {
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-calendar"></i> Manage Payroll<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Payroll<span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li class="dropdown-submenu">
                     <a href="#"><i class="glyphicon glyphicon-plus"></i> Create Payroll</a>
@@ -19,7 +19,7 @@
         </li>
 
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-calendar"></i> Manage Remittance<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Remittance<span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li class="dropdown-submenu">
                     <a href="#"><i class="glyphicon glyphicon-plus"></i> Create Remittance</a>
@@ -28,6 +28,7 @@
                         <li><a href="@Url.Action("Coop", "Remittance")">Coop</a></li>
                         <li><a href="@Url.Action("Phic", "Remittance")">PHIC</a></li>
                         <li><a href="@Url.Action("Gsis", "Remittance")">GSIS</a></li>
+                        <li><a href="@Url.Action("Disallowance", "Remittance")">Disallowances</a></li>
                         <li><a href="@Url.Action("Excess", "Remittance")">Excess Mobile</a></li>
                     </ul>
                 </li>
@@ -36,8 +37,8 @@
     }
     else
     {
-        <li><a href="@Url.Action("Payroll_List", "Payroll")"><i class="fa fa-home"></i>Payroll List</a></li>
-        <li><a href="@Url.Action("Payroll", "Payroll")"><i class="fa fa-home"></i>Payroll PDF</a></li>
+        <li><a href="@Url.Action("Payroll_List", "Payroll")">Payroll List</a></li>
+        <li><a href="@Url.Action("Payroll", "Payroll")">PDF List</a></li>
     }
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
