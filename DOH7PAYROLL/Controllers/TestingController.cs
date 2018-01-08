@@ -65,7 +65,7 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 VerticalAlignment = Element.ALIGN_CENTER
             });
-            outer.AddCell(new PdfPCell(new Phrase("Salary Slip For The Month Of May 2017", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("Salary and Other Benefits Slip For The Month Of May 2017", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
                 Colspan = 20,
@@ -73,10 +73,9 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 VerticalAlignment = Element.ALIGN_CENTER
             });
-            //
             outer.AddCell(new PdfPCell(new Phrase("ID No.", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(124, 124, 124),
+                BackgroundColor = new BaseColor(0, 0, 0),
                 Border = PdfPCell.BOTTOM_BORDER,
                 BorderColor = new BaseColor(255,255,255),
                 Colspan = 5,
@@ -85,7 +84,9 @@ namespace DOH7PAYROLL.Controllers
             });
             outer.AddCell(new PdfPCell(new Phrase("12122388", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 15,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
@@ -93,7 +94,7 @@ namespace DOH7PAYROLL.Controllers
             outer.AddCell(new PdfPCell(new Phrase("Employee name", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
                
-                BackgroundColor = new BaseColor(124, 124, 124),
+                BackgroundColor = new BaseColor(0, 0, 0),
                 Border = PdfPCell.BOTTOM_BORDER,
                 BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
@@ -102,14 +103,16 @@ namespace DOH7PAYROLL.Controllers
             });
             outer.AddCell(new PdfPCell(new Phrase("PANGCATAN", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 15,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("Designation", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(124, 124, 124),
+                BackgroundColor = new BaseColor(0, 0, 0),
                 Border = PdfPCell.BOTTOM_BORDER,
                 BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
@@ -118,14 +121,13 @@ namespace DOH7PAYROLL.Controllers
             });
             outer.AddCell(new PdfPCell(new Phrase("MSD", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
             {
-                BackgroundColor = new BaseColor(255, 255, 255),
+                BackgroundColor = new BaseColor(224, 224, 224),
                 Border = PdfPCell.BOTTOM_BORDER,
                 BorderColor = new BaseColor(124, 124, 124),
                 Colspan = 15,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //
             outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -133,17 +135,14 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            //FIRST HALF SALARY - TITLE
             outer.AddCell(new PdfPCell(new Phrase("FIRST HALF SALARY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(124, 124, 124),
+                BackgroundColor = new BaseColor(0, 0, 0),
                 Border=0,
                 Colspan = 9,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -151,31 +150,32 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //SECOND HALF SALARY - TITLE
             outer.AddCell(new PdfPCell(new Phrase("SECOND HALF SALARY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(124, 124, 124),
+                BackgroundColor = new BaseColor(0, 0, 0),
                 Border = 0,
                 Colspan = 9,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            // FIRST HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("BASIC SALARY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224,224,224),
+                Border = PdfPCell.BOTTOM_BORDER|PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("32,747.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -183,41 +183,42 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("SALARY & PERA/ACA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("7,635.32", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            //******//
-
-            // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("PERA / ACA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("2,000.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -225,8 +226,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -241,27 +240,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
-            // FIRST HALF SALARY - TOTAL SALARY
-            outer.AddCell(new PdfPCell(new Phrase("TOTAL SALARY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("TOTAL SALARY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
                 Border = PdfPCell.BOTTOM_BORDER|PdfPCell.RIGHT_BORDER,
                 BorderColor = new BaseColor(255, 255, 255),
-                BackgroundColor = new BaseColor(224,224,224),
+                BackgroundColor = new BaseColor(124,124,124),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            outer.AddCell(new PdfPCell(new Phrase("0.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("0.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
                 Border = PdfPCell.BOTTOM_BORDER,
                 BorderColor = new BaseColor(255, 255, 255),
-                BackgroundColor = new BaseColor(224, 224, 224),
+                BackgroundColor = new BaseColor(124, 124, 124),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -269,41 +265,40 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("HAZARD PAY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("8,186.75", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
-            //FIRST HALF SALARY - TITLE
             outer.AddCell(new PdfPCell(new Phrase("DEDUCTIONS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(124, 124, 124),
+                BackgroundColor = new BaseColor(0, 0, 0),
                 Border = 0,
                 Colspan = 9,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
-            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255,255, 255)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(255, 255, 255),
+                Border =0,
                 Colspan = 2,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //SECOND HALF SALARY - TITLE
             outer.AddCell(new PdfPCell(new Phrase("MORTUARY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -318,22 +313,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            // FIRST HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("DEDUCTION (Late)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("32,747.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -341,26 +338,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("HWMPC", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(200.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-
-            //******//
-
-            // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("TAX", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -375,7 +370,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -383,8 +377,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("OTHER ACCOUNTS PAYABLE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -399,23 +391,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
-            // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("MEDICARE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -423,26 +416,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
-            outer.AddCell(new PdfPCell(new Phrase("NET HAZARD PAY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("NET HAZARD PAY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(224, 224, 224),
-                BorderColor = new BaseColor(255,255,255),
-                Border = PdfPCell.RIGHT_BORDER,
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(224, 224, 224),
-                Border = 0,
+                BackgroundColor = new BaseColor(124, 124 ,124),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //***//
             outer.AddCell(new PdfPCell(new Phrase("GSIS Premium", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -457,7 +448,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -465,41 +455,42 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("CELLPHONE COMMUNICATION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(200.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-
-            //******//
-
-            // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("UOLI PREM. GSIS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(0.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -507,24 +498,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(296.40)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
-            // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("MEM. GSIS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -539,7 +530,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -547,41 +537,42 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
-            outer.AddCell(new PdfPCell(new Phrase("NET CELLPHONE COMM.", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("NET CELLPHONE COMM.", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(224, 224, 224),
-                BorderColor = new BaseColor(255,255,255),
-                Border = PdfPCell.RIGHT_BORDER,
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(224, 224, 224),
-                Border = 0,
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //**//
             outer.AddCell(new PdfPCell(new Phrase("ED. GSIS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(2,774.79)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -589,26 +580,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("ANNIVERSARY ALLOWANCE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(200.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-
-            //******//
-
-            // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("GSIS SAL.", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -623,7 +612,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -631,39 +619,42 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
-            outer.AddCell(new PdfPCell(new Phrase("UNIFORM AND CLOTHING ALL.", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("UNIFORM AND CLOTHING ALL.", new Font(FontFactory.GetFont("HELVETICA", 7, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(296.40)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //*****//
-            // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("GSIS POL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -671,23 +662,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("MASTERAL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            ///*****????////
             outer.AddCell(new PdfPCell(new Phrase("GSIS CAL/EMER", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -702,7 +694,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -710,8 +701,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -726,25 +715,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-
-            //******//
-
-            // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("GSIS UOLI", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(6.055.86)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -752,28 +740,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
-            outer.AddCell(new PdfPCell(new Phrase("NET MASTERAL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("NET MASTERAL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                Border = PdfPCell.RIGHT_BORDER,
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
                 BorderColor = new BaseColor(255, 255, 255),
-                BackgroundColor = new BaseColor(224, 224, 224),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            outer.AddCell(new PdfPCell(new Phrase("(296.40)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("(296.40)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
-                Border = PdfPCell.BOTTOM_BORDER,
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
                 BorderColor = new BaseColor(255, 255, 255),
-                BackgroundColor = new BaseColor(224,224,224),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
-            // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("PAG-IBIG Premium", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -788,7 +772,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -796,40 +779,42 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("LOYALTY BONUS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-             
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //***//
             outer.AddCell(new PdfPCell(new Phrase("PAG-IBIG Loan", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(2,774.79)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -837,26 +822,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - BASIC SALARY
             outer.AddCell(new PdfPCell(new Phrase("MID-YEAR BONUS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(200.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-
-            //******//
-
-            // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("CFI", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -871,7 +854,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -879,8 +861,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -895,23 +875,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
-            // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("VSMMC", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -919,26 +900,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
-            outer.AddCell(new PdfPCell(new Phrase("NET MID-YEAR BONUS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("NET MID-YEAR BONUS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(224, 224, 224),
-                Border = PdfPCell.RIGHT_BORDER,
-                BorderColor = new BaseColor(255,255,255),
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
             {
-                BackgroundColor = new BaseColor(224, 224, 224),
-                Border = 0,
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //**//
             outer.AddCell(new PdfPCell(new Phrase("COOP", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -953,7 +932,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -961,41 +939,42 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - BASIC SALARY
-            outer.AddCell(new PdfPCell(new Phrase("MONETIZATION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            outer.AddCell(new PdfPCell(new Phrase("YEAR-END BONUS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(200.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-
-            //******//
-
-            // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("GSIS...", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(0.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -1003,24 +982,24 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-
-            // SECOND HALF SALARY - SPACE
             outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 5,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
             outer.AddCell(new PdfPCell(new Phrase("(296.40)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
-                Border = 0,
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
                 Colspan = 4,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //*****//
-            // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("DISALLOWANCES", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -1035,7 +1014,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //SPACE BETWEEN FIRST AND SECOND HALF SALARY
             outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
             {
                 Border = 0,
@@ -1043,8 +1021,884 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
+            outer.AddCell(new PdfPCell(new Phrase("NET MID-YEAR BONUS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SOS/HELP", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("MONETIZATION", new Font(FontFactory.GetFont("HELVETICA", 8, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("GSIS/CA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, new BaseColor(0, 0, 0)))))
+            {
+                Border = PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("REL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("NET MONETIZATION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("TOTAL DEDUCTIONS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("PBB (Performance Based Bonus)", new Font(FontFactory.GetFont("HELVETICA", 7, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("NET SALARY & PERA/ACA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("PES", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("NET 1ST HALF SALARY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("ONA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SUBSISTENCE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("DEDUCTION (Absences)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("NET ONA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("NET SUBSISTENCE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("PEI", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("LONGEIVTY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("LONGEVITY DIFFERENTIAL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("RATA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("NET LONGEVITY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("OTHERS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("7,111.35", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("HAZARD DIFFERENTIAL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SALARY DIFFERENTIAL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(375.00)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
 
-            // SECOND HALF SALARY - SPACE
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER ,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(224, 224, 224)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+
+
+            outer.AddCell(new PdfPCell(new Phrase("TOTAL PAY (1ST HALF)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("16.530.45", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("TOTAL PAY (2ND HALF)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124, 124),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("14,539.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(124, 124 ,124),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("1", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 2,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_LEFT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("SPACE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                Border = 0,
+                Colspan = 4,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+
+
+            outer.AddCell(new PdfPCell(new Phrase("TOTAL PAY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER|PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 15,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("49,620.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("TOTAL DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 15,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(18,550.16)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+            {
+                BackgroundColor = new BaseColor(224, 224, 224),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+
+            outer.AddCell(new PdfPCell(new Phrase("NET PAYMENT", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(0, 0, 0),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 15,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("49,620.00", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(0, 0, 0),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("TOTAL PAY (1ST HALF)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(0, 0, 0),
+                Border = PdfPCell.BOTTOM_BORDER | PdfPCell.RIGHT_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 15,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+            outer.AddCell(new PdfPCell(new Phrase("(18,550.16)", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
+            {
+                BackgroundColor = new BaseColor(0, 0, 0),
+                Border = PdfPCell.BOTTOM_BORDER,
+                BorderColor = new BaseColor(255, 255, 255),
+                Colspan = 5,
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                VerticalAlignment = Element.ALIGN_RIGHT
+            });
+
+            /*
+             
             outer.AddCell(new PdfPCell(new Phrase("NET MONETIZATION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
             {
                 BackgroundColor = new BaseColor(224, 224, 224),
@@ -1103,7 +1957,6 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
 
-            //******//
 
             // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("GSIS/CA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
@@ -1143,7 +1996,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
             // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("REL", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
@@ -1183,7 +2035,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //***//
             outer.AddCell(new PdfPCell(new Phrase("TOTAL DEDUCTIONS", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
             {
                 BackgroundColor = new BaseColor(224, 224, 224),
@@ -1226,8 +2077,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-
-            //******//
 
             // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("Net Salary & PERA/ACA", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
@@ -1275,7 +2124,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            //*****//
             // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("SUBSISTENCE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
@@ -1315,7 +2163,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //**//
             outer.AddCell(new PdfPCell(new Phrase("DEDUCTION", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
                 Border = 0,
@@ -1355,7 +2202,6 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
 
-            //******//
 
             // FIRST HALF SALARY - PERA/ACA
             outer.AddCell(new PdfPCell(new Phrase("NET SUBSISTENCE", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
@@ -1399,7 +2245,6 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
-            //*****//
             // DEDUCTIONS
             outer.AddCell(new PdfPCell(new Phrase("LONGEVITY", new Font(FontFactory.GetFont("HELVETICA", 8, Font.NORMAL, new BaseColor(0, 0, 0)))))
             {
@@ -1686,6 +2531,7 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
             });
+            */
 
 
             doc.Open();

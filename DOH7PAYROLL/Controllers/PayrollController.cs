@@ -151,17 +151,22 @@ namespace DOH7PAYROLL.Controllers
             } 
         }
 
-        public ActionResult ViewPdf(String pdf) {
+        public ActionResult ViewPdf(String pdf)
+        {
             string strAttachment = Server.MapPath(Url.Content("~/public/Pdf/" + pdf));
             try
             {
                 return File(strAttachment, "application/pdf");
             }
-            catch (Exception e) {
+            catch (DirectoryNotFoundException ex)
+            {
+                return RedirectToAction("Payroll", "Payroll");
+            }
+            catch (Exception e)
+            {
                 return RedirectToAction("Payroll", "Payroll");
             }
         }
-
         public ActionResult Payroll()
         {
             if (Session["empID"] != null)
