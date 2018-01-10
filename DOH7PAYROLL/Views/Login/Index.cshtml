@@ -13,11 +13,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
-    <link rel="stylesheet" href="@Url.Content("/public/assets/css/bootstrap.min.css")">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="@Url.Content("/public/assets/css/font-awesome.min.css")">
-    <link rel="stylesheet" href="@Url.Content("/public/assets/css/AdminLTE.min.css")">
-    <link rel="icon" href="@Url.Content("/public/img/favicon.png")">
+   @Styles.Render("~/public/bootstrap/index")
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -70,10 +66,6 @@
 
         </form>
     </div><!-- /.login-box -->
-    <!-- jQuery 2.1.4 -->
-    <script src="@Url.Content("/public/assets/js/jquery.min.js")"></script>
-    <!-- Bootstrap 3.3.5 -->
-    <script src="@Url.Content("/public/assets/js/bootstrap.min.js")"></script>
-    <!-- iCheck -->
+    @Scripts.Render("~/public/bootstrap/index")
 </body>
 </html>
