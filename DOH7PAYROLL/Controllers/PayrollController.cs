@@ -160,10 +160,12 @@ namespace DOH7PAYROLL.Controllers
             }
             catch (DirectoryNotFoundException ex)
             {
+                ViewBag.Err = ex.Message;
                 return RedirectToAction("Payroll", "Payroll");
             }
             catch (Exception e)
             {
+                ViewBag.Err2 = e.Message;
                 return RedirectToAction("Payroll", "Payroll");
             }
         }

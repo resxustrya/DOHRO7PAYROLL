@@ -127,12 +127,12 @@ namespace DOH7PAYROLL.Repo
                 dtr.Close();
                 return true;
             }
-            catch (MySqlException ex)
+            catch
             {
-                // MessageBox.Show(ex.Message);
 
-                return false;
+        
             }
+            return false;
         }
 
 
