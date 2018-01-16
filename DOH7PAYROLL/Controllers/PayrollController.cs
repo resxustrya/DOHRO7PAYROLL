@@ -439,7 +439,10 @@ namespace DOH7PAYROLL.Controllers
                 }
                 int minutes_late = int.Parse(payroll.MinutesLate);
                 int size = payroll.DaysAbsent.Split(',').Length;
-                minutes_late += (480 * size);
+                if (size > 0 && !payroll.DaysAbsent.Split(',')[0].Equals(""))
+                {
+                    minutes_late += (480 * size);
+                }
                 int working_days = int.Parse(payroll.WorkDays);
                 decimal per_day = 0;
                 decimal absences = 0;
@@ -1370,7 +1373,10 @@ namespace DOH7PAYROLL.Controllers
                 page_half_rate += half_salary;
                 int minutes_late = int.Parse(item.MinutesLate);
                 int size = item.DaysAbsent.Split(',').Length;
-                minutes_late += (480 * size);
+                if (size > 0 && !item.DaysAbsent.Split(',')[0].Equals(""))
+                {
+                    minutes_late += (480 * size);
+                }
                 int working_days = int.Parse(item.WorkDays);
                 decimal per_day = 0;
                 decimal absences = 0;

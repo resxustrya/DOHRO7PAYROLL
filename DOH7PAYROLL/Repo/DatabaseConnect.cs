@@ -577,12 +577,10 @@ namespace DOH7PAYROLL.Repo
             if (!search.Equals(""))
             {
                 query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND (position <> 'Health Aiders' OR position IS NULL) AND employee_status = 'Active' AND (fname LIKE '" + search + "%' OR lname LIKE '" + search + "%' OR userid LIKE '"+search+"%')) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (position <> 'Health Aiders' OR position IS NULL)";
-                //query = "SELECT u.mname,(SELECT COUNT(username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"' AND (u.fname LIKE '" + search + "%' OR u.lname LIKE '" + search + "%')) as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
                 query = query + " AND (fname LIKE '" + search + "%' OR lname LIKE '"+search+"%' OR userid LIKE '"+search+"%')";
             }
             else {
                 query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (position <> 'Health Aiders' OR position IS NULL)) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (position <> 'Health Aiders' OR position IS NULL)";
-                // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
             }
             query = query +" ORDER BY fname,lname LIMIT 10 OFFSET "+ DatabaseConnect.start;
 
@@ -636,7 +634,6 @@ namespace DOH7PAYROLL.Repo
         {
             String division = "";
             String query = "SELECT description FROM division WHERE id = '"+id+"'";
-            // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
 
             //Create a list to store the result
 
@@ -669,7 +666,6 @@ namespace DOH7PAYROLL.Repo
         {
             String salary = "0";
             String query = "SELECT monthly_salary FROM work_experience WHERE userid = '" + id + "' ORDER BY date_from DESC LIMIT 1";
-                // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
            
             //Create a list to store the result
             List<Employee> list = new List<Employee>();
@@ -735,13 +731,10 @@ namespace DOH7PAYROLL.Repo
                 String start_date = search.Split(' ')[0];
                 String end_date = search.Split(' ')[2];
                 query = "SELECT (SELECT COUNT(p.userid) FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '"+id+ "' AND p.start_date = '"+start_date+"' AND p.end_date = '"+end_date+ "') as 'MAX_SIZE' ,p.id,CAST(p.start_date as char) as 'start_date',CAST(p.end_date as char) as 'end_date',i.position,i.tin_no,p.userid,p.adjustment,p.remarks,p.absent_days,i.fname,i.lname,i.mname,i.job_status,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '" + id + "' AND p.start_date = '"+start_date+"' AND p.end_date = '"+end_date+"'";
-
-                //query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE o(u.fname LIKE '" + search + "%' OR u.lname LIKE '" + search + "%')) as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid";
             }
             else
             {
                 query = "SELECT (SELECT COUNT(p.userid) FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '"+id+ "') as 'MAX_SIZE' ,p.id, i.position,i.tin_no,CAST(p.start_date as char) as 'start_date',cAST(p.end_date as char) as 'end_date',p.userid,p.adjustment,p.remarks,p.absent_days,i.fname,i.lname,i.mname,i.job_status,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN pis.personal_information i ON p.userid = i.userid WHERE p.userid = '" + id+"'";
-                //query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '" + desc + "') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '" + desc + "'";
             }
             query = query + " ORDER BY p.id DESC LIMIT 10 OFFSET " + DatabaseConnect.start;
 
