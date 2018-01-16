@@ -33,12 +33,11 @@ namespace DOH7PAYROLL
 
 
             bundles.Add(new StyleBundle("~/public/bootstrap/index").Include(
-                "~/public/assets/css/bootstrap.min.css",
                  "~/public/assets/css/font-awesome.min.css",
                  "~/public/assets/css/AdminLTE.min.css"));
 
-            bundles.Add(new ScriptBundle("~/public/bootstrap/home").Include(
-                 "~/public/assets/js/jquery.min.js",
+            bundles.Add(new ScriptBundle("~/public/bootstrap/home/scripts").Include(
+
                  "~/public/assets/js/bootstrap.min.js",
                  "~/public/plugin/daterangepicker/moment.min.js",
                  "~/public/plugin/daterangepicker/daterangepicker.js",

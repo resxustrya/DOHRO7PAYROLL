@@ -13,7 +13,8 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
-   @Styles.Render("~/public/bootstrap/index")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/public/bootstrap/index")
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -24,7 +25,7 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <img src="@Url.Content("/public/img/logo.png")" />
+            <img src="@Url.Content("~/public/img/logo.png")" />
             <br />
             <a href="#"><b>DOHRO7</b> Payroll</a>
         </div><!-- /.login-logo -->
