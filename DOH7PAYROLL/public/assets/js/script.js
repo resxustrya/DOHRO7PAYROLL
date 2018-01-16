@@ -600,11 +600,11 @@ $(document).ready(function () {
 
         var orig_salary = salary.replace(",", "");
         if (+orig_salary >= 17000) {
-         //   $(".tax_2_container").addClass("hidden");
-          //  $(".tax_10_container").removeClass("hidden");
+            //   $(".tax_2_container").addClass("hidden");
+            //  $(".tax_10_container").removeClass("hidden");
         } else {
-           // $(".tax_10_container").addClass("hidden");
-           // $(".tax_2_container").removeClass("hidden");
+            // $(".tax_10_container").addClass("hidden");
+            // $(".tax_2_container").removeClass("hidden");
         }
         half_salary = (salary / 2).toFixed(2);
         if (parseInt(start_date.split("/")[1]) == 1 && parseInt(end_date.split("/")[1]) == 15) {
