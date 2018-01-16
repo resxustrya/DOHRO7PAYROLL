@@ -600,11 +600,11 @@ $(document).ready(function () {
 
         var orig_salary = salary.replace(",", "");
         if (+orig_salary >= 17000) {
-         //   $(".tax_2_container").addClass("hidden");
-          //  $(".tax_10_container").removeClass("hidden");
+            //   $(".tax_2_container").addClass("hidden");
+            //  $(".tax_10_container").removeClass("hidden");
         } else {
-           // $(".tax_10_container").addClass("hidden");
-           // $(".tax_2_container").removeClass("hidden");
+            // $(".tax_10_container").addClass("hidden");
+            // $(".tax_2_container").removeClass("hidden");
         }
         half_salary = (salary / 2).toFixed(2);
         if (parseInt(start_date.split("/")[1]) == 1 && parseInt(end_date.split("/")[1]) == 15) {
@@ -627,16 +627,17 @@ $(document).ready(function () {
         working_days = $(this).closest('tr').find('td:eq(13)').text();
         no_days_absent = $(this).closest('tr').find('td:eq(14)').text();
         count = 0;
-        for (; count < no_days_absent.split(",").length; count++) {
+        for (var z = 0; z < no_days_absent.split(",").length; z++) {
             var item = no_days_absent.split(",")[count];
             if (item !== "") {
-                var date_item = "<tr id = '" + count + "'><td>";
+                var date_item = "<tr id = '" + z + "'><td>";
                 date_item += item;
-                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + count + "'></span></td>";
+                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
                 $("#date-list").append(date_item);
                 array_date.push(item);
                 $("#absent_date_list").val(array_date);
                 $('#absent_date').val("");
+                count++;
             }   
         }
         no_days_absent = count;
