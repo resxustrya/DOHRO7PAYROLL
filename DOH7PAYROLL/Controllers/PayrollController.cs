@@ -458,12 +458,26 @@ namespace DOH7PAYROLL.Controllers
                     original_net_amount = (half_salary + adjustment);
                     net_amount = original_net_amount-absences;
                 }
+
+
                 decimal tax10 = (decimal)0.10;
                 decimal tax3 = (decimal)0.03;
                 decimal tax2 = (decimal)0.02;
-                decimal tax_10 = (net_amount * tax10);
+
+                decimal tax_10 = (0 * tax10);
                 decimal tax_3 = (net_amount * tax3);
-                decimal tax_2 = (net_amount * tax2);
+                decimal tax_2 = (0 * tax2);
+                if (salary >= 17000)
+                {
+                    tax_2 = 0;
+                    tax_10 = (net_amount * tax10);
+                }
+                else
+                {
+                    tax_10 = 0;
+                    tax_2 = (net_amount * tax2);
+                }
+                
                 decimal coop = decimal.Parse(payroll.Coop);
                 decimal disallowance = decimal.Parse(payroll.Disallowance);
                 decimal pagibig = decimal.Parse(payroll.Pagibig);
@@ -1378,15 +1392,27 @@ namespace DOH7PAYROLL.Controllers
                 decimal tax10 = (decimal)0.10;
                 decimal tax3 = (decimal)0.03;
                 decimal tax2 = (decimal)0.02;
-                decimal tax_10 = (net_amount * tax10);
-                grand_tax_10 += tax_10;
-                page_tax_10 += tax_10;
+
+                decimal tax_10 = (0 * tax10);
                 decimal tax_3 = (net_amount * tax3);
+                decimal tax_2 = (0 * tax2);
+                if (salary >= 17000)
+                {
+                    tax_2 = 0;
+                    tax_10 = (net_amount * tax10);
+                    grand_tax_10 += tax_10;
+                    page_tax_10 += tax_10;
+                }
+                else
+                {
+                    tax_10 = 0;
+                    tax_2 = (net_amount * tax2);
+                    grand_tax_2 += tax_2;
+                    page_tax_2 += tax_2;     
+                }
                 grand_tax_3 += tax_3;
                 page_tax_3 += tax_3;
-                decimal tax_2 = (net_amount * tax2);
-                grand_tax_2 += tax_2;
-                page_tax_2 += tax_2;
+  
                 decimal coop = decimal.Parse(item.Coop);
                 grand_coop += coop;
                 page_coop += coop;

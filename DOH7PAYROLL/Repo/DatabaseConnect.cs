@@ -87,13 +87,27 @@ namespace DOH7PAYROLL.Repo
         //open connection to database
         private bool OpenConnection()
         {
+            bool ok = false;
             try
             {
-                sql_payroll.Open();
-                dts.Open();
-                pis.Open();
-                dtr.Open();
-                return true;
+                if(sql_payroll.State == ConnectionState.Closed)
+                {
+                    sql_payroll.Open();
+                }
+                if(dts.State == ConnectionState.Closed)
+                {
+                    dts.Open();
+                }
+                if(pis.State == ConnectionState.Closed)
+                {
+                    pis.Open();
+                }
+                if(dtr.State == ConnectionState.Closed)
+                {
+                    dtr.Open();
+                }
+                ok = true;
+                
             }
             catch (MySqlException ex)
             {
@@ -112,8 +126,10 @@ namespace DOH7PAYROLL.Repo
                         //                      MessageBox.Show("Invalid username/password, please try again");
                         break;
                 }
-                return false;
+                Console.WriteLine(ex.Message);
+                ok = false;
             }
+            return ok;
         }
 
         //Close connection
@@ -560,12 +576,12 @@ namespace DOH7PAYROLL.Repo
             string query = "";
             if (!search.Equals(""))
             {
-                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND position <> 'Health Aiders' AND employee_status = 'Active' AND (fname LIKE '" + search + "%' OR lname LIKE '" + search + "%')) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND position <> 'Health Aiders'";
+                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND (position <> 'Health Aiders' OR position IS NULL) AND employee_status = 'Active' AND (fname LIKE '" + search + "%' OR lname LIKE '" + search + "%' OR userid LIKE '"+search+"%')) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (position <> 'Health Aiders' OR position IS NULL)";
                 //query = "SELECT u.mname,(SELECT COUNT(username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"' AND (u.fname LIKE '" + search + "%' OR u.lname LIKE '" + search + "%')) as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
-                query = query + " AND (fname LIKE '" + search + "%' OR lname LIKE '"+search+"%')";
+                query = query + " AND (fname LIKE '" + search + "%' OR lname LIKE '"+search+"%' OR userid LIKE '"+search+"%')";
             }
             else {
-                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND position <> 'Health Aiders') as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND position <> 'Health Aiders'";
+                query = "SELECT (SELECT COUNT(userid) FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (position <> 'Health Aiders' OR position IS NULL)) as 'MAX_SIZE' , position,tin_no,userid,fname,lname,mname,job_status FROM personal_information WHERE job_status = '" + desc + "' AND employee_status = 'Active' AND (position <> 'Health Aiders' OR position IS NULL)";
                 // query = "SELECT u.mname,p.absent_days,p.adjustment,p.remarks,w.am_in,w.am_out,w.pm_in,w.pm_out,(SELECT COUNT(u.username) FROM dtsv3_0.users u LEFT JOIN pis.personal_information i ON u.username = i.userid WHERE i.job_status = '"+desc+"') as 'MAX_SIZE' , i.position,i.tin_no,u.username,u.fname,u.lname,i.job_status,p.working_days,p.date_range,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM dtsv3_0.users u LEFT JOIN (dohdtr.users r LEFT JOIN dohdtr.work_sched w ON r.sched = w.id) ON u.username = r.userid LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN payroll.payroll p ON u.username = p.userid WHERE i.job_status = '"+desc+"'";
             }
             query = query +" ORDER BY fname,lname LIMIT 10 OFFSET "+ DatabaseConnect.start;

@@ -11,15 +11,18 @@
     <meta name="author" content="Lourence Rex B. Traya">
     <meta name="author" content="Rusel Tayong">
     <meta name="author" content="Department of Health Region 7">
-    <link rel="icon" href="@Url.Content("/public/img/favicon.png")">
+    <link rel="icon" href="@Url.Content("~/public/img/favicon.png")">
     <meta http-equiv="cache-control" content="max-age=0" />
     <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
     @Styles.Render("~/public/bootstrap/home")
-    <script>var loadingState = '<center><img src="@Url.Content("/public/img/spin.gif")" width="150" style="padding:20px;"></center>'; </script>
+    @Scripts.Render("~/bundles/jquery")
+    
+    <script>var loadingState = '<center><img src="@Url.Content("~/public/img/spin.gif")" width="150" style="padding:20px;"></center>'; </script>
     
      <style>  
         body {
-             background: url("/public/img/backdrop.png"), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
+             background: url('@Url.Content("~/public/img/backdrop.png")'), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
              font-family:sans-serif;
         }
          .panel-text-color {
@@ -127,7 +130,7 @@
         </div>
         <div class="header" style="background-color:#607D8B;padding:15px;">
             <div class="container">
-                <img src="@Url.Content("/public/img/payroll_banner.png")" class="img-responsive" />
+                <img src="@Url.Content("~/public/img/payroll_banner.png")" class="img-responsive" />
             </div>
         </div>
         <div class="container">
@@ -157,6 +160,6 @@
     </div>
 </footer>
 
-    @Scripts.Render("~/public/bootstrap/home")        
+    @Scripts.Render("~/public/bootstrap/home/scripts")        
 </body>
 </html>
