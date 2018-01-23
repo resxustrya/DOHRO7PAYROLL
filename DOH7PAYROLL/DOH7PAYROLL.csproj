@@ -249,6 +249,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Sections.cs" />
     <Compile Include="Models\InCharge.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -1002,20 +1003,6 @@
     <Content Include="public\plugin\Lobibox old\sounds\sound4.ogg" />
     <Content Include="public\plugin\Lobibox old\sounds\sound5.ogg" />
     <Content Include="public\plugin\Lobibox old\sounds\sound6.ogg" />
-    <Content Include="public\Pdf\0143_Payslip_August_1_15_2017.pdf" />
-    <Content Include="public\Pdf\0143_Payslip_January_16_31_2017.pdf" />
-    <Content Include="public\Pdf\0143_Payslip_January_1_15_2017.pdf" />
-    <Content Include="public\Pdf\0175_Payslip_January_16_31_2017.pdf" />
-    <Content Include="public\Pdf\0224_Payslip_January_1_15_2017.pdf" />
-    <Content Include="public\Pdf\11112_Payslip_January_1_15_2017.pdf" />
-    <Content Include="public\Pdf\1_January_16_31_2017#ATM_6.pdf" />
-    <Content Include="public\Pdf\1_January_1_15_2017#ATM_6.pdf" />
-    <Content Include="public\Pdf\2_January_16_31_2017#ATM_6.pdf" />
-    <Content Include="public\Pdf\3_January_16_31_2017#ATM_6.pdf" />
-    <Content Include="public\Pdf\4_January_16_31_2017#ATM_6.pdf" />
-    <Content Include="public\Pdf\5_January_16_31_2017#ATM_6.pdf" />
-    <Content Include="public\Pdf\6_January_16_31_2017#ATM_6.pdf" />
-    <Content Include="public\Pdf\Sample_Title.pdf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1084,6 +1071,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="public\Pdf\" />
     <Folder Include="Views\modals\" />
     <Folder Include="Views\Testing\" />
   </ItemGroup>

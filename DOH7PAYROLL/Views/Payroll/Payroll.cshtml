@@ -64,14 +64,15 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr class="hidden">
-                                    <td class="col-sm-3"><strong>In-Charge</strong></td>
+                                <tr>
+                                    <td class="col-sm-3"><strong>Section</strong></td>
                                     <td class="col-sm-1"> :</td>
                                     <td class="col-sm-9">
-                                        <select name="in_charge" id="in_charge" class="form-control pull-left" style="border-radius:0px;" required>
-                                            @foreach (var list in ViewBag.InCharge)
+                                        <select name="section" id="section" class="form-control pull-left" style="border-radius:0px;" required>
+                                            <option value="00000">ALL</option>
+                                            @foreach (var list in ViewBag.Section)
                                             {
-                                                <option value="@list.DivisionID">@list.Description</option>
+                                                <option value="@list.SectionID">@list.Description</option>
                                             }
                                         </select>
                                     </td>

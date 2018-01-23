@@ -27,6 +27,10 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"]; 
                 String submit = Request["submit"];
+                String type = Request["type"];
+                if (type == null) {
+                    type = "ATM";
+                }
                 if (id == null)
                 {
                     id = "3";
@@ -43,12 +47,14 @@ namespace DOH7PAYROLL.Controllers
                         id = "3";
                     }
                 }
+                
 
-                ViewBag.List = connection.GetEmployee(id, search, "Job Order");
+                ViewBag.List = connection.GetEmployee(id, search, "Job Order",type);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
                 ViewBag.Search = search;
+                ViewBag.Type = type;
                 return View();
             }
             else {
@@ -78,7 +84,7 @@ namespace DOH7PAYROLL.Controllers
                 }
             }
 
-            ViewBag.List = connection.GetEmployee(id, search, "Permanent");
+            ViewBag.List = connection.GetEmployee(id, search, "Permanent","");
             ViewBag.Prev = DatabaseConnect.start;
             ViewBag.Next = DatabaseConnect.end;
             ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -195,7 +201,7 @@ namespace DOH7PAYROLL.Controllers
                     id = "3";
                 }
                 List<PdfFile> list = new List<PdfFile>();
-                List<InCharge> in_charge = connection.GetInCharge("");
+                List<Sections> section_list = connection.GetSection();
 
                 if (Session["LoginType"].Equals("0"))
                 {
@@ -206,7 +212,7 @@ namespace DOH7PAYROLL.Controllers
                     list = connection.FetchPdf(id, search, "0");
                 }
                 ViewBag.List = list;
-                ViewBag.InCharge = in_charge;
+                ViewBag.Section = section_list;
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -383,7 +389,9 @@ namespace DOH7PAYROLL.Controllers
             String title = DatabaseConnect.getMonthName(month) + " " + day_from+ "-" + day_to+ ", " + year;
             MemoryStream workStream = new MemoryStream();
             StringBuilder status = new StringBuilder("");
-            string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+ ".pdf");
+            DateTime now = DateTime.Now;
+            String currentDateTime = now.Hour + "" + now.Minute + "" + now.Second;
+            string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+"_"+currentDateTime+ ".pdf");
 
             Document doc = new Document();
             doc.SetMargins(20f, 20f, 20f, 20f);
@@ -1024,7 +1032,7 @@ namespace DOH7PAYROLL.Controllers
 
         }
         
-        public ActionResult CreatePdf(String filter_dates,String selection,String disbursment,String in_charge)
+        public ActionResult CreatePdf(String filter_dates,String selection,String disbursment,String in_charge,String section)
         {
             if (filter_dates.Equals(""))
             {
@@ -1040,7 +1048,7 @@ namespace DOH7PAYROLL.Controllers
                 int month = int.Parse(filter_dates.Split('/')[0]);
                 int day_from = int.Parse(filter_dates.Split('/')[1]);
                 int day_to = int.Parse(filter_dates.Split('/')[3]);
-                int year = int.Parse(filter_dates.Split('/')[4]);
+                int year = int.Parse(filter_dates.Split('/')[4]); 
 
 
                 String from_date = filter_dates.Split(' ')[0];
@@ -1048,10 +1056,10 @@ namespace DOH7PAYROLL.Controllers
                 List<Payroll> payroll = new List<Payroll>();
                 if (selection.Equals("1"))
                 {
-                    payroll = connection.GeneratePayroll(from_date, to_date, "1",disbursment,in_charge); 
+                    payroll = connection.GeneratePayroll(from_date, to_date, "1",disbursment,in_charge, section); 
                 }
                 else {
-                    payroll = connection.GeneratePayroll(from_date, to_date, selection,disbursment, in_charge);
+                    payroll = connection.GeneratePayroll(from_date, to_date, selection,disbursment, in_charge, section);
                 }
                     if (payroll.Count > 0)
                 {
@@ -1059,7 +1067,9 @@ namespace DOH7PAYROLL.Controllers
 
                     MemoryStream workStream = new MemoryStream();
                     StringBuilder status = new StringBuilder("");
-                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+"_"+in_charge+".pdf");
+                    DateTime now = DateTime.Now;
+                    String currentDateTime = now.Hour + "" + now.Minute + "" + now.Second;
+                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+"_"+currentDateTime+"_"+section+ ".pdf");
 
                     Document doc = new Document();
                     doc.SetMargins(20f, 20f, 20f, 20f);
@@ -1111,7 +1121,7 @@ namespace DOH7PAYROLL.Controllers
                     }
                     doc.Add(outer);
                     doc.Close();
-                    in_charge = connection.GetInCharge(in_charge)[0].Description.Split('-')[0];
+                    //in_charge = connection.GetInCharge(in_charge)[0].Description.Split('-')[0];
                     message = connection.InsertPDF(strPDFFileName, "1", "0", from_date, to_date, disbursment, in_charge);
                     TempData["pdf"] = message;
                     // return File(strAttachment, "application/pdf");

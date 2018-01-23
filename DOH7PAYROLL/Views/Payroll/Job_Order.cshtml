@@ -19,6 +19,7 @@
                            <input type="text" name="search" placeholder="Search here.." class="inline form-control margin-top margin-bottom"  style="border-radius:0px;" value="@ViewBag.Search" />
                            <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
                            <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
+                           <input type="text" name="type" value="@ViewBag.Type" style="visibility:hidden" />
                            <input type="text" name="id" value="3" style="visibility:hidden" />
                         </div>
                     </form>
@@ -58,6 +59,7 @@
                 <!--navigation-->
                 <form method="POST" action="">
                     <input type="hidden" name="search" value="@ViewBag.Search" />
+                    <input type="hidden" name="type" value="@ViewBag.Type" />
                     <center>
                         @if (ViewBag.Prev != 0)
                         {

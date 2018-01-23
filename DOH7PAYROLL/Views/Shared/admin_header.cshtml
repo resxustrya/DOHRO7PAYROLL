@@ -9,10 +9,18 @@
                 <li class="dropdown-submenu">
                     <a href="#"><i class="glyphicon glyphicon-plus"></i> Create Payroll</a>
                     <ul class="dropdown-menu">
-                        <li><a href="@Url.Action("Job_Order", "Payroll")">Job Order</a></li>
+                        <li  class="dropdown-submenu">
+                            <a>Job Order</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Job_Order", "Payroll",new {type="ATM"})">ATM</a></li>
+                                <li><a href="@Url.Action("Job_Order", "Payroll",new {type="CASH_CARD"})">Cash Card</a></li>
+                                <li><a href="@Url.Action("Job_Order", "Payroll",new {type="NO_CARD"})">W/O LBP Card</a></li>
+                                <li><a href="@Url.Action("Job_Order", "Payroll",new {type="UNDER_VTF"})">Under VTF</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
-                <li class="dropdown-submenu">
+                <li>
                     <a href="@Url.Action("Payroll", "Payroll")"><i class="fa fa-print"></i> Generate Payroll</a>
                 </li>
             </ul>
