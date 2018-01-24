@@ -721,7 +721,7 @@ namespace DOH7PAYROLL.Repo
         public String GetLoans(String id)
         {
             String salary = "0";
-            String query = "SELECT monthly_salary FROM work_experience WHERE userid = '" + id + "' ORDER BY date_from DESC LIMIT 1";
+            String query = "SELECT monthly_salary FROM work_experience WHERE userid = '" + id + "' AND date_to = 'Present' ORDER BY date_to DESC LIMIT 1";
 
             //Create a list to store the result
             List<Employee> list = new List<Employee>();
