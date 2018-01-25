@@ -47,7 +47,21 @@ namespace DOH7PAYROLL.Controllers
                         id = "3";
                     }
                 }
-                
+                String header = "";
+                switch (type) {
+                    case "ATM":
+                        header = "Employee (JO) - ATM";
+                        break;
+                    case "CASH_CARD":
+                        header = "Employee (JO) - Cash Card";
+                        break;
+                    case "NO_CARD":
+                        header = "Employee (JO) - W/O LBP Card";
+                        break;
+                    case "UNDER_VTF":
+                        header = "Employee (JO) - Under VTF";
+                        break;
+                }
 
                 ViewBag.List = connection.GetEmployee(id, search, "Job Order",type);
                 ViewBag.Prev = DatabaseConnect.start;
@@ -55,6 +69,7 @@ namespace DOH7PAYROLL.Controllers
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
                 ViewBag.Search = search;
                 ViewBag.Type = type;
+                ViewBag.Header = header;
                 return View();
             }
             else {
@@ -394,12 +409,12 @@ namespace DOH7PAYROLL.Controllers
             string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+"_"+currentDateTime+ ".pdf");
 
             Document doc = new Document();
-            doc.SetMargins(20f, 20f, 20f, 20f);
-            doc.SetPageSize(PageSize.LEGAL.Rotate());
+            doc.SetMargins(5f, 5f, 5f, 5f);
+            doc.SetPageSize(PageSize.A4);
 
             PdfPTable outer = new PdfPTable(1);
             outer.TotalWidth = 200;
-            outer.WidthPercentage = 50;
+            outer.WidthPercentage = 100;
 
             PdfPTable header_container = new PdfPTable(1);
             header_container.TotalWidth = 200;
@@ -1004,10 +1019,14 @@ namespace DOH7PAYROLL.Controllers
                 });
                 outer.AddCell(new PdfPCell(header_container) {
                     Border = PdfPCell.RIGHT_BORDER | PdfPCell.BOTTOM_BORDER | PdfPCell.TOP_BORDER | PdfPCell.LEFT_BORDER,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    VerticalAlignment = Element.ALIGN_LEFT
                 });
                 outer.AddCell(new PdfPCell(rate_deduction_container)
                 {
                     Border = PdfPCell.RIGHT_BORDER | PdfPCell.BOTTOM_BORDER | PdfPCell.LEFT_BORDER,
+                    HorizontalAlignment = Element.ALIGN_LEFT,
+                    VerticalAlignment = Element.ALIGN_LEFT
                 });
 
                 doc.Open();
@@ -1113,7 +1132,7 @@ namespace DOH7PAYROLL.Controllers
                     }
                     else
                     {
-                        body = addBodyCustom(body, filter_dates, imageURL, from_date, to_date, selection,payroll, writer, doc, disbursment);
+                        body = addBodyCustom(body, filter_dates, imageURL, from_date, to_date, selection,payroll, writer, doc, disbursment,section);
                         outer.AddCell(new PdfPCell(body)
                         {
                             Border = 0,
@@ -1140,7 +1159,7 @@ namespace DOH7PAYROLL.Controllers
 
         protected PdfPTable addBodyCustom(PdfPTable tableLayout, String filter_range1,
            String imageURL, String from_date, String to_date,String selection, 
-           List<Payroll> payroll,PdfWriter writer, Document document, String disbursment)
+           List<Payroll> payroll,PdfWriter writer, Document document, String disbursment,String sections)
         {
             
 

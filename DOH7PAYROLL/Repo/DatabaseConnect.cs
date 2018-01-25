@@ -569,7 +569,7 @@ namespace DOH7PAYROLL.Repo
         public List<Sections> GetSection()
         {
 
-            String query = "SELECT id,division,description,head FROM section";
+            String query = "SELECT id,division,description,head FROM section ORDER BY description ASC";
             List<Sections> list = new List<Sections>();
 
 
@@ -918,7 +918,7 @@ namespace DOH7PAYROLL.Repo
             String disbursment, String in_charge,String sectionID)
         {
             List<Payroll> payroll = new List<Payroll>();
-            string query = "SELECT d.id,p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.source_fund,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section d ON i.section_id= d.id) ON p.userid = i.userid WHERE p.start_date = '" + start_date + "' AND p.end_date = '" + end_date + "' AND i.disbursement_type = '" + disbursment + "'";
+            string query = "SELECT d.id,p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.source_fund,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section d ON i.section_id = d.id) ON p.userid = i.userid WHERE p.start_date = '" + start_date + "' AND p.end_date = '" + end_date + "' AND i.disbursement_type = '" + disbursment + "'";
             switch (selection)
             {
                 case "2":
@@ -1040,110 +1040,7 @@ namespace DOH7PAYROLL.Repo
             }
             return payroll;
         }
-        /*
-        public List<Employee> GeneratePayroll(){
-            List<Employee> list = new List<Employee>();
-            string query = "SELECT  p.absent_days,p.adjustment,p.remarks,d.description,u.username,u.fname,u.mname,u.lname,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (dtsv3_0.users u LEFT JOIN dtsv3_0.division d ON u.division = d.id) ON p.userid = u.username LEFT JOIN pis.personal_information i ON p.userid = i.userid ORDER BY d.description,u.fname,u.lname ASC";
-            if (this.OpenConnection() == true)
-            {
-                //Create Command
-                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
-                //Create a data reader and Execute the command
-                MySqlDataReader dataReader = cmd.ExecuteReader();
-
-                //Read the data and store them in the list
-                while (dataReader.Read())
-                {
-                    String tin = dataReader["tin_no"].ToString();
-                    String desc = dataReader["description"].ToString().ToUpper();
-                    String userid = dataReader["username"].ToString();
-                    String fname = dataReader["fname"].ToString();
-                    String mname = dataReader["mname"].ToString();
-                    String lname = dataReader["lname"].ToString();
-                    String emptype = dataReader["position"].ToString();
-                    String flag = "1";
-
-                    String minutes_late = dataReader["minutes_late"].ToString();
-                    if (minutes_late.Equals("") || minutes_late.Equals("NULL"))
-                    {
-                        minutes_late = "0";
-                    }
-                    String working_days = dataReader["working_days"].ToString();
-                    if (working_days.Equals("") || working_days.Equals("NULL"))
-                    {
-                        working_days = "0";
-                    }
-                    String monthly_salary = dataReader["month_salary"].ToString();
-                    if (monthly_salary.Equals("") || monthly_salary.Equals("NULL") || monthly_salary.Equals("Null") || monthly_salary.Equals(null))
-                    {
-                        flag = "0";
-                        monthly_salary = "0";
-                    }
-                    String coop = dataReader["coop"].ToString();
-                    if (coop.Equals("") || coop.Equals("NULL"))
-                    {
-                        coop = "0";
-                    }
-                    String adjustment = dataReader["adjustment"].ToString();
-                    if (adjustment.Equals("") || adjustment.Equals("NULL"))
-                    {
-                        adjustment = "0.00";
-                    }
-                    String remarks = dataReader["remarks"].ToString();
-                    if (remarks.Equals("") || remarks.Equals("NULL"))
-                    {
-                        remarks = "";
-                    }
-                    String absent_days = dataReader["absent_days"].ToString();
-                    if (absent_days.Equals("") || absent_days.Equals("NULL"))
-                    {
-                        absent_days = "";
-                    }
-                    String phic = dataReader["phic"].ToString();
-                    if (phic.Equals("") || phic.Equals("NULL"))
-                    {
-                        phic = "0";
-                    }
-                    String disallowance = dataReader["disallowance"].ToString();
-                    if (disallowance.Equals("") || disallowance.Equals("NULL"))
-                    {
-                        disallowance = "0";
-                    }
-                    String gsis = dataReader["gsis"].ToString();
-                    if (gsis.Equals("") || gsis.Equals("NULL"))
-                    {
-                        gsis = "0";
-                    }
-                    String pagibig = dataReader["pagibig"].ToString();
-                    if (pagibig.Equals("") || pagibig.Equals("NULL"))
-                    {
-                        pagibig = "0";
-                    }
-                    String excess_mobile = dataReader["excess_mobile"].ToString();
-                    if (excess_mobile.Equals("") || excess_mobile.Equals("NULL"))
-                    {
-                        excess_mobile = "0";
-                    }
-
-                    //Payroll payroll = new Payroll(userid,"",adjustment,working_days,absent_days, monthly_salary, minutes_late, coop, phic
-                      //  , disallowance, gsis, pagibig, excess_mobile,remarks, flag);
-
-                    Employee employee = new Employee(userid, fname, lname,mname, emptype,tin,desc);
-                    list.Add(employee);
-                }
-
-                //close Data Reader
-                dataReader.Close();
-
-                //close Connection
-                this.CloseConnection();
-
-                //return list to be displayed
-
-            }
-            return list;
-        }
-        */
+       
         public Payroll GeneratePayslip(String id, String start_date, String end_date)
         {
             Payroll payroll = null;
