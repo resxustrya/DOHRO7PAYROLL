@@ -43,6 +43,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                          minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                        no_days_absent = data.split(" ")[2];
@@ -91,6 +93,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                         no_days_absent = data.split(" ")[2];
@@ -136,6 +140,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                         no_days_absent = data.split(" ")[2];
@@ -201,6 +207,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                         no_days_absent = data.split(" ")[2];
@@ -246,6 +254,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                         no_days_absent = data.split(" ")[2];
@@ -291,6 +301,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                       minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                        no_days_absent = data.split(" ")[2];
@@ -355,6 +367,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                         no_days_absent = data.split(" ")[2];
@@ -402,6 +416,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                         no_days_absent = data.split(" ")[2];
@@ -449,6 +465,8 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
+                        array_date = [];
+                        $("#absent_date_list").val("");
                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                         no_days_absent = data.split(" ")[2];
@@ -607,6 +625,8 @@ $(document).ready(function () {
                     "to": "2017-01-15"
                 },
             success: function (data) {
+                array_date = [];
+                $("#absent_date_list").val("");
              minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
                        no_days_absent = data.split(" ")[2];

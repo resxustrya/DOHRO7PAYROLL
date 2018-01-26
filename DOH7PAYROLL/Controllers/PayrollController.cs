@@ -1406,6 +1406,7 @@ namespace DOH7PAYROLL.Controllers
                 {
                     minutes_late += (480 * size);
                 }
+                remarks += " "+size;
                 int working_days = int.Parse(item.WorkDays);
                 decimal per_day = 0;
                 decimal absences = 0;
