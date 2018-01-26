@@ -22,6 +22,11 @@ $(document).ready(function () {
         var chosen_options = $("#month_range").val();
         var from_date = "";
         var to_date = "";
+        var myNode = document.getElementById("date-list");
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
+        $(".loader_ajax").removeClass("hidden");
         switch (chosen_options) {
             case "1":
                 $.ajax({
@@ -38,13 +43,30 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
-                       // minutes_late = data.split(" ")[0];
+                         minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                      //  no_days_absent = data.split(" ")[2];
-                     //   $("#minutes_late").val(minutes_late);
+                       no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                       $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
                       //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                         
                     }
                 });
@@ -69,12 +91,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                       // minutes_late = data.split(" ")[0];
+                        minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                      //  no_days_absent = data.split(" ")[2];
-                      //  $("#minutes_late").val(minutes_late);
+                        no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                        $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                      //  $("#no_days_absent").val(no_days_absent);
+                        //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -98,12 +136,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                      //  minutes_late = data.split(" ")[0];
+                        minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                      //  no_days_absent = data.split(" ")[2];
-                      //  $("#minutes_late").val(minutes_late);
+                        no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                        $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                      //  $("#no_days_absent").val(no_days_absent);
+                        //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -127,6 +181,10 @@ $(document).ready(function () {
         if (+chosen_month <= 9) chosen_month = "0" + chosen_month;
         var from_date = "";
         var to_date = "";
+        var myNode = document.getElementById("date-list");
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
         switch (chosen_options) {
             case "1":
                 $.ajax({
@@ -143,12 +201,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
-                      //  minutes_late = data.split(" ")[0];
+                        minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                      //  no_days_absent = data.split(" ")[2];
-                      //  $("#minutes_late").val(minutes_late);
+                        no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                        $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                      //  $("#no_days_absent").val(no_days_absent);
+                        //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -172,12 +246,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                       // minutes_late = data.split(" ")[0];
+                        minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                       // no_days_absent = data.split(" ")[2];
-                      //  $("#minutes_late").val(minutes_late);
+                        no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                        $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                      //  $("#no_days_absent").val(no_days_absent);
+                        //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -201,12 +291,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month +"-"+ daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                     //   minutes_late = data.split(" ")[0];
+                      minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                    //    no_days_absent = data.split(" ")[2];
-                     //   $("#minutes_late").val(minutes_late);
+                       no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                       $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                     //   $("#no_days_absent").val(no_days_absent);
+                      //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -229,6 +335,10 @@ $(document).ready(function () {
         if (+chosen_month <= 9) chosen_month = "0" + chosen_month;
         var from_date = "";
         var to_date = "";
+        var myNode = document.getElementById("date-list");
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
         switch (chosen_options) {
             case "1":
                 $.ajax({
@@ -245,12 +355,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-15"
                         },
                     success: function (data) {
-                      //  minutes_late = data.split(" ")[0];
+                        minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                     //   no_days_absent = data.split(" ")[2];
-                      //  $("#minutes_late").val(minutes_late);
+                        no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                        $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                     //   $("#no_days_absent").val(no_days_absent);
+                        //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -276,12 +402,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month + "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                      //  minutes_late = data.split(" ")[0];
+                        minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                       // no_days_absent = data.split(" ")[2];
-                      //  $("#minutes_late").val(minutes_late);
+                        no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                        $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                    //    $("#no_days_absent").val(no_days_absent);
+                        //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -307,12 +449,28 @@ $(document).ready(function () {
                             "to": chosen_year + "-" + chosen_month+ "-" + daysInMonth(parseInt(chosen_month), chosen_year)
                         },
                     success: function (data) {
-                      //  minutes_late = data.split(" ")[0];
+                        minutes_late = data.split(" ")[0];
                         working_days = data.split(" ")[1];
-                      //  no_days_absent = data.split(" ")[2];
-                    //    $("#minutes_late").val(minutes_late);
+                        no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                        $("#minutes_late").val(minutes_late);
                         $("#working_days").val(working_days);
-                    //    $("#no_days_absent").val(no_days_absent);
+                        //  $("#no_days_absent").val(no_days_absent);
                         Compute();
                     }
                 });
@@ -434,6 +592,7 @@ $(document).ready(function () {
         var start_date = "01/01/2017";
         var end_date = "01/15/2017";
         $("#month_range_value").val(start_date + " " + end_date);
+        $(".loader_ajax").removeClass("hidden");
         $.ajax({
             url: "../Payroll/GetMins",
             type: 'POST',
@@ -448,13 +607,30 @@ $(document).ready(function () {
                     "to": "2017-01-15"
                 },
             success: function (data) {
-              //  minutes_late = data.split(" ")[0];
-                working_days = data.split(" ")[1];
-              //  no_days_absent = data.split(" ")[2];
-             //   $("#minutes_late").val(minutes_late);
-                $("#working_days").val(working_days);
-             //   $("#no_days_absent").val(no_days_absent);
-                Compute();
+             minutes_late = data.split(" ")[0];
+                        working_days = data.split(" ")[1];
+                       no_days_absent = data.split(" ")[2];
+
+                        count = 0;
+                        for (var z = 0; z < no_days_absent.split("*").length; z++) {
+                            var item = no_days_absent.split("*")[count];
+                            if (item !== "") {
+                                var date_item = "<tr id = '" + z + "'><td>";
+                                date_item += item;
+                                date_item += "</td><td><span class = 'glyphicon glyphicon-remove remove-data' style = 'color:red;cursor:pointer;' data-id='" + z + "'></span></td>";
+                                $("#date-list").append(date_item);
+                                array_date.push(item);
+                                $("#absent_date_list").val(array_date);
+                                $('#absent_date').val("");
+                                count++;
+                            }
+                        }
+
+                       $("#minutes_late").val(minutes_late);
+                        $("#working_days").val(working_days);
+                      //  $("#no_days_absent").val(no_days_absent);
+                        Compute();
+                        $(".loader_ajax").addClass("hidden");
             }
         });
        
@@ -734,8 +910,8 @@ function clearFeld() {
     array_date = [];
 }
 function Compute() {
-    if (no_days_absent > 0) {
-        deduction = ((+minutes_late + (480 * + no_days_absent)) * (((salary / working_days) / 8) / 60)).toFixed(2);
+    if (count > 0) {
+        deduction = ((+minutes_late + (480 * +count)) * (((salary / working_days) / 8) / 60)).toFixed(2);
     } else {
         deduction = (minutes_late * (((salary / working_days) / 8) / 60)).toFixed(2);   
     }

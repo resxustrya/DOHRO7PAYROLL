@@ -1210,7 +1210,7 @@ namespace DOH7PAYROLL.Repo
             int no_days = DateTime.DaysInMonth(year, month);
             int working_days = 0;
             int mins = 0;
-            int no_absent = 0;
+            String days_absent= "";
 
 
             for (int i = 0; i <= (to_days - from_days); i++)
@@ -1479,7 +1479,14 @@ namespace DOH7PAYROLL.Repo
                         if (!ifWeekend(format) && !IsHolilday(format))
                         {
                             // mins += 480;
-                            no_absent++;
+                            if (days_absent.Equals(""))
+                            {
+                                days_absent += format;
+                            }
+                            else {
+                                days_absent +="*"+format;
+                            }
+                           
                         }
                     }
                     for (int i = 0; i < no_days; i++)
@@ -1498,7 +1505,7 @@ namespace DOH7PAYROLL.Repo
                 }
             }
 
-            return mins + " " + working_days + " " + no_absent;
+            return mins + " " + working_days + " " + days_absent;
         }
 
         public Boolean CheckUserRemittance(String table, String id)
