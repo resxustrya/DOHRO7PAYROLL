@@ -245,6 +245,7 @@
     <Compile Include="Controllers\PayrollController.cs" />
     <Compile Include="Controllers\RemittanceController.cs" />
     <Compile Include="Controllers\TestingController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1068,6 +1069,7 @@
     <Content Include="Views\Remittance\Disallowance.cshtml" />
     <Content Include="Views\Remittance\Excess.cshtml" />
     <Content Include="Views\Remittance\Gsis.cshtml" />
+    <Content Include="Views\User\ChangePin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

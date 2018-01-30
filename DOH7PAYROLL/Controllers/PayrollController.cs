@@ -260,7 +260,7 @@ namespace DOH7PAYROLL.Controllers
             String type_request = Request["type_request"];
             String remarks = Request["remarks"];
 
-            Employee employee = new Employee(id,"","","","","","","","");
+            Employee employee = new Employee(id,"","","","","","","","","");
             String message = "";
             Payroll payroll = new Payroll(payroll_id, employee,start_date,end_date, adjustment.Replace(",", ""),
                 working_days, absent_date_list, salary.Replace(",",""), minutes_late, coop.Replace(",", ""), phic.Replace(",", ""), 
@@ -1091,7 +1091,7 @@ namespace DOH7PAYROLL.Controllers
                     string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+"_"+currentDateTime+"_"+section+ ".pdf");
 
                     Document doc = new Document();
-                    doc.SetMargins(20f, 20f, 20f, 20f);
+                    doc.SetMargins(5f, 5f, 5f, 5f);
                     doc.SetPageSize(PageSize.LEGAL.Rotate());
 
                     PdfPTable outer = new PdfPTable(1);
@@ -1100,7 +1100,7 @@ namespace DOH7PAYROLL.Controllers
                     outer.SplitRows = true;
                     outer.SplitLate = true;
 
-                    float[] headers = { 5, 5, 5, 9, 6, 6, 7, 6, 8, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 6 };
+                    float[] headers = { 6, 8, 8, 8, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6};
                     PdfPTable body = new PdfPTable(20);
                     body.SetWidths(headers);
                     body.TotalWidth = 400;
@@ -1406,7 +1406,6 @@ namespace DOH7PAYROLL.Controllers
                 {
                     minutes_late += (480 * size);
                 }
-                remarks += " "+size;
                 int working_days = int.Parse(item.WorkDays);
                 decimal per_day = 0;
                 decimal absences = 0;
@@ -1505,7 +1504,7 @@ namespace DOH7PAYROLL.Controllers
                 AddCellToBody(tableLayout, gsis.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, excess.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, total_amount.ToString("#,##0.00"), "right");
-                AddCellToBody(tableLayout, remarks, "left");
+                AddCellToBody(tableLayout, remarks, "left-remarks");
             }
             addOverall(tableLayout, overall_net.ToString("#,##0.00"));
 
@@ -3023,6 +3022,15 @@ namespace DOH7PAYROLL.Controllers
                 {
                     BorderWidth = 0.2f,
                     HorizontalAlignment = Element.ALIGN_LEFT,
+                    VerticalAlignment = Element.ALIGN_CENTER
+                });
+            }else if (position.Equals("left-remarks"))
+            {
+                tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 6, Font.NORMAL))))
+                {
+                    BorderWidth = 0.2f,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_CENTER
                 });
             }
             else {
@@ -3030,6 +3038,7 @@ namespace DOH7PAYROLL.Controllers
                 {
                     BorderWidth = 0.2f,
                     HorizontalAlignment = Element.ALIGN_RIGHT,
+                    VerticalAlignment = Element.ALIGN_CENTER
                 });
             }
         }

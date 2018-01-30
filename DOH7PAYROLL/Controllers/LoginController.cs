@@ -3,10 +3,8 @@ using System.Web.Mvc;
 using System.Web;
 using DOH7PAYROLL.Repo;
 using DOH7PAYROLL.Models;
-
-
-
-
+using System.Text;
+using System.Security.Cryptography;
 namespace DOH7PAYROLL.Controllers
 {
 
@@ -63,9 +61,9 @@ namespace DOH7PAYROLL.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(String username, String password)
+        public ActionResult Index(String username, String pin)
         {
-                Employee employee = connection.Login(username);
+            Employee employee = connection.Login(username,pin);
             if (employee != null)
             {
                 if (employee.JobType.Equals("") || employee.JobType.Equals("Inactive"))
@@ -77,24 +75,20 @@ namespace DOH7PAYROLL.Controllers
                     Session["empID"] = employee.PersonnelID;
                     Session["Name"] = employee.Firstname + " " + employee.MiddleName + " " + employee.Lastname;
                     Session["Section"] = employee.Section;
-                    if (password.Equals("123"))
+
+                    Session["LoginType"] = employee.UserType;
+                    if (employee.UserType.Equals("1"))
                     {
-                        Session["LoginType"] = "0";
-                        return RedirectToAction("Payroll_List", "Payroll");
-                    }
-                    else if (password.Equals("payroll_123"))
-                    {
-                        Session["LoginType"] = "1";
                         return RedirectToAction("Job_Order", "Payroll");
                     }
                     else {
-                        TempData["message"] = "Incorrect password";
-                        return View();
+                        return RedirectToAction("Payroll_List", "Payroll");
                     }
-                }
+                   }
             }
             TempData["message"] = "User ID don't exists.";
             return View();
         }
+
     }
 }
