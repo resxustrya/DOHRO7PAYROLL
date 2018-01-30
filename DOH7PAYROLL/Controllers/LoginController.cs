@@ -8,7 +8,6 @@ using System.Security.Cryptography;
 namespace DOH7PAYROLL.Controllers
 {
 
-    
     public class NoCache : ActionFilterAttribute
     {
         public override void OnResultExecuting(ResultExecutingContext filterContext)
@@ -27,8 +26,8 @@ namespace DOH7PAYROLL.Controllers
     [OutputCacheAttribute(VaryByParam = "*", Duration = 0, NoStore = true)]
     public class LoginController : Controller
     {
-        DatabaseConnect connection = new DatabaseConnect();
 
+        DatabaseConnect connection = new DatabaseConnect();
 
         // GET: Login
         [NoCache]
@@ -75,11 +74,11 @@ namespace DOH7PAYROLL.Controllers
                     Session["empID"] = employee.PersonnelID;
                     Session["Name"] = employee.Firstname + " " + employee.MiddleName + " " + employee.Lastname;
                     Session["Section"] = employee.Section;
-
+                    Session["PIN"] = employee.PIN;
                     Session["LoginType"] = employee.UserType;
                     if (employee.UserType.Equals("1"))
                     {
-                        return RedirectToAction("Job_Order", "Payroll");
+                        return RedirectToAction("Job_Order", "Payroll", new { type = "ATM"});
                     }
                     else {
                         return RedirectToAction("Payroll_List", "Payroll");

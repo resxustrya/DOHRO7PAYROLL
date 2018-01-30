@@ -15,11 +15,8 @@ namespace DOH7PAYROLL.Controllers
 {
     public class PayrollController : Controller
     {
-
         DatabaseConnect connection = new DatabaseConnect();
 
-        // GET: Payroll
-        
         public ActionResult Job_Order()
         {
             if (Session["empID"] != null)
@@ -28,6 +25,7 @@ namespace DOH7PAYROLL.Controllers
                 String search = Request["search"]; 
                 String submit = Request["submit"];
                 String type = Request["type"];
+
                 if (type == null) {
                     type = "ATM";
                 }
@@ -62,7 +60,7 @@ namespace DOH7PAYROLL.Controllers
                         header = "Employee (JO) - Under VTF";
                         break;
                 }
-
+                
                 ViewBag.List = connection.GetEmployee(id, search, "Job Order",type);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
@@ -98,8 +96,8 @@ namespace DOH7PAYROLL.Controllers
                     id = "3";
                 }
             }
-
-            ViewBag.List = connection.GetEmployee(id, search, "Permanent","");
+            
+            ViewBag.List = connection.GetEmployee(id, search, "Permanent","");  
             ViewBag.Prev = DatabaseConnect.start;
             ViewBag.Next = DatabaseConnect.end;
             ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -109,28 +107,19 @@ namespace DOH7PAYROLL.Controllers
 
 
         public ActionResult Payroll_Redirect() {
+
+            DatabaseConnect.start = 0;
             Session["empID"] = Request["empID"];
-            Session["Salary"] = connection.GetLoans(Session["empID"].ToString());
-          
-            
+            Session["Salary"] = connection.GetLoans(Session["empID"].ToString());          
             Session["Coop"] = connection.GetAmount("coop_remittance",Session["empID"].ToString());
             Session["Disallowance"] = connection.GetAmount("disallowance_remittance", Session["empID"].ToString());
             Session["PagIbig"] = connection.GetAmount("pagibig_remittance", Session["empID"].ToString());
             Session["Phic"] = connection.GetAmount("phic_remittance", Session["empID"].ToString());
             Session["Gsis"] = connection.GetAmount("gsis_remittance", Session["empID"].ToString());
             Session["Excess"] = connection.GetAmount("excess_remittance", Session["empID"].ToString());
-           
-            /*
-            Session["Coop"] = "0";
-            Session["Disallowance"] = "0";
-            Session["PagIbig"] = "0";
-            Session["Phic"] = "0";
-            Session["Gsis"] = "0";
-            Session["Excess"] = "0";
-            */
-
             return RedirectToAction("Payroll_List");
         }
+        [NoCache]
         public ActionResult Payroll_List()
         {
             if (Session["empID"] != null)
@@ -260,7 +249,7 @@ namespace DOH7PAYROLL.Controllers
             String type_request = Request["type_request"];
             String remarks = Request["remarks"];
 
-            Employee employee = new Employee(id,"","","","","","","","","");
+            Employee employee = new Employee(id,"","","","","","","","","","");
             String message = "";
             Payroll payroll = new Payroll(payroll_id, employee,start_date,end_date, adjustment.Replace(",", ""),
                 working_days, absent_date_list, salary.Replace(",",""), minutes_late, coop.Replace(",", ""), phic.Replace(",", ""), 
@@ -404,9 +393,7 @@ namespace DOH7PAYROLL.Controllers
             String title = DatabaseConnect.getMonthName(month) + " " + day_from+ "-" + day_to+ ", " + year;
             MemoryStream workStream = new MemoryStream();
             StringBuilder status = new StringBuilder("");
-            DateTime now = DateTime.Now;
-            String currentDateTime = now.Hour + "" + now.Minute + "" + now.Second;
-            string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+"_"+currentDateTime+ ".pdf");
+            string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+".pdf");
 
             Document doc = new Document();
             doc.SetMargins(5f, 5f, 5f, 5f);
@@ -1086,9 +1073,7 @@ namespace DOH7PAYROLL.Controllers
 
                     MemoryStream workStream = new MemoryStream();
                     StringBuilder status = new StringBuilder("");
-                    DateTime now = DateTime.Now;
-                    String currentDateTime = now.Hour + "" + now.Minute + "" + now.Second;
-                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+"_"+currentDateTime+"_"+section+ ".pdf");
+                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+".pdf");
 
                     Document doc = new Document();
                     doc.SetMargins(5f, 5f, 5f, 5f);

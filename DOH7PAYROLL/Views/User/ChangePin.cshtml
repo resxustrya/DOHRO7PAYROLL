@@ -6,13 +6,13 @@
             TempData["message"].ToString().Equals("Successfully Deleted") ||
              TempData["message"].ToString().Equals("Updated Successfully"))
         {
-            <div class="alert alert-success">
+            <div class="dialog-success">
                 <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span>@TempData["message"]</span>
             </div>
         }
         else
         {
-            <div class="alert alert-danger">
+            <div class="dialog-error">
                 <strong><span class="glyphicon glyphicon-remove"></span> </strong> <span>@TempData["message"]</span>
             </div>
         }
@@ -30,7 +30,7 @@
                             <td class="col-sm-2"><strong>Old PIN</strong></td>
                             <td class="col-sm-1">: </td>
                             <td class="col-sm-4">
-                                <input type="text" class="inline form-control"/>
+                                <input type="password" name="oldpin" class="inline form-control input-pin"/>
                             </td>
                         </tr>
 
@@ -38,7 +38,7 @@
                             <td class="col-sm-2"><strong>New PIN</strong></td>
                             <td class="col-sm-1">: </td>
                             <td class="col-sm-4">
-                                <input type="text" class="inline form-control" />
+                                <input type="password" name="newpin" class="inline form-control input-pin" />
                             </td>
                         </tr>
 
@@ -46,7 +46,7 @@
                             <td class="col-sm-2"><strong>Confirm PIN</strong></td>
                             <td class="col-sm-1">: </td>
                             <td class="col-sm-4">
-                                <input type="text" class="inline form-control" />
+                                <input type="password" name="confirmpin" class="inline form-control input-pin" />
                             </td>
                         </tr>
                         <tr>

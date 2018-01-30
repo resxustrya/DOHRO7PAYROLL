@@ -6,13 +6,13 @@
            TempData["message"].ToString().Equals("Successfully Deleted") ||
             TempData["message"].ToString().Equals("Updated Successfully"))
         {
-            <div class="alert alert-success">
+            <div class="dialog-success">
                 <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span>@TempData["message"]</span>
             </div>
         }
         else
         {
-            <div class="alert alert-danger">
+            <div class="dialog-error">
                 <strong><span class="glyphicon glyphicon-remove"></span> </strong> <span>@TempData["message"]</span>
             </div>
         }
@@ -25,10 +25,14 @@
             <div class="col-md-12">
                 <form class="form-inline" method="POST" action="">
                     <div class="form-group">
-                        <input type="text" name="search" placeholder="Search here.." class="inline form-control margin-top margin-bottom" style="border-radius:0px;" value="@ViewBag.Search" />
-                        <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
-                        <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
-                        <button type="button" name="remit_btn_add" class="btn btn-success pull-left margin-top margin-bottom btn_add" style="border-radius:0px;" data-toggle="modal" data-target="#modal_remit"><span class="glyphicon glyphicon-plus" style="color:white;"></span></button>
+                        <div class="col-md-7">
+                            <input type="text" name="search" placeholder="Search here.." class="inline form-control margin-top margin-bottom" style="border-radius:0px;" value="@ViewBag.Search" />
+                        </div>
+                        <div class="col-md-5">
+                            <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
+                            <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
+                            <button type="button" name="remit_btn_add" class="btn btn-success pull-left margin-top margin-bottom btn_add" style="border-radius:0px;" data-toggle="modal" data-target="#modal_remit"><span class="glyphicon glyphicon-plus" style="color:white;"></span></button>
+                        </div>
                         <input type="text" name="id" value="3" style="visibility:hidden" />
                     </div>
                 </form>

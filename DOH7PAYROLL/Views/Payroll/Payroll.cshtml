@@ -4,13 +4,13 @@
     {
         if (TempData["pdf"].Equals("Data Range must be specified") || TempData["pdf"].Equals("Nothing to generate"))
         {
-            <div class="alert alert-danger">
+            <div class="dialog-error">
                 <strong><span class="glyphicon glyphicon-remove"></span> </strong> <span>@TempData["pdf"]</span>
             </div>
         }
         else
         {
-            <div class="alert alert-success">
+            <div class="dialog-success">
                 <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span>@TempData["pdf"]</span>
             </div>
         }
@@ -95,11 +95,15 @@
                     <div class="col-md-12">
                         <form class="form-inline" method="POST" action="">
                             <div class="form-group">
-                                <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" style="border-radius:0px;background:#fff" value="@ViewBag.Search" readonly />
-                                <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
-                                <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
+                                <div class="col-md-7">
+                                    <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" style="border-radius:0px;background:#fff" value="@ViewBag.Search" readonly />
+                                </div>
+                                <div class="col-md-5">
+                                    <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
+                                    <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
+                                </div>
                                 <input type="text" name="id" value="3" style="visibility:hidden" />
-                            </div>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -206,9 +210,13 @@
                         <div class="col-md-12">
                             <form class="form-inline" method="POST" action="">
                                 <div class="form-group">
-                                    <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" style="border-radius:0px;background:#fff" value="@ViewBag.Search" readonly />
-                                    <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
-                                    <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
+                                    <div class="col-md-7">
+                                        <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" style="border-radius:0px;background:#fff" value="@ViewBag.Search" readonly />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
+                                        <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
+                                    </div>
                                     <input type="text" name="id" value="3" style="visibility:hidden" />
                                 </div>
                             </form>

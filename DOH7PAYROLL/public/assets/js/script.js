@@ -8,6 +8,10 @@ $(document).ready(function () {
         return isNumber(event, this)
     });
 
+    $('.input-pin').keypress(function (event) {
+        return isPIN(event, this)
+    });
+
     $('.input-daterange input').each(function () {
         $(this).datepicker("clearDates");
     });
@@ -982,6 +986,22 @@ function isNumber(evt, element) {
         return false;
 
     return true;
+}
+
+function isPIN(evt, element) {
+    var inputs = $(element).val();
+    if (inputs.length <= 3) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (
+            (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    } else {
+        return false;
+    }  
 }
 
 function daysInMonth(month,year) {

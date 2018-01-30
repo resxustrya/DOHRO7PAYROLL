@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using DOH7PAYROLL.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
-using System.Data.SqlClient;
-using System.Collections.Specialized;
+using System.Globalization;
 
 
 namespace DOH7PAYROLL.Repo
@@ -15,24 +14,34 @@ namespace DOH7PAYROLL.Repo
         public static MySqlConnection pis = null;
         public static MySqlConnection dts = null;
         public static MySqlConnection dtr = null;
-        public static int start = 0;
-        public static int end = 0;
+      
         public static String message = "";
         public static string search = "";
-        private string server;
-        private string database;
-        private string uid;
-        private string password;
+        public static string server;
+        public static string database;
+        public static string uid;
+        public static  string password;
+        public static int start = 0;
+        public static int end = 0;
         public static string max_size = "0";
 
         //Constructor
-        public DatabaseConnect()
+      /*  public static DatabaseConnect Instance()
         {
+            if (instance == null) {
+                instance = new DatabaseConnect();
+            }
+            Initialize();
+            return instance;
+        }
+        */
+
+        public DatabaseConnect() {
             Initialize();
         }
 
         //Initialize values
-        private void Initialize()
+        public  void Initialize()
         {
             if (sql_payroll == null)
             {
@@ -420,7 +429,8 @@ namespace DOH7PAYROLL.Repo
                     String Tin = "";
                     String Section = dataReader["description"].ToString();
                     String UserType = dataReader["usertype"].ToString();
-                    employee = new Employee(PersonnelID, Firstname, Lastname, MiddleName, JobType, Tin, Section, "", "",UserType);
+                    String PIN = dataReader["pin"].ToString();
+                    employee = new Employee(PersonnelID, Firstname, Lastname, MiddleName, JobType, Tin, Section, "", "",UserType,pin);
                 }
                 //Create a data reader and Execute the command
                 dataReader.Close();
@@ -666,7 +676,7 @@ namespace DOH7PAYROLL.Repo
                     String emptype = dataReader["position"].ToString();
                     String tin = dataReader["tin_no"].ToString();
 
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, "", "", "","");
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, "", "", "","","");
                     list.Add(employee);
                 }
 
@@ -889,7 +899,7 @@ namespace DOH7PAYROLL.Repo
                         excess_mobile = "0.00";
                     }
 
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, "", "", "","");
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, "", "", "","","");
 
                     Payroll payroll = new Payroll(payroll_id, employee, start_date, end_date, adjustment, working_days, absent_days, monthly_salary, minutes_late, coop, phic
                         , disallowance, gsis, pagibig, excess_mobile, remarks, flag);
@@ -1024,7 +1034,7 @@ namespace DOH7PAYROLL.Repo
                     {
                         excess_mobile = "0";
                     }
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc, "", "","");
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc, "", "","","");
                     Payroll roll = new Payroll("0", employee, "", "", adjustment, working_days, absent_days
                          , monthly_salary, minutes_late, coop, phic, disallowance, gsis, pagibig, excess_mobile, remarks, "");
                     payroll.Add(roll);
@@ -1140,7 +1150,7 @@ namespace DOH7PAYROLL.Repo
                     {
                         divisionID = "0";
                     }
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc, disbursement, divisionID,"");
+                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc, disbursement, divisionID,"","");
                     payroll = new Payroll("0", employee, start_date, end_date, adjustment, working_days, absent_days
                          , monthly_salary, minutes_late, coop, phic, disallowance, gsis, pagibig, excess_mobile, remarks, "");
 
@@ -1191,7 +1201,9 @@ namespace DOH7PAYROLL.Repo
 
         public Boolean ifWeekend(String dateToday)
         {
-            DateTime dateTime = Convert.ToDateTime(dateToday).Date;
+            DateTime dateTime = DateTime.ParseExact(dateToday,
+                                "m/d/yyyy",
+                                CultureInfo.InvariantCulture);
             DayOfWeek date = dateTime.DayOfWeek;
             if ((date == DayOfWeek.Saturday) || (date == DayOfWeek.Sunday))
             {

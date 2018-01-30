@@ -13,9 +13,28 @@ namespace DOH7PAYROLL.Controllers
         DatabaseConnect connection = new DatabaseConnect();
         // GET: User
         [HttpPost]
-        public ActionResult ChangePin(String pin,String userid)
+        public ActionResult ChangePin(String oldpin,String newpin,String confirmpin)
         {
-            TempData["message"] = connection.UpdatePIN(pin,userid);
+            if (Session["PIN"].ToString().Equals(oldpin))
+            {
+                if (oldpin.Equals(newpin))
+                {
+                    TempData["message"] = "New PIN must not equal to old";
+                }
+                else {
+                    if (newpin.Equals(confirmpin))
+                    {
+                        TempData["message"] = connection.UpdatePIN(newpin, Session["empID"].ToString());
+                    }
+                    else
+                    {
+                        TempData["message"] = "PIN does not match";
+                    }
+                }
+            }
+            else {
+                TempData["message"] = "Old PIN is incorrect";
+            }
             return View();
         }
         [HttpGet]
