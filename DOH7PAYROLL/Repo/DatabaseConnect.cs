@@ -1175,7 +1175,7 @@ namespace DOH7PAYROLL.Repo
             return payroll;
         }
 
-        public Boolean IsHolilday(String date)
+        public Boolean IsHoliday(String date)
         {
             Boolean found = false;
             String month = (int.Parse(date.Split('/')[0]) > 9) ? date.Split('/')[0] : "0" + date.Split('/')[0];
@@ -1185,7 +1185,7 @@ namespace DOH7PAYROLL.Repo
             date = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "' AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
@@ -1496,7 +1496,7 @@ namespace DOH7PAYROLL.Repo
                     for (int i = 0; i < days.Count; i++)
                     {
                         String format = month + "/" + days[i] + "/" + year;
-                        if (!ifWeekend(format) && !IsHolilday(format))
+                        if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
                             if (days_absent.Equals(""))
@@ -1512,7 +1512,7 @@ namespace DOH7PAYROLL.Repo
                     for (int i = 0; i < no_days; i++)
                     {
                         String format = month + "/" + (i + 1) + "/" + year;
-                        if (!ifWeekend(format) && !IsHolilday(format))
+                        if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             working_days++;
                         }
