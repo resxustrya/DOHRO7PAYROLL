@@ -10,7 +10,6 @@ namespace DOH7PAYROLL.Controllers
 {
     public class UserController : Controller
     {
-        DatabaseConnect connection = new DatabaseConnect();
         // GET: User
         [HttpPost]
         public ActionResult ChangePin(String oldpin,String newpin,String confirmpin)
@@ -24,7 +23,7 @@ namespace DOH7PAYROLL.Controllers
                 else {
                     if (newpin.Equals(confirmpin))
                     {
-                        TempData["message"] = connection.UpdatePIN(newpin, Session["empID"].ToString());
+                        TempData["message"] = DatabaseConnect.Instance.UpdatePIN(newpin, Session["empID"].ToString());
                     }
                     else
                     {

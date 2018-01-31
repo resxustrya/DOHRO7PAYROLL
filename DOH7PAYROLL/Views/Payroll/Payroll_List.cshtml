@@ -25,7 +25,7 @@
         <h2><strong>Payroll List</strong></h2>
         <div class="row">
             <div class="col-md-12">
-                <form class="form-inline" method="POST" action="">
+                <form class="form-inline" method="GET" action="">
                     <div class="form-group">
                         <div class="col-md-7">
                             <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" style="border-radius:0px;background:#fff" value="@ViewBag.Search" readonly />
@@ -38,6 +38,9 @@
                         </div>
                         <input type="text" name="id" value="3" style="visibility:hidden" />
                         <input type="text" name="empID" value="@ViewBag.Id" style="visibility:hidden" />
+                        <input type="text" name="start" value="@ViewBag.Prev" style="visibility:hidden" />
+                        <input type="text" name="next" value="@ViewBag.Next" style="visibility:hidden" />
+                        <input type="text" name="max" value="@ViewBag.Max" style="visibility:hidden" />
                     </div>
                 </form>
             </div>
@@ -96,8 +99,11 @@
     </div>
     <div class="panel-footer">
                 <!--navigation-->
-                <form method="POST" action="">
+                <form method="GET" action="">
                     <input type="hidden" name="search" value="@ViewBag.Search" />
+                    <input type="text" name="start" value="@ViewBag.Prev" style="visibility:hidden" />
+                    <input type="text" name="next" value="@ViewBag.Next" style="visibility:hidden" />
+                    <input type="text" name="max" value="@ViewBag.Max" style="visibility:hidden" />
                     <center>
                         @if (ViewBag.Prev != 0)
                         {

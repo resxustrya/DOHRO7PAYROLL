@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace DOH7PAYROLL.Repo
 {
-    public class DatabaseConnect
+    public sealed class DatabaseConnect
     {
         public static MySqlConnection sql_payroll = null;
         public static MySqlConnection pis = null;
@@ -21,28 +21,34 @@ namespace DOH7PAYROLL.Repo
         public static string database;
         public static string uid;
         public static  string password;
-        public static int start = 0;
-        public static int end = 0;
-        public static string max_size = "0";
+        public static int start;
+        public static int end;
+        public static string max_size;
 
-        //Constructor
-      /*  public static DatabaseConnect Instance()
+        private static DatabaseConnect instance;
+
+        private DatabaseConnect() { }
+
+        public static DatabaseConnect Instance
         {
-            if (instance == null) {
-                instance = new DatabaseConnect();
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new DatabaseConnect();
+                    instance.Initialize();
+                    
+                }
+                return instance;
             }
-            Initialize();
-            return instance;
-        }
-        */
-
-        public DatabaseConnect() {
-            Initialize();
         }
 
         //Initialize values
-        public  void Initialize()
+        public void Initialize()
         {
+            start = 0;
+            end = 0;
+            max_size = "0";
             if (sql_payroll == null)
             {
                 server = "localhost";

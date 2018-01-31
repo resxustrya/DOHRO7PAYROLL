@@ -23,7 +23,7 @@
         <h2><strong>Remittance - Excess Mobile</strong></h2>
         <div class="row">
             <div class="col-md-12">
-                <form class="form-inline" method="POST" action="">
+                <form class="form-inline" method="GET" action="">
                     <div class="form-group">
                         <div class="col-md-7">
                             <input type="text" name="search" placeholder="Search here.." class="inline form-control margin-top margin-bottom" style="border-radius:0px;" value="@ViewBag.Search" />
@@ -34,6 +34,9 @@
                             <button type="button" name="remit_btn_add" class="btn btn-success pull-left margin-top margin-bottom btn_add" style="border-radius:0px;" data-toggle="modal" data-target="#modal_remit"><span class="glyphicon glyphicon-plus" style="color:white;"></span></button>
                         </div>
                         <input type="text" name="id" value="3" style="visibility:hidden" />
+                        <input type="text" name="start" value="@ViewBag.Prev" style="visibility:hidden" />
+                        <input type="text" name="next" value="@ViewBag.Next" style="visibility:hidden" />
+                        <input type="text" name="max" value="@ViewBag.Max" style="visibility:hidden" />
                     </div>
                 </form>
             </div>
@@ -73,8 +76,11 @@
     <div class="panel-footer">
         
                 <!--navigation-->
-                <form method="POST" action="">
+                <form method="GET" action="">
                     <input type="hidden" name="search" value="@ViewBag.Search" />
+                    <input type="text" name="start" value="@ViewBag.Prev" style="visibility:hidden" />
+                    <input type="text" name="next" value="@ViewBag.Next" style="visibility:hidden" />
+                    <input type="text" name="max" value="@ViewBag.Max" style="visibility:hidden" />
                     <center>
                         @if (ViewBag.Prev != 0)
                         {

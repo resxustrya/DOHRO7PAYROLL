@@ -26,9 +26,6 @@ namespace DOH7PAYROLL.Controllers
     [OutputCacheAttribute(VaryByParam = "*", Duration = 0, NoStore = true)]
     public class LoginController : Controller
     {
-
-        DatabaseConnect connection = new DatabaseConnect();
-
         // GET: Login
         [NoCache]
         public ActionResult Index()
@@ -62,7 +59,7 @@ namespace DOH7PAYROLL.Controllers
         [HttpPost]
         public ActionResult Index(String username, String pin)
         {
-            Employee employee = connection.Login(username,pin);
+            Employee employee = DatabaseConnect.Instance.Login(username,pin);
             if (employee != null)
             {
                 if (employee.JobType.Equals("") || employee.JobType.Equals("Inactive"))
