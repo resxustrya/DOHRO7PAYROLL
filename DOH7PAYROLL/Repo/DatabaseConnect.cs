@@ -78,13 +78,13 @@ namespace DOH7PAYROLL.Repo
             }
             if (dtr == null)
             {
-                server = "localhost";
-                //server = "172.16.0.14";
+                //server = "localhost";
+                server = "172.16.0.14";
                 database = "dohdtr";
-                uid = "root";
-                password = "";
-                //uid = "doh7payroll";
-                //password = "doh7payroll";
+               // uid = "root";
+                //password = "";
+                   uid = "doh7payroll";
+                password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -1167,7 +1167,7 @@ namespace DOH7PAYROLL.Repo
             date = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "' AND type = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
@@ -1190,7 +1190,7 @@ namespace DOH7PAYROLL.Repo
 
         public Boolean ifWeekend(String dateToday)
         {
-            DateTime dateTime = Convert.ToDateTime(dateToday).Date;
+            DateTime dateTime = Convert.ToDateTime(dateToday);
             DayOfWeek date = dateTime.DayOfWeek;
             if ((date == DayOfWeek.Saturday) || (date == DayOfWeek.Sunday))
             {

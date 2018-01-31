@@ -65,7 +65,7 @@ namespace DOH7PAYROLL.Controllers
         [HttpPost]
         public ActionResult Index(String username, String password)
         {
-                Employee employee = connection.Login(username);
+            Employee employee = connection.Login(username);
             if (employee != null)
             {
                 if (employee.JobType.Equals("") || employee.JobType.Equals("Inactive"))
