@@ -29,6 +29,7 @@ namespace DOH7PAYROLL.Repo
 
         private DatabaseConnect() { }
 
+        //Singleton Pattern
         public static DatabaseConnect Instance
         {
             get
