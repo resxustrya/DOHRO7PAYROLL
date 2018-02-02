@@ -1189,7 +1189,7 @@ namespace DOH7PAYROLL.Repo
             //Create Command
             if (this.OpenConnection() == true)
             {
-                MySqlCommand cmd = new MySqlCommand(query, dtr);
+                MySqlCommand cmd = new MySqlCommand(query, dtr);    
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
