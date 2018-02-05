@@ -65,12 +65,12 @@ namespace DOH7PAYROLL.Repo
             if (pis == null)
             {
                 server = "localhost";
-                server = "172.16.0.14";
+                //server = "172.16.0.14";
                 database = "pis";
-                //uid = "root";
-                //password = "";
-                uid = "doh7payroll";
-                password = "doh7payroll";
+                uid = "root";
+                password = "";
+                //uid = "doh7payroll";
+                //password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -94,13 +94,13 @@ namespace DOH7PAYROLL.Repo
             }
             if (dtr == null)
             {
-                //server = "localhost";
-                server = "172.16.0.14";
+                server = "localhost";
+                //server = "172.16.0.14";
                 database = "dohdtr";
-               // uid = "root";
-                //password = "";
-                   uid = "doh7payroll";
-                password = "doh7payroll";
+                uid = "root";
+                password = "";
+                //uid = "doh7payroll";
+                //password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -1175,7 +1175,8 @@ namespace DOH7PAYROLL.Repo
             return payroll;
         }
 
-        public Boolean IsHolilday(String date)
+        //GET MINS,ABSENCES and WORKING DAYS
+        public Boolean IsHoliday(String date)
         {
             Boolean found = false;
             String month = (int.Parse(date.Split('/')[0]) > 9) ? date.Split('/')[0] : "0" + date.Split('/')[0];
@@ -1185,11 +1186,11 @@ namespace DOH7PAYROLL.Repo
             date = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "' AND type = '1'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "' AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
-                MySqlCommand cmd = new MySqlCommand(query, dtr);
+                MySqlCommand cmd = new MySqlCommand(query, dtr);    
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -1208,7 +1209,9 @@ namespace DOH7PAYROLL.Repo
 
         public Boolean ifWeekend(String dateToday)
         {
-            DateTime dateTime = Convert.ToDateTime(dateToday).Date;
+            DateTime dateTime = DateTime.ParseExact(dateToday,
+                                "m/d/yyyy",
+                                CultureInfo.InvariantCulture);
             DayOfWeek date = dateTime.DayOfWeek;
             if ((date == DayOfWeek.Saturday) || (date == DayOfWeek.Sunday))
             {
@@ -1494,7 +1497,7 @@ namespace DOH7PAYROLL.Repo
                     for (int i = 0; i < days.Count; i++)
                     {
                         String format = month + "/" + days[i] + "/" + year;
-                        if (!ifWeekend(format) && !IsHolilday(format))
+                        if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
                             if (days_absent.Equals(""))
@@ -1510,7 +1513,7 @@ namespace DOH7PAYROLL.Repo
                     for (int i = 0; i < no_days; i++)
                     {
                         String format = month + "/" + (i + 1) + "/" + year;
-                        if (!ifWeekend(format) && !IsHolilday(format))
+                        if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             working_days++;
                         }
