@@ -65,12 +65,12 @@ namespace DOH7PAYROLL.Repo
             if (pis == null)
             {
                 server = "localhost";
-                //server = "172.16.0.14";
+                server = "172.16.0.14";
                 database = "pis";
-                uid = "root";
-                password = "";
-                //uid = "doh7payroll";
-                //password = "doh7payroll";
+                //uid = "root";
+                //password = "";
+                uid = "doh7payroll";
+                password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
