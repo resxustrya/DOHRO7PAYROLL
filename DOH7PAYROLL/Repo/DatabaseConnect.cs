@@ -1175,6 +1175,7 @@ namespace DOH7PAYROLL.Repo
             return payroll;
         }
 
+        //GET MINS,ABSENCES and WORKING DAYS
         public Boolean IsHoliday(String date)
         {
             Boolean found = false;
