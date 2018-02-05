@@ -4,19 +4,19 @@
     {
         if (TempData["message"].Equals("Date Range Already Exists"))
         {
-            <div class="alert alert-danger" id="update_payroll_container">
+            <div class="dialog-error" id="update_payroll_container">
                 <strong><span class="glyphicon glyphicon-remove"></span> </strong> <span>@TempData["message"]</span>
             </div>
         }
         else
         {
-            <div class="alert alert-success" id="update_payroll_container">
+            <div class="dialog-success" id="update_payroll_container">
                 <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span>@TempData["message"]</span>
             </div>
         }
         TempData["message"] = null;
     }
-    <div class="alert alert-success hidden" id="payroll_list_msg_container">
+    <div class="dialog-success hidden" id="payroll_list_msg_container">
        <strong><span class="glyphicon glyphicon-ok"></span> </strong> <span id="payroll_list_msg">Successfully Generated</span>
     </div>
 }
@@ -25,15 +25,22 @@
         <h2><strong>Payroll List</strong></h2>
         <div class="row">
             <div class="col-md-12">
-                <form class="form-inline" method="POST" action="">
+                <form class="form-inline" method="GET" action="">
                     <div class="form-group">
-                        <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" style="border-radius:0px;background:#fff" value="@ViewBag.Search" readonly />
-                        <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
-                        <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
-                        @if (Session["LoginType"].Equals("1"))
-                        { <button type="button" name="add" class="btn btn-success pull-left margin-top margin-bottom btn_add" style="border-radius:0px;" data-toggle="modal" data-target="#modal" data-id="@ViewBag.Id"><span class="glyphicon glyphicon-plus" style="color:white;"></span></button>}
+                        <div class="col-md-7">
+                            <input type="text" name="search" id="search" placeholder="Date Range" class="inline form-control margin-top margin-bottom" style="border-radius:0px;background:#fff" value="@ViewBag.Search" readonly />
+                        </div>
+                        <div class="col-md-5">
+                            <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Search"><span class="glyphicon glyphicon-search" style="color:white;"></span></button>
+                            <button type="submit" name="submit" class="btn btn-success pull-left margin-top margin-bottom" style="border-radius:0px;" value="Refresh"><span class="glyphicon glyphicon-refresh" style="color:white;"></span></button>
+                            @if (Session["LoginType"].Equals("1"))
+                            { <button type="button" name="add" class="btn btn-success pull-left margin-top margin-bottom btn_add" style="border-radius:0px;" data-toggle="modal" data-target="#modal" data-id="@ViewBag.Id"><span class="glyphicon glyphicon-plus" style="color:white;"></span></button>}
+                        </div>
                         <input type="text" name="id" value="3" style="visibility:hidden" />
                         <input type="text" name="empID" value="@ViewBag.Id" style="visibility:hidden" />
+                        <input type="text" name="start" value="@ViewBag.Prev" style="visibility:hidden" />
+                        <input type="text" name="next" value="@ViewBag.Next" style="visibility:hidden" />
+                        <input type="text" name="max" value="@ViewBag.Max" style="visibility:hidden" />
                     </div>
                 </form>
             </div>
@@ -92,8 +99,11 @@
     </div>
     <div class="panel-footer">
                 <!--navigation-->
-                <form method="POST" action="">
+                <form method="GET" action="">
                     <input type="hidden" name="search" value="@ViewBag.Search" />
+                    <input type="text" name="start" value="@ViewBag.Prev" style="visibility:hidden" />
+                    <input type="text" name="next" value="@ViewBag.Next" style="visibility:hidden" />
+                    <input type="text" name="max" value="@ViewBag.Max" style="visibility:hidden" />
                     <center>
                         @if (ViewBag.Prev != 0)
                         {

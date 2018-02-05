@@ -3,7 +3,6 @@ using System.Text;
 using System.Web.Mvc;
 using DOH7PAYROLL.Repo;
 using DOH7PAYROLL.Models;
-using System.Web.Routing;
 using System.IO;
 using System.Collections.Generic;
 using iTextSharp.text.pdf;
@@ -11,71 +10,95 @@ using iTextSharp.text;
 
 
 
+
 namespace DOH7PAYROLL.Controllers
 {
     public class PayrollController : Controller
     {
-
-        DatabaseConnect connection = new DatabaseConnect();
-
-        // GET: Payroll
-        
         public ActionResult Job_Order()
         {
-            if (Session["empID"] != null)
-            {
-                String id = Request["id"];
-                String search = Request["search"]; 
-                String submit = Request["submit"];
-                String type = Request["type"];
-                if (type == null) {
-                    type = "ATM";
-                }
-                if (id == null)
+           
+                if (Session["empID"] != null)
                 {
-                    id = "3";
-                }
-                if (search == null)
-                {
-                    search = "";
-                }
-                if (submit != null)
-                {
-                    if (submit.Equals("Refresh"))
+                    String id = Request["id"];
+                    String search = Request["search"];
+                    String submit = Request["submit"];
+                    String type = Request["type"];
+                    String start = Request["start"];
+                    String next = Request["next"];
+                    String max = Request["max"];
+
+                    if (start == null)
                     {
-                        search = "";
+                        start = "0";
+                    }
+                    if (next == null)
+                    {
+                        next = "0";
+                    }
+                    if (max == null)
+                    {
+                        max = "0";
+                    }
+                    if (type == null)
+                    {
+                        type = "ATM";
+                    }
+                  
+                    if (id == null)
+                    {
                         id = "3";
                     }
+                    if (search == null)
+                    {
+                        search = "";
+                    }
+                    if (submit != null)
+                    {
+                        if (submit.Equals("Refresh"))
+                        {
+                            search = "";
+                            id = "3";
+                            start = "0";
+                            next = "0";
+                            max = "0";
+                        }
+                    }
+                    String header = "";
+                    switch (type)
+                    {
+                        case "ATM":
+                            header = "Employee (JO) - ATM";
+                            break;
+                        case "CASH_CARD":
+                            header = "Employee (JO) - Cash Card";
+                            break;
+                        case "NO_CARD":
+                            header = "Employee (JO) - W/O LBP Card";
+                            break;
+                        case "UNDER_VTF":
+                            header = "Employee (JO) - Under VTF";
+                            break;
+                    }
+                    DatabaseConnect.start = int.Parse(start);
+                    DatabaseConnect.end = int.Parse(next);
+                    DatabaseConnect.max_size = max;
+                    ViewBag.List = DatabaseConnect.Instance.GetEmployee(id, search, "Job Order", type);
+                    ViewBag.Prev = DatabaseConnect.start;
+                    ViewBag.Next = DatabaseConnect.end;
+                    ViewBag.Max = int.Parse(DatabaseConnect.max_size);
+                    ViewBag.Search = search;
+                    ViewBag.Type = type;
+                    ViewBag.Header = header;
+                    return View();
                 }
-                String header = "";
-                switch (type) {
-                    case "ATM":
-                        header = "Employee (JO) - ATM";
-                        break;
-                    case "CASH_CARD":
-                        header = "Employee (JO) - Cash Card";
-                        break;
-                    case "NO_CARD":
-                        header = "Employee (JO) - W/O LBP Card";
-                        break;
-                    case "UNDER_VTF":
-                        header = "Employee (JO) - Under VTF";
-                        break;
+                else
+                {
+                    return RedirectToAction("Index", "Login");
                 }
-
-                ViewBag.List = connection.GetEmployee(id, search, "Job Order",type);
-                ViewBag.Prev = DatabaseConnect.start;
-                ViewBag.Next = DatabaseConnect.end;
-                ViewBag.Max = int.Parse(DatabaseConnect.max_size);
-                ViewBag.Search = search;
-                ViewBag.Type = type;
-                ViewBag.Header = header;
-                return View();
-            }
-            else {
-                return RedirectToAction("Index", "Login");
-            }
         }
+
+
 
         public ActionResult Regular()
         {
@@ -98,8 +121,8 @@ namespace DOH7PAYROLL.Controllers
                     id = "3";
                 }
             }
-
-            ViewBag.List = connection.GetEmployee(id, search, "Permanent","");
+            
+            ViewBag.List = DatabaseConnect.Instance.GetEmployee(id, search, "Permanent","");  
             ViewBag.Prev = DatabaseConnect.start;
             ViewBag.Next = DatabaseConnect.end;
             ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -109,28 +132,18 @@ namespace DOH7PAYROLL.Controllers
 
 
         public ActionResult Payroll_Redirect() {
-            Session["empID"] = Request["empID"];
-            Session["Salary"] = connection.GetLoans(Session["empID"].ToString());
-          
-            
-            Session["Coop"] = connection.GetAmount("coop_remittance",Session["empID"].ToString());
-            Session["Disallowance"] = connection.GetAmount("disallowance_remittance", Session["empID"].ToString());
-            Session["PagIbig"] = connection.GetAmount("pagibig_remittance", Session["empID"].ToString());
-            Session["Phic"] = connection.GetAmount("phic_remittance", Session["empID"].ToString());
-            Session["Gsis"] = connection.GetAmount("gsis_remittance", Session["empID"].ToString());
-            Session["Excess"] = connection.GetAmount("excess_remittance", Session["empID"].ToString());
-           
-            /*
-            Session["Coop"] = "0";
-            Session["Disallowance"] = "0";
-            Session["PagIbig"] = "0";
-            Session["Phic"] = "0";
-            Session["Gsis"] = "0";
-            Session["Excess"] = "0";
-            */
 
+            Session["empID"] = Request["empID"];
+            Session["Salary"] = DatabaseConnect.Instance.GetLoans(Session["empID"].ToString());          
+            Session["Coop"] = DatabaseConnect.Instance.GetAmount("coop_remittance",Session["empID"].ToString());
+            Session["Disallowance"] = DatabaseConnect.Instance.GetAmount("disallowance_remittance", Session["empID"].ToString());
+            Session["PagIbig"] = DatabaseConnect.Instance.GetAmount("pagibig_remittance", Session["empID"].ToString());
+            Session["Phic"] = DatabaseConnect.Instance.GetAmount("phic_remittance", Session["empID"].ToString());
+            Session["Gsis"] = DatabaseConnect.Instance.GetAmount("gsis_remittance", Session["empID"].ToString());
+            Session["Excess"] = DatabaseConnect.Instance.GetAmount("excess_remittance", Session["empID"].ToString());
             return RedirectToAction("Payroll_List");
         }
+        [NoCache]
         public ActionResult Payroll_List()
         {
             if (Session["empID"] != null)
@@ -139,6 +152,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (empID == null)
                 {
                     empID = "3";
@@ -157,9 +186,15 @@ namespace DOH7PAYROLL.Controllers
                     {
                         search = "";
                         id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
                 }
-                ViewBag.List = connection.GetPayroll(empID, id, search);
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetPayroll(empID, id, search);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -197,7 +232,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
 
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (submit == null)
                 {
                     submit = "";
@@ -214,17 +264,23 @@ namespace DOH7PAYROLL.Controllers
                 {
                     search = "";
                     id = "3";
+                    start = "0";
+                    next = "0";
+                    max = "0";
                 }
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
                 List<PdfFile> list = new List<PdfFile>();
-                List<Sections> section_list = connection.GetSection();
+                List<Sections> section_list = DatabaseConnect.Instance.GetSection();
 
                 if (Session["LoginType"].Equals("0"))
                 {
-                    list = connection.FetchPdf(id, search, Session["empID"].ToString());
+                    list = DatabaseConnect.Instance.FetchPdf(id, search, Session["empID"].ToString());
                 }
                 else
                 {
-                    list = connection.FetchPdf(id, search, "0");
+                    list = DatabaseConnect.Instance.FetchPdf(id, search, "0");
                 }
                 ViewBag.List = list;
                 ViewBag.Section = section_list;
@@ -260,7 +316,7 @@ namespace DOH7PAYROLL.Controllers
             String type_request = Request["type_request"];
             String remarks = Request["remarks"];
 
-            Employee employee = new Employee(id,"","","","","","","","");
+            Employee employee = new Employee(id,"","","","","","","","","","");
             String message = "";
             Payroll payroll = new Payroll(payroll_id, employee,start_date,end_date, adjustment.Replace(",", ""),
                 working_days, absent_date_list, salary.Replace(",",""), minutes_late, coop.Replace(",", ""), phic.Replace(",", ""), 
@@ -268,10 +324,10 @@ namespace DOH7PAYROLL.Controllers
 
             if (payroll_id.Equals(""))
             {
-                message = connection.InsertPayroll(payroll);
+                message = DatabaseConnect.Instance.InsertPayroll(payroll);
             }
             else
-                message = connection.UpdatePayroll(payroll);
+                message = DatabaseConnect.Instance.UpdatePayroll(payroll);
 
             TempData["message"] = message;
 
@@ -281,26 +337,26 @@ namespace DOH7PAYROLL.Controllers
         public ActionResult DeletePayroll()
         {
             String id = Request["submit"];
-            TempData["message"] = connection.DeletePayroll(id);
+            TempData["message"] = DatabaseConnect.Instance.DeletePayroll(id);
             return RedirectToAction("Payroll_List");
         }
 
         public ActionResult DeletePayrollPDF()
         {
             String id = Request["submit"];
-            TempData["pdf"] = connection.DeletePayrollPDF(id);
+            TempData["pdf"] = DatabaseConnect.Instance.DeletePayrollPDF(id);
             return RedirectToAction("Payroll");
         }
 
 
         [HttpPost]
         public String GetMins(String id,String from, String to,String am_in,String am_out,String pm_in,String pm_out) {
-            return connection.GetMins(id, from, to,am_in,am_out,pm_in,pm_out);
+            return DatabaseConnect.Instance.GetMins(id, from, to,am_in,am_out,pm_in,pm_out);
             
 ;        }
 
         public String ifWeekend(String date) {
-            return connection.ifWeekend(date) ?"WEEKEND":"NOT WEEKEND";
+            return DatabaseConnect.Instance.ifWeekend(date) ?"WEEKEND":"NOT WEEKEND";
         }
 
         /*
@@ -404,9 +460,7 @@ namespace DOH7PAYROLL.Controllers
             String title = DatabaseConnect.getMonthName(month) + " " + day_from+ "-" + day_to+ ", " + year;
             MemoryStream workStream = new MemoryStream();
             StringBuilder status = new StringBuilder("");
-            DateTime now = DateTime.Now;
-            String currentDateTime = now.Hour + "" + now.Minute + "" + now.Second;
-            string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+"_"+currentDateTime+ ".pdf");
+            string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+".pdf");
 
             Document doc = new Document();
             doc.SetMargins(5f, 5f, 5f, 5f);
@@ -440,7 +494,7 @@ namespace DOH7PAYROLL.Controllers
             String strAttachment = Server.MapPath(Url.Content("~/public/Pdf/" + strPDFFileName));
             String imageURL = Server.MapPath(Url.Content("~/public/img/logo.png"));
             PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(strAttachment, FileMode.Create));
-            Payroll payroll = connection.GeneratePayslip(id,start_date,end_date);
+            Payroll payroll = DatabaseConnect.Instance.GeneratePayslip(id,start_date,end_date);
 
             if (payroll != null)
             {
@@ -453,7 +507,7 @@ namespace DOH7PAYROLL.Controllers
                 string position = payroll.Employee.JobType;
                 string remarks = payroll.Remarks;
                 string disbursement_type = payroll.Employee.Disbursement;
-                string division_charge = connection.GetDivisionNameByID(payroll.Employee.DivisionID);
+                string division_charge = DatabaseConnect.Instance.GetDivisionNameByID(payroll.Employee.DivisionID);
                 decimal salary = decimal.Parse(payroll.Salary);
                 decimal adjustment = decimal.Parse(payroll.Adjustment);
                 decimal half_salary = salary / 2;
@@ -833,7 +887,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
                 });
-                count = connection.GetRemittanceCount("coop_remittance", ID).Split(' ')[0];
+                count = DatabaseConnect.Instance.GetRemittanceCount("coop_remittance", ID).Split(' ')[0];
                 rate_deductions.AddCell(new PdfPCell(new Phrase("Coop(" + count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
@@ -860,7 +914,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
                 });
-                count = connection.GetRemittanceCount("disallowance_remittance", ID).Split(' ')[0];
+                count = DatabaseConnect.Instance.GetRemittanceCount("disallowance_remittance", ID).Split(' ')[0];
                 rate_deductions.AddCell(new PdfPCell(new Phrase("Disallowance(" + count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
@@ -887,7 +941,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
                 });
-                 count = connection.GetRemittanceCount("pagibig_remittance",ID).Split(' ')[0];
+                 count = DatabaseConnect.Instance.GetRemittanceCount("pagibig_remittance",ID).Split(' ')[0];
                 rate_deductions.AddCell(new PdfPCell(new Phrase("Pag-Ibig("+ count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
@@ -913,7 +967,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
                 });
-                count = connection.GetRemittanceCount("phic_remittance", ID).Split(' ')[0];
+                count = DatabaseConnect.Instance.GetRemittanceCount("phic_remittance", ID).Split(' ')[0];
                 rate_deductions.AddCell(new PdfPCell(new Phrase("PHIC(" + count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
@@ -939,7 +993,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
                 });
-                count = connection.GetRemittanceCount("gsis_remittance", ID).Split(' ')[0];
+                count = DatabaseConnect.Instance.GetRemittanceCount("gsis_remittance", ID).Split(' ')[0];
                 rate_deductions.AddCell(new PdfPCell(new Phrase("GSIS(" + count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
@@ -965,7 +1019,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
                 });
-                count = connection.GetRemittanceCount("excess_remittance", ID).Split(' ')[0];
+                count = DatabaseConnect.Instance.GetRemittanceCount("excess_remittance", ID).Split(' ')[0];
                 rate_deductions.AddCell(new PdfPCell(new Phrase("Excess Mobile(" + count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
@@ -1032,7 +1086,7 @@ namespace DOH7PAYROLL.Controllers
                 doc.Open();
                 doc.Add(outer);
                 doc.Close();
-                message = connection.InsertPDF(strPDFFileName, "0",id,start_date,end_date,disbursement_type, division_charge);
+                message = DatabaseConnect.Instance.InsertPDF(strPDFFileName, "0",id,start_date,end_date,disbursement_type, division_charge);
                 return message;
             }
             else {
@@ -1075,10 +1129,10 @@ namespace DOH7PAYROLL.Controllers
                 List<Payroll> payroll = new List<Payroll>();
                 if (selection.Equals("1"))
                 {
-                    payroll = connection.GeneratePayroll(from_date, to_date, "1",disbursment,in_charge, section); 
+                    payroll = DatabaseConnect.Instance.GeneratePayroll(from_date, to_date, "1",disbursment,in_charge, section); 
                 }
                 else {
-                    payroll = connection.GeneratePayroll(from_date, to_date, selection,disbursment, in_charge, section);
+                    payroll = DatabaseConnect.Instance.GeneratePayroll(from_date, to_date, selection,disbursment, in_charge, section);
                 }
                     if (payroll.Count > 0)
                 {
@@ -1086,12 +1140,10 @@ namespace DOH7PAYROLL.Controllers
 
                     MemoryStream workStream = new MemoryStream();
                     StringBuilder status = new StringBuilder("");
-                    DateTime now = DateTime.Now;
-                    String currentDateTime = now.Hour + "" + now.Minute + "" + now.Second;
-                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+"_"+currentDateTime+"_"+section+ ".pdf");
+                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+".pdf");
 
                     Document doc = new Document();
-                    doc.SetMargins(20f, 20f, 20f, 20f);
+                    doc.SetMargins(5f, 5f, 5f, 5f);
                     doc.SetPageSize(PageSize.LEGAL.Rotate());
 
                     PdfPTable outer = new PdfPTable(1);
@@ -1100,7 +1152,7 @@ namespace DOH7PAYROLL.Controllers
                     outer.SplitRows = true;
                     outer.SplitLate = true;
 
-                    float[] headers = { 5, 5, 5, 9, 6, 6, 7, 6, 8, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 6 };
+                    float[] headers = { 6, 8, 8, 8, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6};
                     PdfPTable body = new PdfPTable(20);
                     body.SetWidths(headers);
                     body.TotalWidth = 400;
@@ -1119,7 +1171,7 @@ namespace DOH7PAYROLL.Controllers
                     if (selection.Equals("1"))
                     {
                         body = addBody(body, filter_dates, imageURL, from_date, to_date, payroll, writer,doc, disbursment);
-                        String name = connection.GetEmployeeNameByID(in_charge);
+                        String name = DatabaseConnect.Instance.GetEmployeeNameByID(in_charge);
                         footer = addFooter(footer, name);
                         outer.AddCell(new PdfPCell(body)
                         {
@@ -1141,7 +1193,7 @@ namespace DOH7PAYROLL.Controllers
                     doc.Add(outer);
                     doc.Close();
                     //in_charge = connection.GetInCharge(in_charge)[0].Description.Split('-')[0];
-                    message = connection.InsertPDF(strPDFFileName, "1", "0", from_date, to_date, disbursment, in_charge);
+                    message = DatabaseConnect.Instance.InsertPDF(strPDFFileName, "1", "0", from_date, to_date, disbursment, in_charge);
                     TempData["pdf"] = message;
                     // return File(strAttachment, "application/pdf");
 
@@ -1204,24 +1256,24 @@ namespace DOH7PAYROLL.Controllers
                 string lname = item.Employee.Lastname;
                 string position = item.Employee.JobType;
                 decimal pagibig = decimal.Parse(item.Pagibig);
-                String max_and_count = connection.GetRemittanceCount("pagibig_remittance",ID);
+                String max_and_count = DatabaseConnect.Instance.GetRemittanceCount("pagibig_remittance",ID);
                 switch (selection)
                 {
                     case "3":
                         pagibig = decimal.Parse(item.Coop);
-                        max_and_count = connection.GetRemittanceCount("pagibig_remittance", ID);
+                        max_and_count = DatabaseConnect.Instance.GetRemittanceCount("pagibig_remittance", ID);
                         break;
                     case "4":
                         pagibig = decimal.Parse(item.Phic);
-                        max_and_count = connection.GetRemittanceCount("phic_remittance", ID);
+                        max_and_count = DatabaseConnect.Instance.GetRemittanceCount("phic_remittance", ID);
                         break;
                     case "5":
                         pagibig = decimal.Parse(item.Gsis);
-                        max_and_count = connection.GetRemittanceCount("gsis_remittance", ID);
+                        max_and_count = DatabaseConnect.Instance.GetRemittanceCount("gsis_remittance", ID);
                         break;
                     case "6":
                         pagibig = decimal.Parse(item.ExcessMobile);
-                        max_and_count = connection.GetRemittanceCount("excess_remittance", ID);
+                        max_and_count = DatabaseConnect.Instance.GetRemittanceCount("excess_remittance", ID);
                         break;
                 }
                 
@@ -1406,7 +1458,6 @@ namespace DOH7PAYROLL.Controllers
                 {
                     minutes_late += (480 * size);
                 }
-                remarks += " "+size;
                 int working_days = int.Parse(item.WorkDays);
                 decimal per_day = 0;
                 decimal absences = 0;
@@ -1505,7 +1556,7 @@ namespace DOH7PAYROLL.Controllers
                 AddCellToBody(tableLayout, gsis.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, excess.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, total_amount.ToString("#,##0.00"), "right");
-                AddCellToBody(tableLayout, remarks, "left");
+                AddCellToBody(tableLayout, remarks, "left-remarks");
             }
             addOverall(tableLayout, overall_net.ToString("#,##0.00"));
 
@@ -3023,6 +3074,15 @@ namespace DOH7PAYROLL.Controllers
                 {
                     BorderWidth = 0.2f,
                     HorizontalAlignment = Element.ALIGN_LEFT,
+                    VerticalAlignment = Element.ALIGN_CENTER
+                });
+            }else if (position.Equals("left-remarks"))
+            {
+                tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 6, Font.NORMAL))))
+                {
+                    BorderWidth = 0.2f,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_CENTER
                 });
             }
             else {
@@ -3030,6 +3090,7 @@ namespace DOH7PAYROLL.Controllers
                 {
                     BorderWidth = 0.2f,
                     HorizontalAlignment = Element.ALIGN_RIGHT,
+                    VerticalAlignment = Element.ALIGN_CENTER
                 });
             }
         }

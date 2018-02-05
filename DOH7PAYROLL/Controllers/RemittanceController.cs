@@ -11,7 +11,6 @@ namespace DOH7PAYROLL.Controllers
 {
     public class RemittanceController : Controller
     {
-        DatabaseConnect connection = new DatabaseConnect();
         // GET: Remittance
         public ActionResult Pagibig()
         {
@@ -21,6 +20,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (id == null)
                 {
                     id = "3";
@@ -35,10 +50,15 @@ namespace DOH7PAYROLL.Controllers
                     {
                         search = "";
                         id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
                 }
-
-                ViewBag.List = connection.GetRemittance("pagibig_remittance",id, search);
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetRemittance("pagibig_remittance",id, search);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -58,6 +78,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (id == null)
                 {
                     id = "3";
@@ -72,10 +108,15 @@ namespace DOH7PAYROLL.Controllers
                     {
                         search = "";
                         id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
                 }
-
-                ViewBag.List = connection.GetRemittance("phic_remittance", id, search);
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetRemittance("phic_remittance", id, search);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -96,6 +137,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (id == null)
                 {
                     id = "3";
@@ -110,10 +167,15 @@ namespace DOH7PAYROLL.Controllers
                     {
                         search = "";
                         id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
                 }
-
-                ViewBag.List = connection.GetRemittance("excess_remittance", id, search);
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetRemittance("excess_remittance", id, search);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -133,6 +195,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (id == null)
                 {
                     id = "3";
@@ -147,10 +225,15 @@ namespace DOH7PAYROLL.Controllers
                     {
                         search = "";
                         id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
                 }
-
-                ViewBag.List = connection.GetRemittance("gsis_remittance", id, search);
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetRemittance("gsis_remittance", id, search);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -171,6 +254,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (id == null)
                 {
                     id = "3";
@@ -185,10 +284,15 @@ namespace DOH7PAYROLL.Controllers
                     {
                         search = "";
                         id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
                 }
-
-                ViewBag.List = connection.GetRemittance("disallowance_remittance", id, search);
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetRemittance("disallowance_remittance", id, search);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -209,6 +313,22 @@ namespace DOH7PAYROLL.Controllers
                 String id = Request["id"];
                 String search = Request["search"];
                 String submit = Request["submit"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
                 if (id == null)
                 {
                     id = "3";
@@ -223,10 +343,15 @@ namespace DOH7PAYROLL.Controllers
                     {
                         search = "";
                         id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
                 }
-
-                ViewBag.List = connection.GetRemittance("coop_remittance", id, search);
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetRemittance("coop_remittance", id, search);
                 ViewBag.Prev = DatabaseConnect.start;
                 ViewBag.Next = DatabaseConnect.end;
                 ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -252,61 +377,61 @@ namespace DOH7PAYROLL.Controllers
                 case "Pagibig":
                     if (submit.Equals("0"))
                     {
-                        TempData["message"] = connection.InsertRemittance("pagibig_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.InsertRemittance("pagibig_remittance", remmitance);
                     }
                     else {
-                        TempData["message"] = connection.UpdateRemittance("pagibig_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.UpdateRemittance("pagibig_remittance", remmitance);
                     }
 
                     return RedirectToAction("Pagibig");
                 case "Coop":
                     if (submit.Equals("0"))
                     {
-                        TempData["message"] = connection.InsertRemittance("coop_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.InsertRemittance("coop_remittance", remmitance);
                     }
                     else
                     {
-                        TempData["message"] = connection.UpdateRemittance("coop_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.UpdateRemittance("coop_remittance", remmitance);
                     }
                     return RedirectToAction("Coop");
                 case "Excess":
                     if (submit.Equals("0"))
                     {
-                        TempData["message"] = connection.InsertRemittance("excess_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.InsertRemittance("excess_remittance", remmitance);
                     }
                     else
                     {
-                        TempData["message"] = connection.UpdateRemittance("excess_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.UpdateRemittance("excess_remittance", remmitance);
                     }
                     return RedirectToAction("Excess");
                 case "Phic":
                     if (submit.Equals("0"))
                     {
-                        TempData["message"] = connection.InsertRemittance("phic_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.InsertRemittance("phic_remittance", remmitance);
                     }
                     else
                     {
-                        TempData["message"] = connection.UpdateRemittance("phic_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.UpdateRemittance("phic_remittance", remmitance);
                     }
                     return RedirectToAction("Phic");
                 case "Disallowance":
                     if (submit.Equals("0"))
                     {
-                        TempData["message"] = connection.InsertRemittance("disallowance_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.InsertRemittance("disallowance_remittance", remmitance);
                     }
                     else
                     {
-                        TempData["message"] = connection.UpdateRemittance("disallowance_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.UpdateRemittance("disallowance_remittance", remmitance);
                     }
                     return RedirectToAction("Disallowance");
                 case "Gsis":
                     if (submit.Equals("0"))
                     {
-                        TempData["message"] = connection.InsertRemittance("gsis_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.InsertRemittance("gsis_remittance", remmitance);
                     }
                     else
                     {
-                        TempData["message"] = connection.UpdateRemittance("gsis_remittance", remmitance);
+                        TempData["message"] = DatabaseConnect.Instance.UpdateRemittance("gsis_remittance", remmitance);
                     }
                     return RedirectToAction("Gsis");
             }
@@ -319,22 +444,22 @@ namespace DOH7PAYROLL.Controllers
             switch (Session["RemitType"].ToString())
             {
                 case "Pagibig":
-                    TempData["message"] = connection.DeleteRemittance("pagibig_remittance", empID);
+                    TempData["message"] = DatabaseConnect.Instance.DeleteRemittance("pagibig_remittance", empID);
                     return RedirectToAction("Pagibig");
                 case "Coop":
-                    TempData["message"] = connection.DeleteRemittance("coop_remittance", empID);
+                    TempData["message"] = DatabaseConnect.Instance.DeleteRemittance("coop_remittance", empID);
                     return RedirectToAction("Coop");
                 case "Excess":
-                    TempData["message"] = connection.DeleteRemittance("excess_remittance", empID);
+                    TempData["message"] = DatabaseConnect.Instance.DeleteRemittance("excess_remittance", empID);
                     return RedirectToAction("Excess");
                 case "Phic":
-                    TempData["message"] = connection.DeleteRemittance("phic_remittance", empID);
+                    TempData["message"] = DatabaseConnect.Instance.DeleteRemittance("phic_remittance", empID);
                     return RedirectToAction("Phic");
                 case "Disallowance":
-                    TempData["message"] = connection.DeleteRemittance("disallowance_remittance", empID);
+                    TempData["message"] = DatabaseConnect.Instance.DeleteRemittance("disallowance_remittance", empID);
                     return RedirectToAction("Disallowance");
                 case "Gsis":
-                    TempData["message"] = connection.DeleteRemittance("gsis_remittance", empID);
+                    TempData["message"] = DatabaseConnect.Instance.DeleteRemittance("gsis_remittance", empID);
                     return RedirectToAction("Gsis");
             }
             return RedirectToAction("Pagibig");
