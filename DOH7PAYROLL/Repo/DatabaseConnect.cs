@@ -43,7 +43,7 @@ namespace DOH7PAYROLL.Repo
                 return instance;
             }
         }
-
+        //SQL DB
         //Initialize values
         public void Initialize()
         {
