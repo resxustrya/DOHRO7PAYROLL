@@ -64,13 +64,10 @@ namespace DOH7PAYROLL.Repo
             }
             if (pis == null)
             {
-                server = "localhost";
-                //server = "172.16.0.14";
+                server = "172.16.0.14";
                 database = "pis";
-                uid = "root";
-                password = "";
-                //uid = "doh7payroll";
-                //password = "doh7payroll";
+                uid = "doh7payroll";
+                password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -80,12 +77,9 @@ namespace DOH7PAYROLL.Repo
             if (dts == null)
             {
                 server = "localhost";
-                //server = "localhost";
                 database = "dtsv3_0";
                 uid = "root";
                 password = "";
-                //uid = "root";
-                //password = "";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -94,13 +88,11 @@ namespace DOH7PAYROLL.Repo
             }
             if (dtr == null)
             {
-                server = "localhost";
-                //server = "172.16.0.14";
+                
+                server = "172.16.0.14";
                 database = "dohdtr";
-                uid = "root";
-                password = "";
-                //uid = "doh7payroll";
-                //password = "doh7payroll";
+                uid = "doh7payroll";
+                password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -1175,7 +1167,6 @@ namespace DOH7PAYROLL.Repo
             return payroll;
         }
 
-        //GET MINS,ABSENCES and WORKING DAYS
         public Boolean IsHoliday(String date)
         {
             Boolean found = false;
@@ -1190,7 +1181,7 @@ namespace DOH7PAYROLL.Repo
             //Create Command
             if (this.OpenConnection() == true)
             {
-                MySqlCommand cmd = new MySqlCommand(query, dtr);    
+                MySqlCommand cmd = new MySqlCommand(query, dtr);
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -1491,7 +1482,7 @@ namespace DOH7PAYROLL.Repo
 
                     //close Data Reader
                     dataReader.Close();
-                    //close Connection
+                    //close Connection  
                     this.CloseConnection();
 
                     for (int i = 0; i < days.Count; i++)
