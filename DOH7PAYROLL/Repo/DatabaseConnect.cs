@@ -81,7 +81,7 @@ namespace DOH7PAYROLL.Repo
             {
                 server = "localhost";
                 //server = "localhost";
-                database = "dtsv3_0";
+                database = "dtsv3.0";
                 uid = "root";
                 password = "";
                 //uid = "root";
