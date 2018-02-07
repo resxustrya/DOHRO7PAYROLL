@@ -122,6 +122,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                         //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Half Month");
@@ -169,6 +170,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                         //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Whole Month");
@@ -195,6 +197,7 @@ $(document).ready(function () {
         while (myNode.firstChild) {
             myNode.removeChild(myNode.firstChild);
         }
+        $(".loader_ajax").removeClass("hidden");
         switch (chosen_options) {
             case "1":
                 $.ajax({
@@ -236,6 +239,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                         //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Half Month");
@@ -283,6 +287,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                         //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Half Month");
@@ -330,6 +335,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                       //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Whole Month");
@@ -355,6 +361,7 @@ $(document).ready(function () {
         while (myNode.firstChild) {
             myNode.removeChild(myNode.firstChild);
         }
+        $(".loader_ajax").removeClass("hidden");
         switch (chosen_options) {
             case "1":
                 $.ajax({
@@ -396,6 +403,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                         //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Half Month");
@@ -445,6 +453,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                         //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Half Month");
@@ -494,6 +503,7 @@ $(document).ready(function () {
                         $("#working_days").val(working_days);
                         //  $("#no_days_absent").val(no_days_absent);
                         Compute();
+                        $(".loader_ajax").addClass("hidden");
                     }
                 });
                 $("#half_month_text").text("Whole Month");
