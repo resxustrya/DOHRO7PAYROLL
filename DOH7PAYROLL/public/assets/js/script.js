@@ -901,7 +901,7 @@ $(document).ready(function () {
 function clearFeld() {
     $("#month").val("1");
     $("#month_range").val("1");
-    $("#year").val("1");
+    $("#year").val("2017");
     $("#type_request").val("0");
     $("#working_days").val("");
     $("#minutes_late").val("");

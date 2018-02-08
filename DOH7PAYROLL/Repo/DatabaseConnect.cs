@@ -69,8 +69,8 @@ namespace DOH7PAYROLL.Repo
                 database = "pis";
                 //uid = "root";
                 //password = "";
-                uid = "doh7payroll";
-                password = "doh7payroll";
+                uid = "rexus";
+                password = "@HAHAhehe1211";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -82,8 +82,8 @@ namespace DOH7PAYROLL.Repo
                 server = "172.16.0.14";
                 //server = "localhost";
                 database = "dts";
-                uid = "doh7payroll";
-                password = "doh7payroll";
+                uid = "rexus";
+                password = "HAHAhehe1211";
                 //uid = "root";
                 //password = "";
                 string connectionString;
@@ -99,8 +99,8 @@ namespace DOH7PAYROLL.Repo
                 database = "dohdtr";
                 //uid = "root";
                 //password = "";
-                uid = "doh7payroll";
-                password = "doh7payroll";
+                uid = "rexus";
+                password = "HAHAhehe1211";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";

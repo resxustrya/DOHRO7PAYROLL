@@ -447,7 +447,6 @@ namespace DOH7PAYROLL.Controllers
         }
         */
 
-        [HttpPost]
         public String CreatePayslip(String id,String start_date,String end_date)
         {
             String message = "";
