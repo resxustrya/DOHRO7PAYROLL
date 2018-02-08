@@ -2368,6 +2368,9 @@ namespace DOH7PAYROLL.Controllers
             return header;
         }
 
+
+      
+
         public ActionResult CreateRegularSummary()
         {
             String title = "Summary";

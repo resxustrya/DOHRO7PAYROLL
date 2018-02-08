@@ -69,8 +69,8 @@ namespace DOH7PAYROLL.Repo
                 database = "pis";
                 //uid = "root";
                 //password = "";
-                uid = "rexus";
-                password = "@HAHAhehe1211";
+                uid = "doh7payroll";
+                password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -82,8 +82,8 @@ namespace DOH7PAYROLL.Repo
                 server = "172.16.0.14";
                 //server = "localhost";
                 database = "dts";
-                uid = "rexus";
-                password = "HAHAhehe1211";
+                uid = "doh7payroll";
+                password = "doh7payroll";
                 //uid = "root";
                 //password = "";
                 string connectionString;
@@ -99,8 +99,8 @@ namespace DOH7PAYROLL.Repo
                 database = "dohdtr";
                 //uid = "root";
                 //password = "";
-                uid = "rexus";
-                password = "HAHAhehe1211";
+                uid = "doh7payroll";
+                password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -419,7 +419,7 @@ namespace DOH7PAYROLL.Repo
         {
 
             Employee employee = null;
-            String query = "SELECT u.usertype,u.username,u.pin,i.userid,i.fname,i.lname,i.mname,i.employee_status,s.description FROM pis.users u LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN dts.section s ON i.section_id= s.id WHERE u.username = '" + userid + "' AND u.pin = '"+pin+"'";
+            String query = "SELECT u.usertype,u.username,u.pin,i.userid,i.fname,i.lname,i.mname,i.employee_status,s.description FROM pis.users u LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN dtsv3_0.section s ON i.section_id= s.id WHERE u.username = '" + userid + "' AND u.pin = '"+pin+"'";
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, pis);
@@ -444,7 +444,39 @@ namespace DOH7PAYROLL.Repo
                 this.CloseConnection();
             }
             return employee;
-        } 
+        }
+
+        public String Dummy()
+        {
+            String response = "";
+            List<Payroll> payroll = new List<Payroll>();
+            string query = "SELECT d.id,p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.source_fund,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section d ON i.section_id = d.id) ON p.userid = i.userid WHERE p.start_date = '01/01/2017' AND p.end_date = '01/15/2017' AND i.disbursement_type = 'CASH_CARD'";
+            query = query + " ORDER BY d.description,i.source_fund,i.fname,i.lname ASC";
+            if (this.OpenConnection() == true)
+            {
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    String userid = dataReader["userid"].ToString();
+                    response += userid;
+                }
+
+                //close Data Reader
+                dataReader.Close();
+
+                //close Connection
+                this.CloseConnection();
+
+                //return list to be displayed
+
+            }
+            return response;
+        }
 
 
         public List<PdfFile> FetchPdf(String type, String search, String mId)
@@ -936,7 +968,7 @@ namespace DOH7PAYROLL.Repo
             String disbursment, String in_charge,String sectionID)
         {
             List<Payroll> payroll = new List<Payroll>();
-            string query = "SELECT d.id,p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.source_fund,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dts.section d ON i.section_id = d.id) ON p.userid = i.userid WHERE p.start_date = '" + start_date + "' AND p.end_date = '" + end_date + "' AND i.disbursement_type = '" + disbursment + "'";
+            string query = "SELECT d.id,p.absent_days,p.adjustment,p.remarks,d.description,i.userid,i.mname,i.fname,i.lname,i.position,i.source_fund,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section d ON i.section_id = d.id) ON p.userid = i.userid WHERE p.start_date = '" + start_date + "' AND p.end_date = '" + end_date + "' AND i.disbursement_type = '" + disbursment + "'";
             switch (selection)
             {
                 case "2":
@@ -1062,7 +1094,7 @@ namespace DOH7PAYROLL.Repo
         public Payroll GeneratePayslip(String id, String start_date, String end_date)
         {
             Payroll payroll = null;
-            string query = "SELECT p.absent_days,p.adjustment,p.remarks,s.description,i.userid,i.mname,i.fname,i.lname,i.disbursement_type,i.salary_charge,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dts.section s ON i.section_id = s.id) ON p.userid = i.userid WHERE p.userid = '" + id + "'";
+            string query = "SELECT p.absent_days,p.adjustment,p.remarks,s.description,i.userid,i.mname,i.fname,i.lname,i.disbursement_type,i.salary_charge,i.position,i.tin_no,p.working_days,p.month_salary,p.minutes_late,p.coop,p.phic,p.disallowance,p.gsis,p.pagibig,p.excess_mobile FROM payroll.payroll p LEFT JOIN (pis.personal_information i LEFT JOIN dtsv3_0.section s ON i.section_id = s.id) ON p.userid = i.userid WHERE p.userid = '" + id + "'";
             if (!start_date.Equals("") && !end_date.Equals(""))
             {
                 query = query + " AND p.start_date = '" + start_date + "' AND p.end_date = '" + end_date + "'";
