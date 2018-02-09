@@ -52,10 +52,13 @@ namespace DOH7PAYROLL.Repo
             max_size = "0";
             if (sql_payroll == null)
             {
-                server = "localhost";
+                //server = "localhost";
+                server = "172.16.0.14";
                 database = "payroll";
-                uid = "root";
-                password = "";
+                //uid = "root";
+                //password = "";
+                uid = "doh7payroll";
+                password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
                 database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -451,28 +454,57 @@ namespace DOH7PAYROLL.Repo
             return employee;
         }
 
-        public String Dummy(String userid,String pin)
+        public String Dummy()
         {
             String response = "";
-            List<Payroll> payroll = new List<Payroll>();
-            string query = "SELECT u.usertype,u.username,u.pin,i.userid,i.fname,i.lname,i.mname,i.employee_status,s.description FROM pis.users u LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN dts.section s ON i.section_id= s.id WHERE u.username = '" + userid + "' AND u.pin = '" + pin + "'";
+            String query = "SELECT datein FROM dtr_file WHERE userid = '0618' LIMIT 20";
+            if (this.OpenConnection() == true)
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, dtr);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    //Read the data and store them in the list
+                    while (dataReader.Read())
+                    {
+                        response += dataReader["datein"].ToString().Split(' ')[0]+" ";
+                    }
+                    //Create a data reader and Execute the command
+                    dataReader.Close();
+                    this.CloseConnection();
+                }
+                catch (MySqlException e)
+                {
+                    response += " CATCH";
+                    this.CloseConnection();
+                }
+
+            }
+            return response;
+        }
+
+        public String SectionDescription(String id)
+        {
+            String response = "";
+            String query = "SELECT description FROM section WHERE id = '"+id+"' LIMIT 1";
+            //Open connection
             if (this.OpenConnection() == true)
             {
                 //Create Command
-                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                MySqlCommand cmd = new MySqlCommand(query, dts);
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
                 //Read the data and store them in the list
                 while (dataReader.Read())
                 {
-                    String ya = dataReader["fname"].ToString()+" "+dataReader["lname"].ToString()+" "+ dataReader["mname"].ToString();
-                    response += ya;
+                   
+                    response = dataReader["description"].ToString();
                 }
 
                 //close Data Reader
                 dataReader.Close();
-
                 //close Connection
                 this.CloseConnection();
 
@@ -481,7 +513,6 @@ namespace DOH7PAYROLL.Repo
             }
             return response;
         }
-
 
         public List<PdfFile> FetchPdf(String type, String search, String mId)
         {
@@ -1108,105 +1139,111 @@ namespace DOH7PAYROLL.Repo
 
             if (this.OpenConnection() == true)
             {
-                //Create Command
-                MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
-                //Create a data reader and Execute the command
-                MySqlDataReader dataReader = cmd.ExecuteReader();
+                try {
+                    //Create Command
+                    MySqlCommand cmd = new MySqlCommand(query, sql_payroll);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
 
-                //Read the data and store them in the list
-                while (dataReader.Read())
-                {
-                    String tin = dataReader["tin_no"].ToString();
-                    String desc = dataReader["description"].ToString().ToUpper();
-                    String userid = dataReader["userid"].ToString();
-                    String fname = dataReader["fname"].ToString();
-                    String mname = dataReader["mname"].ToString();
-                    String lname = dataReader["lname"].ToString();
-                    String emptype = dataReader["position"].ToString();
+                    //Read the data and store them in the list
+                    while (dataReader.Read())
+                    {
+                        String tin = dataReader["tin_no"].ToString();
+                        String desc = dataReader["description"].ToString().ToUpper();
+                        String userid = dataReader["userid"].ToString();
+                        String fname = dataReader["fname"].ToString();
+                        String mname = dataReader["mname"].ToString();
+                        String lname = dataReader["lname"].ToString();
+                        String emptype = dataReader["position"].ToString();
 
-                    String minutes_late = dataReader["minutes_late"].ToString();
-                    if (minutes_late.Equals("") || minutes_late.Equals("NULL"))
-                    {
-                        minutes_late = "0";
+                        String minutes_late = dataReader["minutes_late"].ToString();
+                        if (minutes_late.Equals("") || minutes_late.Equals("NULL"))
+                        {
+                            minutes_late = "0";
+                        }
+                        String working_days = dataReader["working_days"].ToString();
+                        if (working_days.Equals("") || working_days.Equals("NULL"))
+                        {
+                            working_days = "0";
+                        }
+                        String monthly_salary = dataReader["month_salary"].ToString();
+                        if (monthly_salary.Equals("") || monthly_salary.Equals("NULL") || monthly_salary.Equals("Null") || monthly_salary.Equals(null))
+                        {
+                            monthly_salary = "0";
+                        }
+                        String coop = dataReader["coop"].ToString();
+                        if (coop.Equals("") || coop.Equals("NULL"))
+                        {
+                            coop = "0";
+                        }
+                        String adjustment = dataReader["adjustment"].ToString();
+                        if (adjustment.Equals("") || adjustment.Equals("NULL"))
+                        {
+                            adjustment = "0.00";
+                        }
+                        String remarks = dataReader["remarks"].ToString();
+                        if (remarks.Equals("") || remarks.Equals("NULL"))
+                        {
+                            remarks = "";
+                        }
+                        String absent_days = dataReader["absent_days"].ToString();
+                        if (absent_days.Equals("") || absent_days.Equals("NULL"))
+                        {
+                            absent_days = "";
+                        }
+                        String phic = dataReader["phic"].ToString();
+                        if (phic.Equals("") || phic.Equals("NULL"))
+                        {
+                            phic = "0";
+                        }
+                        String disallowance = dataReader["disallowance"].ToString();
+                        if (disallowance.Equals("") || disallowance.Equals("NULL"))
+                        {
+                            disallowance = "0";
+                        }
+                        String gsis = dataReader["gsis"].ToString();
+                        if (gsis.Equals("") || gsis.Equals("NULL"))
+                        {
+                            gsis = "0";
+                        }
+                        String pagibig = dataReader["pagibig"].ToString();
+                        if (pagibig.Equals("") || pagibig.Equals("NULL"))
+                        {
+                            pagibig = "0";
+                        }
+                        String excess_mobile = dataReader["excess_mobile"].ToString();
+                        if (excess_mobile.Equals("") || excess_mobile.Equals("NULL"))
+                        {
+                            excess_mobile = "0";
+                        }
+                        String disbursement = dataReader["disbursement_type"].ToString();
+                        if (disbursement.Equals("") || disbursement.Equals("NULL"))
+                        {
+                            disbursement = "";
+                        }
+                        String divisionID = dataReader["salary_charge"].ToString();
+                        if (divisionID.Equals("") || divisionID.Equals("NULL"))
+                        {
+                            divisionID = "0";
+                        }
+                        Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc, disbursement, divisionID, "", "");
+                        payroll = new Payroll("0", employee, start_date, end_date, adjustment, working_days, absent_days
+                             , monthly_salary, minutes_late, coop, phic, disallowance, gsis, pagibig, excess_mobile, remarks, "");
+
                     }
-                    String working_days = dataReader["working_days"].ToString();
-                    if (working_days.Equals("") || working_days.Equals("NULL"))
-                    {
-                        working_days = "0";
-                    }
-                    String monthly_salary = dataReader["month_salary"].ToString();
-                    if (monthly_salary.Equals("") || monthly_salary.Equals("NULL") || monthly_salary.Equals("Null") || monthly_salary.Equals(null))
-                    {
-                        monthly_salary = "0";
-                    }
-                    String coop = dataReader["coop"].ToString();
-                    if (coop.Equals("") || coop.Equals("NULL"))
-                    {
-                        coop = "0";
-                    }
-                    String adjustment = dataReader["adjustment"].ToString();
-                    if (adjustment.Equals("") || adjustment.Equals("NULL"))
-                    {
-                        adjustment = "0.00";
-                    }
-                    String remarks = dataReader["remarks"].ToString();
-                    if (remarks.Equals("") || remarks.Equals("NULL"))
-                    {
-                        remarks = "";
-                    }
-                    String absent_days = dataReader["absent_days"].ToString();
-                    if (absent_days.Equals("") || absent_days.Equals("NULL"))
-                    {
-                        absent_days = "";
-                    }
-                    String phic = dataReader["phic"].ToString();
-                    if (phic.Equals("") || phic.Equals("NULL"))
-                    {
-                        phic = "0";
-                    }
-                    String disallowance = dataReader["disallowance"].ToString();
-                    if (disallowance.Equals("") || disallowance.Equals("NULL"))
-                    {
-                        disallowance = "0";
-                    }
-                    String gsis = dataReader["gsis"].ToString();
-                    if (gsis.Equals("") || gsis.Equals("NULL"))
-                    {
-                        gsis = "0";
-                    }
-                    String pagibig = dataReader["pagibig"].ToString();
-                    if (pagibig.Equals("") || pagibig.Equals("NULL"))
-                    {
-                        pagibig = "0";
-                    }
-                    String excess_mobile = dataReader["excess_mobile"].ToString();
-                    if (excess_mobile.Equals("") || excess_mobile.Equals("NULL"))
-                    {
-                        excess_mobile = "0";
-                    }
-                    String disbursement = dataReader["disbursement_type"].ToString();
-                    if (disbursement.Equals("") || disbursement.Equals("NULL"))
-                    {
-                        disbursement = "";
-                    }
-                    String divisionID = dataReader["salary_charge"].ToString();
-                    if (divisionID.Equals("") || divisionID.Equals("NULL"))
-                    {
-                        divisionID = "0";
-                    }
-                    Employee employee = new Employee(userid, fname, lname, mname, emptype, tin, desc, disbursement, divisionID,"","");
-                    payroll = new Payroll("0", employee, start_date, end_date, adjustment, working_days, absent_days
-                         , monthly_salary, minutes_late, coop, phic, disallowance, gsis, pagibig, excess_mobile, remarks, "");
+
+                    //close Data Reader
+                    dataReader.Close();
+
+                    //close Connection
+                    this.CloseConnection();
+
+                    //return list to be displayed
+                }
+                catch (Exception e) {
 
                 }
-
-                //close Data Reader
-                dataReader.Close();
-
-                //close Connection
-                this.CloseConnection();
-
-                //return list to be displayed
+               
 
             }
             return payroll;
@@ -1259,7 +1296,7 @@ namespace DOH7PAYROLL.Repo
 
         public String GetMins(String id, String from, String to, String am_in, String am_out, String pm_in, String pm_out)
         {
-            List<String> days = new List<String>();
+            List<int> days = new List<int>();
             int month = int.Parse(from.Split('-')[1]);
             int year = int.Parse(from.Split('-')[0]);
             int from_days = int.Parse(from.Split('-')[2]);
@@ -1272,10 +1309,10 @@ namespace DOH7PAYROLL.Repo
 
             for (int i = 0; i <= (to_days - from_days); i++)
             {
-                days.Add((i + from_days) + "");
+                days.Add((i + from_days));
             }
 
-
+            int count = 0;
             String query = "SELECT DISTINCT e.userid, datein,holiday,remark, (SELECT  CONCAT(t1.time, '_', t1.edited) FROM dtr_file t1 WHERE userid = d.userid and datein = d.datein and t1.time < '" + am_out + "' AND t1.event = 'IN' ORDER BY time ASC LIMIT 1) as am_in, (SELECT CONCAT(t2.time,'_',t2.edited) FROM dtr_file t2 WHERE userid = d.userid and datein = d.datein and (SELECT CONCAT(t1.time,'_',t1.edited) FROM dtr_file t1 WHERE userid = d.userid and datein = d.datein and t1.time < '" + am_out + "' AND t1.event = 'IN' ORDER BY time ASC LIMIT 1) and t2.time < '" + pm_in + "' AND t2.event = 'OUT' AND t2.time > '" + am_in + "' ORDER BY t2.time DESC LIMIT 1 ) as am_out,(SELECT CONCAT(t3.time,'_',t3.edited) FROM dtr_file t3 WHERE userid = d.userid AND datein = d.datein and t3.time > '" + am_out + "' and t3.time < '" + pm_out + "' AND t3.event = 'IN' ORDER BY t3.time ASC LIMIT 1) as pm_in,(SELECT CONCAT(t4.time,'_',t4.edited) FROM dtr_file t4 WHERE userid = d.userid AND datein = d.datein and t4.time >= '" + pm_in + "' AND t4.event = 'OUT' ORDER BY time DESC LIMIT 1) as pm_out FROM dtr_file d LEFT JOIN users e ON d.userid = e.userid and datein = d.datein or (datein between '" + from + "' AND '" + to + "' and holiday = '001') or (datein between '" + from + "' AND '" + to + "' and holiday = '002' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '003' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '004' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '005' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '006' and d.userid = e.userid) WHERE d.datein BETWEEN '" + from + "' AND '" + to + "' AND e.userid = '" + id + "' group by d.datein ORDER BY datein ASC";
             if (this.OpenConnection() == true)
             {
@@ -1290,10 +1327,10 @@ namespace DOH7PAYROLL.Repo
                     //Read the data and store them in the list
                     while (dataReader.Read())
                     {
-
                         //int day = int.Parse(dataReader["datein"].ToString().Split('-')[2]);
                         String holiday = dataReader["holiday"].ToString();
-                        String day = dataReader["datein"].ToString().Split('/')[1];
+                        String date_in = dataReader["datein"].ToString().Split(' ')[0];
+                        int day = int.Parse(date_in.Split('/')[0]);
                         String am_in1 = dataReader["am_in"].ToString();
                         if (!am_in1.Equals("")) { am_in1 = am_in1.Split('_')[0]; }
                         String am_out1 = dataReader["am_out"].ToString();
@@ -1302,7 +1339,7 @@ namespace DOH7PAYROLL.Repo
                         if (!pm_in1.Equals("")) { pm_in1 = pm_in1.Split('_')[0]; }
                         String pm_out1 = dataReader["pm_out"].ToString();
                         if (!pm_out1.Equals("")) { pm_out1 = pm_out1.Split('_')[0]; }
-                        if (holiday.Equals(""))
+                        if (!holiday.Equals("0003"))
                         {
 
                             ///CASE 1 
@@ -1519,9 +1556,9 @@ namespace DOH7PAYROLL.Repo
                                 }
                             }
                         }
-                        if (days.Contains(day + ""))
+                        if (days.Contains(day))
                         {
-                            days.Remove(day + "");
+                            days.Remove(day);
                         }
                     }
 
@@ -1558,7 +1595,7 @@ namespace DOH7PAYROLL.Repo
                 }
                 catch (Exception e)
                 {
-                    return e.Message.ToString();
+                    return "ERROR ERROR ERROR";
                 }
             }
 

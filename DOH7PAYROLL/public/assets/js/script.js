@@ -575,7 +575,7 @@ $(document).ready(function () {
         $('#payslip_print').modal('show');
         $("#update_payroll_container").addClass('hidden');
         $.ajax({
-            url: "../Payroll/CreatePayslip",
+            url: "../Payroll/CreateJoPayslip",
             type: 'POST',
             data:
                 {
