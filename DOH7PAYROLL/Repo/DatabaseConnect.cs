@@ -43,7 +43,7 @@ namespace DOH7PAYROLL.Repo
                 return instance;
             }
         }
-        //SQL DB
+        //SQL DB COMMENT
         //Initialize values
         public void Initialize()
         {
@@ -433,7 +433,7 @@ namespace DOH7PAYROLL.Repo
                     while (dataReader.Read())
                     {
                         String PersonnelID = dataReader["userid"].ToString();
-                        String Firstname = dataReader["fname"].ToString();
+                        String Firstname = dataReader["fname"].ToString(); 
                         String Lastname = dataReader["lname"].ToString();
                         String MiddleName = dataReader["mname"].ToString();
                         String JobType = dataReader["employee_status"].ToString();
