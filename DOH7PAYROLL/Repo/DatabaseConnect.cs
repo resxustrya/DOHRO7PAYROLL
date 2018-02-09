@@ -419,7 +419,7 @@ namespace DOH7PAYROLL.Repo
         {
 
             Employee employee = null;
-            String query = "SELECT u.usertype,u.username,u.pin,i.userid,i.fname,i.lname,i.mname,i.employee_status,s.description FROM pis.users u LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN dtsv3_0.section s ON i.section_id= s.id WHERE u.username = '" + userid + "' AND u.pin = '"+pin+"'";
+            String query = "SELECT u.usertype,u.username,u.pin,i.userid,i.fname,i.lname,i.mname,i.employee_status,s.description FROM pis.users u LEFT JOIN pis.personal_information i ON u.username = i.userid LEFT JOIN dts.section s ON i.section_id= s.id WHERE u.username = '" + userid + "' AND u.pin = '"+pin+"'";
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, pis);
