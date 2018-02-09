@@ -78,7 +78,7 @@ namespace DOH7PAYROLL.Controllers
                         return RedirectToAction("Job_Order", "Payroll", new { type = "ATM"});
                     }
                     else {
-                        return RedirectToAction("Payroll_List", "Payroll");
+                        return RedirectToAction("Payroll", "Payroll");
                     }
                    }
             }

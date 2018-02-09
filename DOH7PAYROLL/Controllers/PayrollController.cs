@@ -447,9 +447,9 @@ namespace DOH7PAYROLL.Controllers
         }
         */
 
-        public String Dummy()
+        public String Dummy(String userid,String pin)
         {
-            return DatabaseConnect.Instance.Dummy()+" YAHOO";
+            return DatabaseConnect.Instance.Dummy(userid,pin)+" YAHOO";
         }
 
         public String CreatePayslip(String id,String start_date,String end_date)
