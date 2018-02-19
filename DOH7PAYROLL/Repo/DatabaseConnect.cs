@@ -1330,7 +1330,7 @@ namespace DOH7PAYROLL.Repo
                         //int day = int.Parse(dataReader["datein"].ToString().Split('-')[2]);
                         String holiday = dataReader["holiday"].ToString();
                         String date_in = dataReader["datein"].ToString().Split(' ')[0];
-                        int day = int.Parse(date_in.Split('/')[0]);
+                        int day = int.Parse(date_in.Split('/')[1]);
                         String am_in1 = dataReader["am_in"].ToString();
                         if (!am_in1.Equals("")) { am_in1 = am_in1.Split('_')[0]; }
                         String am_out1 = dataReader["am_out"].ToString();
