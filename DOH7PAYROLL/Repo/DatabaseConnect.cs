@@ -1433,7 +1433,6 @@ namespace DOH7PAYROLL.Repo
                 days.Add((i + from_days));
             }
 
-            int count = 0;
             String query = "SELECT DISTINCT e.userid, datein,holiday,remark, (SELECT  CONCAT(t1.time, '_', t1.edited) FROM dtr_file t1 WHERE userid = d.userid and datein = d.datein and t1.time < '" + am_out + "' AND t1.event = 'IN' ORDER BY time ASC LIMIT 1) as am_in, (SELECT CONCAT(t2.time,'_',t2.edited) FROM dtr_file t2 WHERE userid = d.userid and datein = d.datein and (SELECT CONCAT(t1.time,'_',t1.edited) FROM dtr_file t1 WHERE userid = d.userid and datein = d.datein and t1.time < '" + am_out + "' AND t1.event = 'IN' ORDER BY time ASC LIMIT 1) and t2.time < '" + pm_in + "' AND t2.event = 'OUT' AND t2.time > '" + am_in + "' ORDER BY t2.time DESC LIMIT 1 ) as am_out,(SELECT CONCAT(t3.time,'_',t3.edited) FROM dtr_file t3 WHERE userid = d.userid AND datein = d.datein and t3.time > '" + am_out + "' and t3.time < '" + pm_out + "' AND t3.event = 'IN' ORDER BY t3.time ASC LIMIT 1) as pm_in,(SELECT CONCAT(t4.time,'_',t4.edited) FROM dtr_file t4 WHERE userid = d.userid AND datein = d.datein and t4.time >= '" + pm_in + "' AND t4.event = 'OUT' ORDER BY time DESC LIMIT 1) as pm_out FROM dtr_file d LEFT JOIN users e ON d.userid = e.userid and datein = d.datein or (datein between '" + from + "' AND '" + to + "' and holiday = '001') or (datein between '" + from + "' AND '" + to + "' and holiday = '002' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '003' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '004' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '005' and d.userid = e.userid) or (datein between '" + from + "' AND '" + to + "' and holiday = '006' and d.userid = e.userid) WHERE d.datein BETWEEN '" + from + "' AND '" + to + "' AND e.userid = '" + id + "' group by d.datein ORDER BY datein ASC";
             if (this.OpenConnection() == true)
             {
@@ -1460,9 +1459,14 @@ namespace DOH7PAYROLL.Repo
                         if (!pm_in1.Equals("")) { pm_in1 = pm_in1.Split('_')[0]; }
                         String pm_out1 = dataReader["pm_out"].ToString();
                         if (!pm_out1.Equals("")) { pm_out1 = pm_out1.Split('_')[0]; }
-                       
-                            ///CASE 1 WHOLEDAY
-                            if (!am_in1.Equals("") && !am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
+
+                        int mMonth = int.Parse(date_in.Split('/')[0]);
+                        int mDay = int.Parse(date_in.Split('/')[1]);
+
+                        String cto_date_format = mMonth + "/" + mDay + "/" + date_in.Split('/')[2];
+
+                        ///CASE 1 WHOLEDAY
+                        if (!am_in1.Equals("") && !am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
 
                                 //AM IN
@@ -1577,7 +1581,7 @@ namespace DOH7PAYROLL.Repo
                                     mins += result_am_out;
                                 }
 
-                                if (!CheckCTO(id, date_in, "13:00:00"))
+                                if (!CheckCTO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1597,7 +1601,7 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     mins += result_am_in;
                                 }
-                                if (!CheckCTO(id, date_in, "13:00:00"))
+                                if (!CheckCTO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1632,7 +1636,7 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
 
-                                if (!CheckCTO(id, date_in, "08:00:00"))
+                                if (!CheckCTO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1662,7 +1666,7 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
                             {
 
-                                if (!CheckCTO(id, date_in, "08:00:00"))
+                                if (!CheckCTO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1700,7 +1704,7 @@ namespace DOH7PAYROLL.Repo
                     //CHECK
                     for (int i = 0; i < days.Count; i++)
                     {
-                        String format = days[i]  + "/" + month + "/" + year;
+                        String format = month+ "/" +days[i] + "/" + year;
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
@@ -1736,7 +1740,7 @@ namespace DOH7PAYROLL.Repo
                     }
                     for (int i = 0; i < no_days; i++)
                     {
-                        String format = (i + 1) + "/" + month + "/" + year;
+                        String format = month + "/" + (i + 1) + "/" + year;
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             working_days++;
