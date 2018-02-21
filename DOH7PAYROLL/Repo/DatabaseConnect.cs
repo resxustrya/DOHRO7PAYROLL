@@ -61,7 +61,7 @@ namespace DOH7PAYROLL.Repo
                 password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + "; pooling = false; convert zero datetime=True";
 
                 sql_payroll = new MySqlConnection(connectionString);
             }
@@ -76,7 +76,7 @@ namespace DOH7PAYROLL.Repo
                 password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + "; pooling = false; convert zero datetime=True";
 
                 pis = new MySqlConnection(connectionString);
             }
@@ -91,7 +91,7 @@ namespace DOH7PAYROLL.Repo
                 //password = "";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + "; pooling = false; convert zero datetime=True";
 
                 dts = new MySqlConnection(connectionString);
             }                                                                                                                                                                               
@@ -106,7 +106,7 @@ namespace DOH7PAYROLL.Repo
                 password = "doh7payroll";
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+                database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + "; pooling = false; convert zero datetime=True";
 
                 dtr = new MySqlConnection(connectionString);
             }
@@ -457,7 +457,7 @@ namespace DOH7PAYROLL.Repo
         public String DummyCalendar()
         {
             String response = "";
-            string query = "SELECT start FROM calendar";
+            string query = "SELECT start FROM calendar LIMIT 10";
             if (this.OpenConnection() == true)
             {
                 try
@@ -484,10 +484,40 @@ namespace DOH7PAYROLL.Repo
             return response;
         }
 
+        public String DummyDTR()
+        {
+            String response = "";
+            string query = "SELECT * FROM dtr_file LIMIT 10";
+            if (this.OpenConnection() == true)
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, dtr);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    //Read the data and store them in the list
+                    while (dataReader.Read())
+                    {
+                        response += dataReader["datein"].ToString().Split(' ')[0]+" ";
+                    }
+                    //Create a data reader and Execute the command
+                    dataReader.Close();
+                    this.CloseConnection();
+                }
+                catch (MySqlException e)
+                {
+                    response += " CATCH";
+                    this.CloseConnection();
+                }
+
+            }
+            return response;
+        }
+
         public String DummyCTO()
         {
             String response = "";
-            string query = "SELECT datein FROM cdo_logs";
+            string query = "SELECT datein FROM cdo_logs LIMIT 10";
             if (this.OpenConnection() == true)
             {
                 try

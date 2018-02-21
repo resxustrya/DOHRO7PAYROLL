@@ -465,6 +465,10 @@ namespace DOH7PAYROLL.Controllers
         {
             return DatabaseConnect.Instance.DummyCalendar();
         }
+        public String DummyDTR()
+        {
+            return DatabaseConnect.Instance.DummyDTR();
+        }
 
 
         public String CreateJoPayslip(String id, String start_date, String end_date)
