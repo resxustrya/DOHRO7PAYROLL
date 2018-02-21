@@ -17,85 +17,85 @@ namespace DOH7PAYROLL.Controllers
     {
         public ActionResult Job_Order()
         {
-           
-                if (Session["empID"] != null)
-                {
-                    String id = Request["id"];
-                    String search = Request["search"];
-                    String submit = Request["submit"];
-                    String type = Request["type"];
-                    String start = Request["start"];
-                    String next = Request["next"];
-                    String max = Request["max"];
 
-                    if (start == null)
-                    {
-                        start = "0";
-                    }
-                    if (next == null)
-                    {
-                        next = "0";
-                    }
-                    if (max == null)
-                    {
-                        max = "0";
-                    }
-                    if (type == null)
-                    {
-                        type = "ATM";
-                    }
-                  
-                    if (id == null)
-                    {
-                        id = "3";
-                    }
-                    if (search == null)
+            if (Session["empID"] != null)
+            {
+                String id = Request["id"];
+                String search = Request["search"];
+                String submit = Request["submit"];
+                String type = Request["type"];
+                String start = Request["start"];
+                String next = Request["next"];
+                String max = Request["max"];
+
+                if (start == null)
+                {
+                    start = "0";
+                }
+                if (next == null)
+                {
+                    next = "0";
+                }
+                if (max == null)
+                {
+                    max = "0";
+                }
+                if (type == null)
+                {
+                    type = "ATM";
+                }
+
+                if (id == null)
+                {
+                    id = "3";
+                }
+                if (search == null)
+                {
+                    search = "";
+                }
+                if (submit != null)
+                {
+                    if (submit.Equals("Refresh"))
                     {
                         search = "";
+                        id = "3";
+                        start = "0";
+                        next = "0";
+                        max = "0";
                     }
-                    if (submit != null)
-                    {
-                        if (submit.Equals("Refresh"))
-                        {
-                            search = "";
-                            id = "3";
-                            start = "0";
-                            next = "0";
-                            max = "0";
-                        }
-                    }
-                    String header = "";
-                    switch (type)
-                    {
-                        case "ATM":
-                            header = "Employee (JO) - ATM";
-                            break;
-                        case "CASH_CARD":
-                            header = "Employee (JO) - Cash Card";
-                            break;
-                        case "NO_CARD":
-                            header = "Employee (JO) - W/O LBP Card";
-                            break;
-                        case "UNDER_VTF":
-                            header = "Employee (JO) - Under VTF";
-                            break;
-                    }
-                    DatabaseConnect.start = int.Parse(start);
-                    DatabaseConnect.end = int.Parse(next);
-                    DatabaseConnect.max_size = max;
-                    ViewBag.List = DatabaseConnect.Instance.GetEmployee(id, search, "Job Order", type);
-                    ViewBag.Prev = DatabaseConnect.start;
-                    ViewBag.Next = DatabaseConnect.end;
-                    ViewBag.Max = int.Parse(DatabaseConnect.max_size);
-                    ViewBag.Search = search;
-                    ViewBag.Type = type;
-                    ViewBag.Header = header;
-                    return View();
                 }
-                else
+                String header = "";
+                switch (type)
                 {
-                    return RedirectToAction("Index", "Login");
+                    case "ATM":
+                        header = "Employee (JO) - ATM";
+                        break;
+                    case "CASH_CARD":
+                        header = "Employee (JO) - Cash Card";
+                        break;
+                    case "NO_CARD":
+                        header = "Employee (JO) - W/O LBP Card";
+                        break;
+                    case "UNDER_VTF":
+                        header = "Employee (JO) - Under VTF";
+                        break;
                 }
+                DatabaseConnect.start = int.Parse(start);
+                DatabaseConnect.end = int.Parse(next);
+                DatabaseConnect.max_size = max;
+                ViewBag.List = DatabaseConnect.Instance.GetEmployee(id, search, "Job Order", type);
+                ViewBag.Prev = DatabaseConnect.start;
+                ViewBag.Next = DatabaseConnect.end;
+                ViewBag.Max = int.Parse(DatabaseConnect.max_size);
+                ViewBag.Search = search;
+                ViewBag.Type = type;
+                ViewBag.Header = header;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
 
@@ -121,8 +121,8 @@ namespace DOH7PAYROLL.Controllers
                     id = "3";
                 }
             }
-            
-            ViewBag.List = DatabaseConnect.Instance.GetEmployee(id, search, "Permanent","");  
+
+            ViewBag.List = DatabaseConnect.Instance.GetEmployee(id, search, "Permanent", "");
             ViewBag.Prev = DatabaseConnect.start;
             ViewBag.Next = DatabaseConnect.end;
             ViewBag.Max = int.Parse(DatabaseConnect.max_size);
@@ -131,11 +131,12 @@ namespace DOH7PAYROLL.Controllers
         }
 
 
-        public ActionResult Payroll_Redirect() {
+        public ActionResult Payroll_Redirect()
+        {
 
             Session["empID"] = Request["empID"];
-            Session["Salary"] = DatabaseConnect.Instance.GetLoans(Session["empID"].ToString());          
-            Session["Coop"] = DatabaseConnect.Instance.GetAmount("coop_remittance",Session["empID"].ToString());
+            Session["Salary"] = DatabaseConnect.Instance.GetLoans(Session["empID"].ToString());
+            Session["Coop"] = DatabaseConnect.Instance.GetAmount("coop_remittance", Session["empID"].ToString());
             Session["Disallowance"] = DatabaseConnect.Instance.GetAmount("disallowance_remittance", Session["empID"].ToString());
             Session["PagIbig"] = DatabaseConnect.Instance.GetAmount("pagibig_remittance", Session["empID"].ToString());
             Session["Phic"] = DatabaseConnect.Instance.GetAmount("phic_remittance", Session["empID"].ToString());
@@ -202,9 +203,10 @@ namespace DOH7PAYROLL.Controllers
                 ViewBag.Id = empID;
                 return View();
             }
-            else {
+            else
+            {
                 return RedirectToAction("Index", "Login");
-            } 
+            }
         }
 
         public ActionResult ViewPdf(String pdf)
@@ -290,11 +292,12 @@ namespace DOH7PAYROLL.Controllers
                 ViewBag.Search = search;
                 return View();
             }
-            else {
+            else
+            {
                 return RedirectToAction("Index", "Login");
             }
         }
-        
+
         [HttpPost]
         public ActionResult Insert()
         {
@@ -316,11 +319,11 @@ namespace DOH7PAYROLL.Controllers
             String type_request = Request["type_request"];
             String remarks = Request["remarks"];
 
-            Employee employee = new Employee(id,"","","","","","","","","","");
+            Employee employee = new Employee(id, "", "", "", "", "", "", "", "", "", "");
             String message = "";
-            Payroll payroll = new Payroll(payroll_id, employee,start_date,end_date, adjustment.Replace(",", ""),
-                working_days, absent_date_list, salary.Replace(",",""), minutes_late, coop.Replace(",", ""), phic.Replace(",", ""), 
-                disallowance.Replace(",", ""), gsis.Replace(",", ""), pagibig.Replace(",", ""), excess.Replace(",", ""),remarks, "");
+            Payroll payroll = new Payroll(payroll_id, employee, start_date, end_date, adjustment.Replace(",", ""),
+                working_days, absent_date_list, salary.Replace(",", ""), minutes_late, coop.Replace(",", ""), phic.Replace(",", ""),
+                disallowance.Replace(",", ""), gsis.Replace(",", ""), pagibig.Replace(",", ""), excess.Replace(",", ""), remarks, "");
 
             if (payroll_id.Equals(""))
             {
@@ -350,13 +353,16 @@ namespace DOH7PAYROLL.Controllers
 
 
         [HttpPost]
-        public String GetMins(String id,String from, String to,String am_in,String am_out,String pm_in,String pm_out) {
-            return DatabaseConnect.Instance.GetMins(id, from, to,am_in,am_out,pm_in,pm_out);
-            
-;        }
+        public String GetMins(String id, String from, String to, String am_in, String am_out, String pm_in, String pm_out)
+        {
+            return DatabaseConnect.Instance.GetMins(id, from, to, am_in, am_out, pm_in, pm_out);
 
-        public String ifWeekend(String date) {
-            return DatabaseConnect.Instance.ifWeekend(date) ?"WEEKEND":"NOT WEEKEND";
+            ;
+        }
+
+        public String ifWeekend(String date)
+        {
+            return DatabaseConnect.Instance.ifWeekend(date) ? "WEEKEND" : "NOT WEEKEND";
         }
 
         /*
@@ -473,7 +479,7 @@ namespace DOH7PAYROLL.Controllers
 
             PdfPTable outer = new PdfPTable(20);
             outer.TotalWidth = 400;
-            
+
             String strAttachment = Server.MapPath(Url.Content("~/public/Pdf/" + strPDFFileName));
             String imageURL = Server.MapPath(Url.Content("~/public/img/logo.png"));
             PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(strAttachment, FileMode.Create));
@@ -587,7 +593,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_CENTER,
                     VerticalAlignment = Element.ALIGN_CENTER
                 });
-                outer.AddCell(new PdfPCell(new Phrase("Job Order Payslip - " + title, new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
+                outer.AddCell(new PdfPCell(new Phrase("Job Order Payslip for " + title, new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(0, 0, 0)))))
                 {
                     Border = 0,
                     Colspan = 20,
@@ -905,7 +911,6 @@ namespace DOH7PAYROLL.Controllers
                 outer.AddCell(new PdfPCell(new Phrase("Total Deductions:", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
                 {
 
-                    PaddingLeft = 10,
                     BackgroundColor = new BaseColor(0, 0, 0),
                     Border = PdfPCell.BOTTOM_BORDER,
                     BorderColor = new BaseColor(255, 255, 255),
@@ -933,7 +938,6 @@ namespace DOH7PAYROLL.Controllers
                 });
                 outer.AddCell(new PdfPCell(new Phrase("Net Income:", new Font(FontFactory.GetFont("HELVETICA", 8, Font.BOLD, new BaseColor(255, 255, 255)))))
                 {
-                    PaddingLeft = 10,
                     BackgroundColor = new BaseColor(0, 0, 0),
                     Border = PdfPCell.BOTTOM_BORDER,
                     BorderColor = new BaseColor(255, 255, 255),
@@ -958,24 +962,25 @@ namespace DOH7PAYROLL.Controllers
                 message = DatabaseConnect.Instance.InsertPDF(strPDFFileName, "0", id, start_date, end_date, disbursement_type, division_charge);
                 return message;
             }
-            else {
+            else
+            {
                 return "Failed to Generate";
             }
-          
+
         }
-        public String CreatePayslip(String id,String start_date,String end_date)
+        public String CreatePayslip(String id, String start_date, String end_date)
         {
             String message = "";
-           
+
             int month = int.Parse(start_date.Split('/')[0]);
             int day_from = int.Parse(start_date.Split('/')[1]);
             int day_to = int.Parse(end_date.Split('/')[1]);
             int year = int.Parse(end_date.Split('/')[2]);
-            
-            String title = DatabaseConnect.getMonthName(month) + " " + day_from+ "-" + day_to+ ", " + year;
+
+            String title = DatabaseConnect.getMonthName(month) + " " + day_from + "-" + day_to + ", " + year;
             MemoryStream workStream = new MemoryStream();
             StringBuilder status = new StringBuilder("");
-            string strPDFFileName = String.Format(id+"_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from+ "_" + day_to+ "_" + year+".pdf");
+            string strPDFFileName = String.Format(id + "_Payslip_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year + ".pdf");
 
             Document doc = new Document();
             doc.SetMargins(5f, 5f, 5f, 5f);
@@ -1000,7 +1005,7 @@ namespace DOH7PAYROLL.Controllers
             header_container.WidthPercentage = 20;
 
             PdfPTable rate_deductions = new PdfPTable(4);
-            float[] headers = { 1, 1, 2,2};
+            float[] headers = { 1, 1, 2, 2 };
             rate_deductions.SetWidths(headers);
             rate_deductions.TotalWidth = 200;
             rate_deductions.WidthPercentage = 70;
@@ -1009,7 +1014,7 @@ namespace DOH7PAYROLL.Controllers
             String strAttachment = Server.MapPath(Url.Content("~/public/Pdf/" + strPDFFileName));
             String imageURL = Server.MapPath(Url.Content("~/public/img/logo.png"));
             PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(strAttachment, FileMode.Create));
-            Payroll payroll = DatabaseConnect.Instance.GeneratePayslip(id,start_date,end_date);
+            Payroll payroll = DatabaseConnect.Instance.GeneratePayslip(id, start_date, end_date);
 
             if (payroll != null)
             {
@@ -1026,7 +1031,8 @@ namespace DOH7PAYROLL.Controllers
                 decimal salary = decimal.Parse(payroll.Salary);
                 decimal adjustment = decimal.Parse(payroll.Adjustment);
                 decimal half_salary = salary / 2;
-                if (day_from == 1 && day_to > 17) {
+                if (day_from == 1 && day_to > 17)
+                {
                     half_salary = salary;
                 }
                 int minutes_late = int.Parse(payroll.MinutesLate);
@@ -1047,11 +1053,11 @@ namespace DOH7PAYROLL.Controllers
 
                 decimal net_amount = 0;
                 decimal original_net_amount = 0;
-               
+
                 if (working_days != 0)
                 {
                     original_net_amount = (half_salary + adjustment);
-                    net_amount = original_net_amount-absences;
+                    net_amount = original_net_amount - absences;
                 }
 
 
@@ -1072,7 +1078,7 @@ namespace DOH7PAYROLL.Controllers
                     tax_10 = 0;
                     tax_2 = (net_amount * tax2);
                 }
-                
+
                 decimal coop = decimal.Parse(payroll.Coop);
                 decimal disallowance = decimal.Parse(payroll.Disallowance);
                 decimal pagibig = decimal.Parse(payroll.Pagibig);
@@ -1097,7 +1103,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_RIGHT,
                     VerticalAlignment = Element.ALIGN_RIGHT
                 });
-                header.AddCell(new PdfPCell(new Phrase(lname + ", " + fname + " " + mname + " (" + position+")", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
+                header.AddCell(new PdfPCell(new Phrase(lname + ", " + fname + " " + mname + " (" + position + ")", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
                     Colspan = 6,
@@ -1123,7 +1129,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_RIGHT,
                     VerticalAlignment = Element.ALIGN_RIGHT
                 });
-              
+
                 rate_deductions.AddCell(new PdfPCell(new Phrase("Deductions", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(255, 255, 255))))
                 {
                     Border = 0,
@@ -1187,7 +1193,8 @@ namespace DOH7PAYROLL.Controllers
                         VerticalAlignment = Element.ALIGN_LEFT
                     });
                 }
-                else {
+                else
+                {
                     rate_deductions.AddCell(new PdfPCell(new Phrase("Half-Salary:", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                     {
                         Border = 0,
@@ -1456,8 +1463,8 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
                 });
-                 count = DatabaseConnect.Instance.GetRemittanceCount("pagibig_remittance",ID).Split(' ')[0];
-                rate_deductions.AddCell(new PdfPCell(new Phrase("Pag-Ibig("+ count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
+                count = DatabaseConnect.Instance.GetRemittanceCount("pagibig_remittance", ID).Split(' ')[0];
+                rate_deductions.AddCell(new PdfPCell(new Phrase("Pag-Ibig(" + count + "):", new Font(Font.FontFamily.HELVETICA, 10, 1, new BaseColor(0, 0, 0))))
                 {
                     Border = 0,
                     HorizontalAlignment = Element.ALIGN_RIGHT,
@@ -1579,14 +1586,16 @@ namespace DOH7PAYROLL.Controllers
 
                 ////
 
-                header_container.AddCell(new PdfPCell(header){
-                    Border=0
+                header_container.AddCell(new PdfPCell(header)
+                {
+                    Border = 0
                 });
                 rate_deduction_container.AddCell(new PdfPCell(rate_deductions)
                 {
                     Border = 0
                 });
-                outer.AddCell(new PdfPCell(header_container) {
+                outer.AddCell(new PdfPCell(header_container)
+                {
                     Border = PdfPCell.RIGHT_BORDER | PdfPCell.BOTTOM_BORDER | PdfPCell.TOP_BORDER | PdfPCell.LEFT_BORDER,
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_LEFT
@@ -1601,10 +1610,11 @@ namespace DOH7PAYROLL.Controllers
                 doc.Open();
                 doc.Add(outer);
                 doc.Close();
-                message = DatabaseConnect.Instance.InsertPDF(strPDFFileName, "0",id,start_date,end_date,disbursement_type, division_charge);
+                message = DatabaseConnect.Instance.InsertPDF(strPDFFileName, "0", id, start_date, end_date, disbursement_type, division_charge);
                 return message;
             }
-            else {
+            else
+            {
                 return "Failed to Generate";
             }
             //return File(strAttachment, "application/pdf");
@@ -1619,10 +1629,10 @@ namespace DOH7PAYROLL.Controllers
             return from_date + " " + to_date;
 
         }
-        
-        public ActionResult CreatePdf(String filter_dates,String selection,String disbursment,String in_charge,String section)
+
+        public ActionResult CreatePdf(String filter_dates, String selection, String disbursment, String in_charge, String section)
         {
-            String sections = section.Replace(" ","_");
+            String sections = section.Replace(" ", "_");
             if (filter_dates.Equals(""))
             {
                 TempData["pdf"] = "Data Range must be specified";
@@ -1637,7 +1647,7 @@ namespace DOH7PAYROLL.Controllers
                 int month = int.Parse(filter_dates.Split('/')[0]);
                 int day_from = int.Parse(filter_dates.Split('/')[1]);
                 int day_to = int.Parse(filter_dates.Split('/')[3]);
-                int year = int.Parse(filter_dates.Split('/')[4]); 
+                int year = int.Parse(filter_dates.Split('/')[4]);
 
 
                 String from_date = filter_dates.Split(' ')[0];
@@ -1645,18 +1655,19 @@ namespace DOH7PAYROLL.Controllers
                 List<Payroll> payroll = new List<Payroll>();
                 if (selection.Equals("1"))
                 {
-                    payroll = DatabaseConnect.Instance.GeneratePayroll(from_date, to_date, "1",disbursment,in_charge, section); 
+                    payroll = DatabaseConnect.Instance.GeneratePayroll(from_date, to_date, "1", disbursment, in_charge, section);
                 }
-                else {
-                    payroll = DatabaseConnect.Instance.GeneratePayroll(from_date, to_date, selection,disbursment, in_charge, section);
+                else
+                {
+                    payroll = DatabaseConnect.Instance.GeneratePayroll(from_date, to_date, selection, disbursment, in_charge, section);
                 }
-                    if (payroll.Count > 0)
+                if (payroll.Count > 0)
                 {
                     filter_dates = DatabaseConnect.getMonthName(month) + " " + day_from + "-" + day_to + ", " + year;
 
                     MemoryStream workStream = new MemoryStream();
                     StringBuilder status = new StringBuilder("");
-                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year +"#"+disbursment+"_"+ sections+ ".pdf");
+                    string strPDFFileName = String.Format(selection + "_" + DatabaseConnect.getMonthName(month) + "_" + day_from + "_" + day_to + "_" + year + "#" + disbursment + "_" + sections + ".pdf");
 
                     Document doc = new Document();
                     doc.SetMargins(5f, 5f, 5f, 5f);
@@ -1668,7 +1679,7 @@ namespace DOH7PAYROLL.Controllers
                     outer.SplitRows = true;
                     outer.SplitLate = true;
 
-                    float[] headers = { 6, 8, 8, 8, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6};
+                    float[] headers = { 6, 8, 8, 8, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6 };
                     PdfPTable body = new PdfPTable(20);
                     body.SetWidths(headers);
                     body.TotalWidth = 400;
@@ -1686,7 +1697,7 @@ namespace DOH7PAYROLL.Controllers
                     doc.Open();
                     if (selection.Equals("1"))
                     {
-                        body = addBody(body, filter_dates, imageURL, from_date, to_date, payroll, writer,doc, disbursment);
+                        body = addBody(body, filter_dates, imageURL, from_date, to_date, payroll, writer, doc, disbursment);
                         String name = DatabaseConnect.Instance.GetEmployeeNameByID(in_charge);
                         footer = addFooter(footer, name);
                         outer.AddCell(new PdfPCell(body)
@@ -1700,7 +1711,7 @@ namespace DOH7PAYROLL.Controllers
                     }
                     else
                     {
-                        body = addBodyCustom(body, filter_dates, imageURL, from_date, to_date, selection,payroll, writer, doc, disbursment,section);
+                        body = addBodyCustom(body, filter_dates, imageURL, from_date, to_date, selection, payroll, writer, doc, disbursment, section);
                         outer.AddCell(new PdfPCell(body)
                         {
                             Border = 0,
@@ -1715,23 +1726,24 @@ namespace DOH7PAYROLL.Controllers
 
                     return RedirectToAction("Payroll");
                 }
-                else {
+                else
+                {
                     TempData["pdf"] = "Nothing to generate";
                     // return File(strAttachment, "application/pdf");
                     return RedirectToAction("Payroll");
                 }
 
-               
+
             }
         }
 
         protected PdfPTable addBodyCustom(PdfPTable tableLayout, String filter_range1,
-           String imageURL, String from_date, String to_date,String selection, 
-           List<Payroll> payroll,PdfWriter writer, Document document, String disbursment,String sections)
+           String imageURL, String from_date, String to_date, String selection,
+           List<Payroll> payroll, PdfWriter writer, Document document, String disbursment, String sections)
         {
-            
 
-            tableLayout =  addHeaderCustom(tableLayout, filter_range1, from_date, to_date, imageURL,selection,writer,disbursment);
+
+            tableLayout = addHeaderCustom(tableLayout, filter_range1, from_date, to_date, imageURL, selection, writer, disbursment);
             document.Add(tableLayout);
             tableLayout.FlushContent();
             String description = "";
@@ -1761,7 +1773,7 @@ namespace DOH7PAYROLL.Controllers
                     document.NewPage();
                     tableLayout.FlushContent();
                     addHeaderCustom(tableLayout, filter_range1, from_date, to_date, imageURL, selection, writer, disbursment);
-                    
+
                     addSectionCustom(tableLayout, "Balance forwarded", page_pagibig.ToString("#,##0.00"));
                     description = "";
 
@@ -1772,7 +1784,7 @@ namespace DOH7PAYROLL.Controllers
                 string lname = item.Employee.Lastname;
                 string position = item.Employee.JobType;
                 decimal pagibig = decimal.Parse(item.Pagibig);
-                String max_and_count = DatabaseConnect.Instance.GetRemittanceCount("pagibig_remittance",ID);
+                String max_and_count = DatabaseConnect.Instance.GetRemittanceCount("pagibig_remittance", ID);
                 switch (selection)
                 {
                     case "3":
@@ -1792,7 +1804,7 @@ namespace DOH7PAYROLL.Controllers
                         max_and_count = DatabaseConnect.Instance.GetRemittanceCount("excess_remittance", ID);
                         break;
                 }
-                
+
                 grand_pagibig += pagibig;
                 page_pagibig += pagibig;
                 if (description.Equals(""))
@@ -1857,15 +1869,15 @@ namespace DOH7PAYROLL.Controllers
 
             addPageTotalCustom(tableLayout, "");
 
-            addGrandTotalCustom(tableLayout,grand_pagibig.ToString("#,##0.00"));
+            addGrandTotalCustom(tableLayout, grand_pagibig.ToString("#,##0.00"));
             return tableLayout;
         }
 
-        protected PdfPTable addBody(PdfPTable tableLayout,String filter_range1,
-            String imageURL,String from_date,String to_date,List<Payroll> payroll,
-            PdfWriter writer,Document document,String disbursment)
+        protected PdfPTable addBody(PdfPTable tableLayout, String filter_range1,
+            String imageURL, String from_date, String to_date, List<Payroll> payroll,
+            PdfWriter writer, Document document, String disbursment)
         {
-            tableLayout = addHeader(tableLayout, filter_range1, from_date,to_date, imageURL,writer,disbursment);
+            tableLayout = addHeader(tableLayout, filter_range1, from_date, to_date, imageURL, writer, disbursment);
             document.Add(tableLayout);
             tableLayout.FlushContent();
             String description = "";
@@ -1906,19 +1918,20 @@ namespace DOH7PAYROLL.Controllers
             int MAX_ROW_SIZE = 300;
             foreach (var item in payroll)
             {
-               
+
                 string TIN = item.Employee.Tin;
                 string section = item.Employee.Section;
-                if (section.Equals("")) {
+                if (section.Equals(""))
+                {
                     section = "NO SECTION";
                 }
                 if (tableLayout.CalculateHeights() >= MAX_ROW_SIZE)
                 {
-                        if (!section.Equals(description))
-                        {
-                            addOverall(tableLayout, overall_net.ToString("#,##0.00"));
-                            overall_net = 0;
-                        }
+                    if (!section.Equals(description))
+                    {
+                        addOverall(tableLayout, overall_net.ToString("#,##0.00"));
+                        overall_net = 0;
+                    }
                     MAX_ROW_SIZE = 390;
                     addPageTotal(tableLayout, page_mo_rate.ToString("#,##0.00"), page_half_rate.ToString("#,##0.00"),
                page_adjustment.ToString("#,##0.00"), page_absences.ToString("#,##0.00"), page_overall_net.ToString("#,##0.00"), page_tax_10.ToString("#,##0.00"),
@@ -1963,7 +1976,8 @@ namespace DOH7PAYROLL.Controllers
                 {
                     half_salary = salary;
                 }
-                else {
+                else
+                {
                     half_salary = salary / 2;
                 }
                 grand_half_rate += half_salary;
@@ -2011,11 +2025,11 @@ namespace DOH7PAYROLL.Controllers
                     tax_10 = 0;
                     tax_2 = (net_amount * tax2);
                     grand_tax_2 += tax_2;
-                    page_tax_2 += tax_2;     
+                    page_tax_2 += tax_2;
                 }
                 grand_tax_3 += tax_3;
                 page_tax_3 += tax_3;
-  
+
                 decimal coop = decimal.Parse(item.Coop);
                 grand_coop += coop;
                 page_coop += coop;
@@ -2034,21 +2048,24 @@ namespace DOH7PAYROLL.Controllers
                 decimal excess = decimal.Parse(item.ExcessMobile);
                 grand_excess += excess;
                 page_excess += excess;
-                decimal total_amount = net_amount - tax_10 - tax_3 -tax_2- coop - disallowance - pagibig - phic - gsis - excess;
+                decimal total_amount = net_amount - tax_10 - tax_3 - tax_2 - coop - disallowance - pagibig - phic - gsis - excess;
                 grand_total_amount += total_amount;
                 page_total_amount += total_amount;
-                if (description.Equals("")) {
+                if (description.Equals(""))
+                {
                     addSection(tableLayout, section, "");
                     overall_net += net_amount;
                 }
-                else{
+                else
+                {
                     if (!section.Equals(description))
                     {
                         addOverall(tableLayout, overall_net.ToString("#,##0.00"));
                         addSection(tableLayout, section, "");
                         overall_net = net_amount;
                     }
-                    else {
+                    else
+                    {
                         overall_net += net_amount;
                     }
                 }
@@ -2058,7 +2075,7 @@ namespace DOH7PAYROLL.Controllers
                 AddCellToBody(tableLayout, lname, "left");
                 AddCellToBody(tableLayout, position, "left");
                 AddCellToBody(tableLayout, salary.ToString("#,##0.00"), "right");
-                AddCellToBody(tableLayout, (salary/2).ToString("#,##0.00"), "right");
+                AddCellToBody(tableLayout, (salary / 2).ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, adjustment.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, absences.ToString("#,##0.00"), "right");
                 AddCellToBody(tableLayout, net_amount.ToString("#,##0.00"), "right");
@@ -2081,16 +2098,16 @@ namespace DOH7PAYROLL.Controllers
              page_tax_3.ToString("#,##0.00"), page_tax_2.ToString("#,##0.00"), page_coop.ToString("#,##0.00"), page_disallow.ToString("#,##0.00"),
              page_pagibig.ToString("#,##0.00"), page_phic.ToString("#,##0.00"), page_gsis.ToString("#,##0.00"), page_excess.ToString("#,##0.00"), page_total_amount.ToString("#,##0.00"));
 
-            addPageTotal(tableLayout, "", "","","","", "","", "","", "","", "", "", "", "");
+            addPageTotal(tableLayout, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
-            addGrandOverall(tableLayout, grand_mo_rate.ToString("#,##0.00"), grand_half_rate.ToString("#,##0.00"), 
-                grand_adjustment.ToString("#,##0.00"),grand_absences.ToString("#,##0.00"), grand_overall_net.ToString("#,##0.00"), grand_tax_10.ToString("#,##0.00"),
+            addGrandOverall(tableLayout, grand_mo_rate.ToString("#,##0.00"), grand_half_rate.ToString("#,##0.00"),
+                grand_adjustment.ToString("#,##0.00"), grand_absences.ToString("#,##0.00"), grand_overall_net.ToString("#,##0.00"), grand_tax_10.ToString("#,##0.00"),
                 grand_tax_3.ToString("#,##0.00"), grand_tax_2.ToString("#,##0.00"), grand_coop.ToString("#,##0.00"), grand_disallow.ToString("#,##0.00"),
-                grand_pagibig.ToString("#,##0.00"), grand_phic.ToString("#,##0.00"), grand_gsis.ToString("#,##0.00"),grand_excess.ToString("#,##0.00"), grand_total_amount.ToString("#,##0.00"));
+                grand_pagibig.ToString("#,##0.00"), grand_phic.ToString("#,##0.00"), grand_gsis.ToString("#,##0.00"), grand_excess.ToString("#,##0.00"), grand_total_amount.ToString("#,##0.00"));
             return tableLayout;
         }
-        protected PdfPTable addHeader(PdfPTable tableLayout,String filter_range1, String from_date,
-            String to_date, String imageURL,PdfWriter writer, String disbursment)
+        protected PdfPTable addHeader(PdfPTable tableLayout, String filter_range1, String from_date,
+            String to_date, String imageURL, PdfWriter writer, String disbursment)
         {
 
             Image jpg = Image.GetInstance(imageURL);
@@ -2108,7 +2125,8 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 VerticalAlignment = Element.ALIGN_LEFT
             });
-            switch (disbursment) {
+            switch (disbursment)
+            {
                 case "ATM":
                     disbursment = "WITH REG. ATM CARDS";
                     break;
@@ -2129,7 +2147,7 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_MIDDLE,
                 VerticalAlignment = Element.ALIGN_MIDDLE
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase(disbursment, new Font(Font.FontFamily.HELVETICA, 8,Font.UNDERLINE, BaseColor.RED)))
+            tableLayout.AddCell(new PdfPCell(new Phrase(disbursment, new Font(Font.FontFamily.HELVETICA, 8, Font.UNDERLINE, BaseColor.RED)))
             {
                 Colspan = 3,
                 Rowspan = 3,
@@ -2144,9 +2162,9 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 VerticalAlignment = Element.ALIGN_CENTER
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase("Page "+writer.PageNumber, new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Page " + writer.PageNumber, new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
             {
-                Colspan=5,
+                Colspan = 5,
                 Border = 0,
                 HorizontalAlignment = Element.ALIGN_RIGHT,
                 VerticalAlignment = Element.ALIGN_RIGHT
@@ -2228,7 +2246,7 @@ namespace DOH7PAYROLL.Controllers
         }
 
         protected PdfPTable addHeaderCustom(PdfPTable tableLayout, String filter_range1, String from_date, String to_date,
-            String imageURL,String selection,PdfWriter writer, String disbursment)
+            String imageURL, String selection, PdfWriter writer, String disbursment)
         {
 
             Image jpg = Image.GetInstance(imageURL);
@@ -2295,7 +2313,7 @@ namespace DOH7PAYROLL.Controllers
                     title = "Excess Mobile";
                     break;
             }
-            tableLayout.AddCell(new PdfPCell(new Phrase("Summary of "+title, new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Summary of " + title, new Font(Font.FontFamily.HELVETICA, 9, 1, new BaseColor(0, 0, 0))))
             {
                 Colspan = 10,
                 Border = 0,
@@ -2396,7 +2414,7 @@ namespace DOH7PAYROLL.Controllers
             return tableLayout;
         }
 
-        private static void addSectionCustom(PdfPTable tableLayout, String section,String amount)
+        private static void addSectionCustom(PdfPTable tableLayout, String section, String amount)
         {
             tableLayout.AddCell(new PdfPCell(new Phrase(section, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
             {
@@ -2426,7 +2444,7 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase(amount, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD,BaseColor.RED))))
+            tableLayout.AddCell(new PdfPCell(new Phrase(amount, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.RED))))
             {
                 BorderWidth = 0.2f,
                 Colspan = 4,
@@ -2436,15 +2454,16 @@ namespace DOH7PAYROLL.Controllers
 
         }
 
-        private static void addSection(PdfPTable tableLayout,String section,String balance) {
+        private static void addSection(PdfPTable tableLayout, String section, String balance)
+        {
             AddCellToBody(tableLayout, "", "left");
-                tableLayout.AddCell(new PdfPCell(new Phrase(section, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
-                {
-                    BorderWidth = 0.2f,
-                    Colspan = 2,
-                    VerticalAlignment = Element.ALIGN_CENTER,
-                    HorizontalAlignment = Element.ALIGN_CENTER,
-                });
+            tableLayout.AddCell(new PdfPCell(new Phrase(section, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
+            {
+                BorderWidth = 0.2f,
+                Colspan = 2,
+                VerticalAlignment = Element.ALIGN_CENTER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+            });
             AddCellToBody(tableLayout, "", "left");
             AddCellToBody(tableLayout, "", "left");
             AddCellToBody(tableLayout, "", "left");
@@ -2464,10 +2483,11 @@ namespace DOH7PAYROLL.Controllers
             {
                 AddCellToBody(tableLayout, balance, "right");
             }
-            else {
+            else
+            {
                 tableLayout.AddCell(new PdfPCell(new Phrase(balance, new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL, BaseColor.RED))))
                 {
-                    
+
                     BorderWidth = 0.2f,
                     HorizontalAlignment = Element.ALIGN_RIGHT,
                 });
@@ -2486,7 +2506,7 @@ namespace DOH7PAYROLL.Controllers
             AddCellToBody(tableLayout, "", "left");
             AddCellToBody(tableLayout, "", "left");
             AddCellToBody(tableLayout, "", "left");
-            tableLayout.AddCell(new PdfPCell(new Phrase(overall, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD,BaseColor.RED))))
+            tableLayout.AddCell(new PdfPCell(new Phrase(overall, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.RED))))
             {
                 BorderWidth = 0.2f,
                 VerticalAlignment = Element.ALIGN_RIGHT,
@@ -2507,12 +2527,6 @@ namespace DOH7PAYROLL.Controllers
 
         private static void addOverallCustom(PdfPTable tableLayout, String overall)
         {
-            tableLayout.AddCell(new PdfPCell(new Phrase("haha", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL,BaseColor.WHITE))))
-            {
-                Colspan = 4,
-                BorderWidth = 0.2f,
-                HorizontalAlignment = Element.ALIGN_CENTER,
-            });
             tableLayout.AddCell(new PdfPCell(new Phrase("haha", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL, BaseColor.WHITE))))
             {
                 Colspan = 4,
@@ -2531,7 +2545,13 @@ namespace DOH7PAYROLL.Controllers
                 BorderWidth = 0.2f,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase(overall, new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL,BaseColor.RED))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("haha", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL, BaseColor.WHITE))))
+            {
+                Colspan = 4,
+                BorderWidth = 0.2f,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+            });
+            tableLayout.AddCell(new PdfPCell(new Phrase(overall, new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL, BaseColor.RED))))
             {
                 Colspan = 4,
                 BorderWidth = 0.2f,
@@ -2539,8 +2559,8 @@ namespace DOH7PAYROLL.Controllers
             });
         }
 
-        private static void addGrandOverall(PdfPTable tableLayout, String month,String half,String adjustment,String absent,String net
-            ,String tax_10,String tax_3,String tax_2,String coop,String disallow,String pagibig,String phic,String gsis,String excess,
+        private static void addGrandOverall(PdfPTable tableLayout, String month, String half, String adjustment, String absent, String net
+            , String tax_10, String tax_3, String tax_2, String coop, String disallow, String pagibig, String phic, String gsis, String excess,
             String total)
         {
             AddCellToBody(tableLayout, "", "left");
@@ -2660,7 +2680,8 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_CENTER,
                 });
             }
-            else {
+            else
+            {
                 tableLayout.AddCell(new PdfPCell(new Phrase("Page Total", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
                 {
                     Colspan = 2,
@@ -2669,7 +2690,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_CENTER,
                 });
             }
-            
+
             tableLayout.AddCell(new PdfPCell(new Phrase(month, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
             {
                 BorderWidth = 0.2f,
@@ -2779,7 +2800,8 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_CENTER,
                 });
             }
-            else {
+            else
+            {
                 tableLayout.AddCell(new PdfPCell(new Phrase("Page Total", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
                 {
                     Colspan = 8,
@@ -2787,7 +2809,7 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_CENTER,
                 });
             }
-           
+
             tableLayout.AddCell(new PdfPCell(new Phrase("haha", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL, BaseColor.WHITE))))
             {
                 Colspan = 4,
@@ -2810,14 +2832,14 @@ namespace DOH7PAYROLL.Controllers
                 BorderWidth = 0.2f,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-           
-                tableLayout.AddCell(new PdfPCell(new Phrase("Grand Total", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
-                {
-                    Colspan = 8,
-                    BorderWidth = 0.2f,
-                    HorizontalAlignment = Element.ALIGN_CENTER,
-                });
-          
+
+            tableLayout.AddCell(new PdfPCell(new Phrase("Grand Total", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.BLACK))))
+            {
+                Colspan = 8,
+                BorderWidth = 0.2f,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+            });
+
             tableLayout.AddCell(new PdfPCell(new Phrase("haha", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL, BaseColor.WHITE))))
             {
                 Colspan = 4,
@@ -2832,7 +2854,8 @@ namespace DOH7PAYROLL.Controllers
             });
         }
 
-        private static PdfPTable addFooter(PdfPTable tableLayout,String preparedBy) {
+        private static PdfPTable addFooter(PdfPTable tableLayout, String preparedBy)
+        {
             tableLayout.HeaderRows = 0;
             //FOOTER LETTER A
             tableLayout.AddCell(new PdfPCell(new Phrase("A", new Font(FontFactory.GetFont("Times New Roman", 7, Font.BOLD))))
@@ -2979,7 +3002,7 @@ namespace DOH7PAYROLL.Controllers
             });
 
 
-            tableLayout.AddCell(new PdfPCell(new Phrase("d", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("d", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.WHITE))))
             {
                 Border = 0,
                 VerticalAlignment = Element.ALIGN_CENTER,
@@ -2993,7 +3016,7 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL, BaseColor.WHITE))))
             {
                 Colspan = 4,
                 Border = PdfPCell.RIGHT_BORDER,
@@ -3017,7 +3040,7 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL, BaseColor.WHITE))))
             {
                 Colspan = 4,
                 Border = 0,
@@ -3038,7 +3061,7 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.WHITE))))
             {
                 Colspan = 4,
                 Border = PdfPCell.RIGHT_BORDER,
@@ -3061,7 +3084,7 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.WHITE))))
             {
                 Colspan = 4,
                 Border = 0,
@@ -3076,7 +3099,7 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
             //FOOTER LETTER A - DIVISION TITLE
-            tableLayout.AddCell(new PdfPCell(new Phrase("Official", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Official", new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD, BaseColor.WHITE))))
             {
                 Colspan = 5,
                 Border = 0,
@@ -3273,7 +3296,7 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL, BaseColor.WHITE))))
             {
                 Colspan = 4,
                 Border = PdfPCell.RIGHT_BORDER,
@@ -3297,7 +3320,7 @@ namespace DOH7PAYROLL.Controllers
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
-            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL,BaseColor.WHITE))))
+            tableLayout.AddCell(new PdfPCell(new Phrase("Date", new Font(FontFactory.GetFont("Times New Roman", 7, Font.NORMAL, BaseColor.WHITE))))
             {
                 Colspan = 4,
                 Border = 0,
@@ -3372,7 +3395,7 @@ namespace DOH7PAYROLL.Controllers
                 HorizontalAlignment = Element.ALIGN_CENTER,
             });
 
-         
+
             /*
            tableLayout.AddCell(new PdfPCell(new Phrase("1) Certified: Supporting documents complete and proper, Cash available ", new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
            {
@@ -3514,12 +3537,13 @@ namespace DOH7PAYROLL.Controllers
         // Method to add single cell to the Header  
         private static void AddCellToHeader(PdfPTable tableLayout, string cellText)
         {
-            switch (cellText) {
+            switch (cellText)
+            {
                 case "Net Amount":
                     tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.BOLD))))
                     {
                         BorderWidth = 0.2f,
-                        Rowspan =2,
+                        Rowspan = 2,
                         VerticalAlignment = Element.ALIGN_CENTER,
                         HorizontalAlignment = Element.ALIGN_CENTER,
                     });
@@ -3581,7 +3605,7 @@ namespace DOH7PAYROLL.Controllers
             }
         }
         // Method to add single cell to the body  
-        private static void AddCellToBody(PdfPTable tableLayout, string cellText,string position)
+        private static void AddCellToBody(PdfPTable tableLayout, string cellText, string position)
         {
 
             if (position.Equals("left"))
@@ -3592,7 +3616,8 @@ namespace DOH7PAYROLL.Controllers
                     HorizontalAlignment = Element.ALIGN_LEFT,
                     VerticalAlignment = Element.ALIGN_CENTER
                 });
-            }else if (position.Equals("left-remarks"))
+            }
+            else if (position.Equals("left-remarks"))
             {
                 tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 6, Font.NORMAL))))
                 {
@@ -3601,7 +3626,8 @@ namespace DOH7PAYROLL.Controllers
                     VerticalAlignment = Element.ALIGN_CENTER
                 });
             }
-            else {
+            else
+            {
                 tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(FontFactory.GetFont("Times New Roman", 8, Font.NORMAL))))
                 {
                     BorderWidth = 0.2f,
