@@ -454,10 +454,10 @@ namespace DOH7PAYROLL.Repo
             return employee;
         }
 
-        public String Dummy()
+        public String DummyCalendar()
         {
             String response = "";
-            String query = "SELECT datein FROM dtr_file WHERE userid = '0618' LIMIT 20";
+            string query = "SELECT start FROM calendar";
             if (this.OpenConnection() == true)
             {
                 try
@@ -468,7 +468,67 @@ namespace DOH7PAYROLL.Repo
                     //Read the data and store them in the list
                     while (dataReader.Read())
                     {
-                        response += dataReader["datein"].ToString().Split(' ')[0]+" ";
+                        response += dataReader["start"].ToString().Split(' ')[0]+" ";
+                    }
+                    //Create a data reader and Execute the command
+                    dataReader.Close();
+                    this.CloseConnection();
+                }
+                catch (MySqlException e)
+                {
+                    response += " CATCH";
+                    this.CloseConnection();
+                }
+
+            }
+            return response;
+        }
+
+        public String DummyCTO()
+        {
+            String response = "";
+            string query = "SELECT datein FROM cdo_logs";
+            if (this.OpenConnection() == true)
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, dtr);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    //Read the data and store them in the list
+                    while (dataReader.Read())
+                    {
+                        response += dataReader["datein"].ToString().Split(' ')[0] + " ";
+                    }
+                    //Create a data reader and Execute the command
+                    dataReader.Close();
+                    this.CloseConnection();
+                }
+                catch (MySqlException e)
+                {
+                    response += " CATCH";
+                    this.CloseConnection();
+                }
+
+            }
+            return response;
+        }
+
+        public String DummySO()
+        {
+            String response = "";
+            string query = "SELECT datein FROM so_logs";
+            if (this.OpenConnection() == true)
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, dtr);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    //Read the data and store them in the list
+                    while (dataReader.Read())
+                    {
+                        response += dataReader["datein"].ToString().Split(' ')[0] + " ";
                     }
                     //Create a data reader and Execute the command
                     dataReader.Close();
@@ -1370,9 +1430,7 @@ namespace DOH7PAYROLL.Repo
                         if (!pm_in1.Equals("")) { pm_in1 = pm_in1.Split('_')[0]; }
                         String pm_out1 = dataReader["pm_out"].ToString();
                         if (!pm_out1.Equals("")) { pm_out1 = pm_out1.Split('_')[0]; }
-                        if (!holiday.Equals("0003"))
-                        {
-
+                       
                             ///CASE 1 WHOLEDAY
                             if (!am_in1.Equals("") && !am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
@@ -1599,7 +1657,6 @@ namespace DOH7PAYROLL.Repo
                                     mins += result_pm_out;
                                 }
                             }
-                        }
                         if (days.Contains(day))
                         {
                             days.Remove(day);
@@ -1613,16 +1670,7 @@ namespace DOH7PAYROLL.Repo
                     //CHECK
                     for (int i = 0; i < days.Count; i++)
                     {
-                        String format = month + "/" + days[i] + "/" + year;
-                        if (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00"))
-                        {
-                            mins += 240;
-                        }
-                        else if (CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
-                        {
-                            mins += 240;
-                        }
-
+                        String format = days[i]  + "/" + month + "/" + year;
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
@@ -1636,21 +1684,29 @@ namespace DOH7PAYROLL.Repo
                             }
 
                         }
-                            else if (!CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
+                        else if (!CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
+                        {
+                            if (days_absent.Equals(""))
                             {
-                                if (days_absent.Equals(""))
-                                {
-                                    days_absent += format;
-                                }
-                                else
-                                {
-                                    days_absent += "*" + format;
-                                }
+                                days_absent += format;
+                            }
+                            else
+                            {
+                                days_absent += "*" + format;
+                            }
+                        }
+                        else if (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00"))
+                            {
+                                mins += 240;
+                            }
+                            else if (CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
+                            {
+                                mins += 240;
                             }
                     }
                     for (int i = 0; i < no_days; i++)
                     {
-                        String format = month + "/" + (i + 1) + "/" + year;
+                        String format = (i + 1) + "/" + month + "/" + year;
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             working_days++;

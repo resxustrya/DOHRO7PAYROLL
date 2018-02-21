@@ -453,9 +453,17 @@ namespace DOH7PAYROLL.Controllers
         }
         */
 
-        public String Dummy()
+        public String DummyCTO()
         {
-            return DatabaseConnect.Instance.Dummy();
+            return DatabaseConnect.Instance.DummyCTO();
+        }
+        public String DummySO()
+        {
+            return DatabaseConnect.Instance.DummyCTO();
+        }
+        public String DummyCalendar()
+        {
+            return DatabaseConnect.Instance.DummyCalendar();
         }
 
 
