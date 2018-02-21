@@ -1610,7 +1610,7 @@ namespace DOH7PAYROLL.Repo
                     dataReader.Close();
                     //close Connection  
                     this.CloseConnection();
-
+                    //CHECK
                     for (int i = 0; i < days.Count; i++)
                     {
                         String format = month + "/" + days[i] + "/" + year;
