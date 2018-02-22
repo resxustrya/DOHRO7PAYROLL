@@ -501,7 +501,7 @@ namespace DOH7PAYROLL.Repo
         public String DummyCalendar(String date)
         {
             String response = "";
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND status = '1'";
+            string query = "SELECT start FROM calendar WHERE status = '1' LIMIT 10";
             if (this.OpenConnection() == true)
             {
                 try
@@ -513,6 +513,36 @@ namespace DOH7PAYROLL.Repo
                     while (dataReader.Read())
                     {
                         response += dataReader["start"].ToString().Split(' ')[0]+" ";
+                    }
+                    //Create a data reader and Execute the command
+                    dataReader.Close();
+                    this.CloseConnection();
+                }
+                catch (MySqlException e)
+                {
+                    response += " CATCH";
+                    this.CloseConnection();
+                }
+
+            }
+            return response;
+        }
+
+        public String DummyDateAdd()
+        {
+            String response = "";
+            string query = "SELECT start,DATE_ADD(start,INTERVAL 1 DAY) as 'start_added' FROM calendar LIMIT 10";
+            if (this.OpenConnection() == true)
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, dtr);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    //Read the data and store them in the list
+                    while (dataReader.Read())
+                    {
+                        response += dataReader["start"].ToString().Split(' ')[0] + "-" + dataReader["start_added"].ToString()+" ";
                     }
                     //Create a data reader and Execute the command
                     dataReader.Close();

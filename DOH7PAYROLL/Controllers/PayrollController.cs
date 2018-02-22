@@ -457,6 +457,10 @@ namespace DOH7PAYROLL.Controllers
         {
             return DatabaseConnect.Instance.DummyCTO();
         }
+        public String DummyDateAdd()
+        {
+            return DatabaseConnect.Instance.DummyDateAdd();
+        }
 
         public String DummyWeekend(String date)
         {
