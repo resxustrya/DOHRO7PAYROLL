@@ -454,10 +454,54 @@ namespace DOH7PAYROLL.Repo
             return employee;
         }
 
-        public String DummyCalendar()
+        public String DummyifWeekend(String dateToday)
+        {
+            DateTime dateTime = DateTime.ParseExact(dateToday,
+                                "m/d/yyyy",
+                                CultureInfo.InvariantCulture);
+            DayOfWeek date = dateTime.DayOfWeek;
+            if ((date == DayOfWeek.Saturday) || (date == DayOfWeek.Sunday))
+            {
+                return "Weekend";
+            }
+            return "Not Weekend";
+        }
+
+        public String DummyifHoliday(String date)
+        {
+            String found = "Not Holiday";
+            String month = (int.Parse(date.Split('/')[0]) > 9) ? date.Split('/')[0] : "0" + date.Split('/')[0];
+            String day = (int.Parse(date.Split('/')[1]) > 9) ? date.Split('/')[1] : "0" + date.Split('/')[1];
+            String year = date.Split('/')[2];
+
+            date = year + "-" + month + "-" + day;
+
+            List<Employee> list = new List<Employee>();
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND status = '1'";
+            //Create Command
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, dtr);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Read the data and store them in the list
+                while (dataReader.Read())
+                {
+                    found = "Holiday";
+                }
+                dataReader.Close();
+                this.CloseConnection();
+            }
+
+            //close Data Reader
+            return found;
+        }
+
+        public String DummyCalendar(String date)
         {
             String response = "";
-            string query = "SELECT start FROM calendar LIMIT 10";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND status = '1'";
             if (this.OpenConnection() == true)
             {
                 try
