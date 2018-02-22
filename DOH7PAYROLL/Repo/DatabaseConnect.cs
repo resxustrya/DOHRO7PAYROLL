@@ -1393,7 +1393,7 @@ namespace DOH7PAYROLL.Repo
             date = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND status = '1'";
+            string query = "SELECT id FROM calendar WHERE start = '" + date + "' AND end <= '"+date+"' AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
