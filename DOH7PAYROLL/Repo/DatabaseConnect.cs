@@ -1686,10 +1686,10 @@ namespace DOH7PAYROLL.Repo
                                     mins += result_am_out;
                                 }
 
-                               if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                             /*  if (!CheckCTO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
-                                }
+                                }*/
                                
                             }
                             ///CASE 4 
@@ -1706,10 +1706,11 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     mins += result_am_in;
                                 }
-                              if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                             /* if (!CheckCTO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
+                                */
                             }
                             ///CASE 5
                             else if (!am_in1.Equals("") && am_out1.Equals("") && pm_in1.Equals("") && !pm_out1.Equals(""))
@@ -1741,10 +1742,11 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
 
-                               if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                             /*  if (!CheckCTO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
+                                */
                                
                                 //PM IN
                                 TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
@@ -1772,10 +1774,11 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
                             {
 
-                              if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                            /*  if (!CheckCTO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
+                                */
                                
                                 //PM IN
                                 TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
@@ -1821,7 +1824,7 @@ namespace DOH7PAYROLL.Repo
                     if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
-                            if (!CheckCTO(id, cto_date_format, "08:00:00") && CheckCTO(id, cto_date_format, "13:00:00"))
+                          /*  if (!CheckCTO(id, cto_date_format, "08:00:00") && CheckCTO(id, cto_date_format, "13:00:00"))
                             {
                                 mins += 240;
                             }
@@ -1830,6 +1833,7 @@ namespace DOH7PAYROLL.Repo
                                 mins += 240;
                             }
                             else {
+                            */
                                 if (days_absent.Equals(""))
                                 {
                                     days_absent += format;
@@ -1838,7 +1842,7 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     days_absent += "*" + format;
                                 }
-                            }
+                            //}
                         }      
                     }
                     for (int i = 0; i < no_days; i++)
