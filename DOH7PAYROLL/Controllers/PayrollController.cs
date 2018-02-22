@@ -473,7 +473,7 @@ namespace DOH7PAYROLL.Controllers
         }
         public String DummySO()
         {
-            return DatabaseConnect.Instance.DummyCTO();
+            return DatabaseConnect.Instance.DummySO();
         }
         public String DummyCalendar(String date)
         {
