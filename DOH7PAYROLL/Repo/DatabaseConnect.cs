@@ -477,7 +477,7 @@ namespace DOH7PAYROLL.Repo
             date = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end <= DATE_ADD('2017 - 06 - 15', INTERVAL 1 DAY) AND status = '1'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end <= DATE_ADD('"+date+"', INTERVAL 1 DAY) AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
@@ -1390,10 +1390,10 @@ namespace DOH7PAYROLL.Repo
             String day = (int.Parse(date.Split('/')[1]) > 9) ? date.Split('/')[1] : "0" + date.Split('/')[1];
             String year = date.Split('/')[2];
 
-            date = year + "-" + month + "-" + day;
+            String mDate = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end <= DATE_ADD('"+date+"', INTERVAL 1 DAY) AND status = '1'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + mDate + "' AND end <= DATE_ADD('"+ mDate + "', INTERVAL 1 DAY) AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
@@ -1755,17 +1755,15 @@ namespace DOH7PAYROLL.Repo
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
-                           if (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00"))
+                            if (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00"))
                             {
                                 mins += 240;
-                                continue;
                             }
                             else if (CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
                             {
                                 mins += 240;
-                                continue;
-                            }   
-                                               
+                            }
+                            else {
                                 if (days_absent.Equals(""))
                                 {
                                     days_absent += format;
@@ -1774,7 +1772,7 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     days_absent += "*" + format;
                                 }
-                          
+                            }
                         }      
                     }
                     for (int i = 0; i < no_days; i++)
