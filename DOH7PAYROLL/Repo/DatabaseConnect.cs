@@ -1475,7 +1475,7 @@ namespace DOH7PAYROLL.Repo
                         found = true;
                     }
                     //Create a data reader and Execute the command
-                    dataReader.Close();
+                    //dataReader.Close();
                     this.CloseConnection();
                 }
                 catch (MySqlException e)
