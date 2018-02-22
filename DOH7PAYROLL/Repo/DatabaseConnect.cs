@@ -477,7 +477,7 @@ namespace DOH7PAYROLL.Repo
             date = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end <= DATE_ADD('"+date+"', INTERVAL 1 DAY) AND status = '1'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '"+date+"' AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
@@ -1423,7 +1423,7 @@ namespace DOH7PAYROLL.Repo
             String mDate = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + mDate + "' AND end <= DATE_ADD('"+ mDate + "', INTERVAL 1 DAY) AND status = '1'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "' AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
