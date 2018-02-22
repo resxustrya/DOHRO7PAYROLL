@@ -1487,7 +1487,38 @@ namespace DOH7PAYROLL.Repo
             }
             return found;
         }
-       
+
+        public Boolean CheckSO(String userid, String date, String time)
+        {
+
+            Boolean found = false;
+            String query = "SELECT userid FROM so_logs WHERE userid = '" + userid + "' AND datein = '" + date + "' AND time = '" + time + "' LIMIT 2";
+            if (this.OpenConnection() == true)
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, dtr);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    //Read the data and store them in the list
+                    while (dataReader.Read())
+                    {
+                        found = true;
+                        break;
+                    }
+                    //Create a data reader and Execute the command
+                    dataReader.Close();
+                    this.CloseConnection();
+                }
+                catch (MySqlException e)
+                {
+                    this.CloseConnection();
+                }
+
+            }
+            return found;
+        }
+
 
 
         public String GetMins(String id, String from, String to, String am_in, String am_out, String pm_in, String pm_out)
@@ -1656,7 +1687,7 @@ namespace DOH7PAYROLL.Repo
                                     mins += result_am_out;
                                 }
 
-                               if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                               if (!CheckCTO(id, cto_date_format, "13:00:00") || !CheckSO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1676,7 +1707,7 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     mins += result_am_in;
                                 }
-                              if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                              if (!CheckCTO(id, cto_date_format, "13:00:00") || !CheckSO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1711,7 +1742,7 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
 
-                               if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                               if (!CheckCTO(id, cto_date_format, "08:00:00") || !CheckSO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1742,7 +1773,7 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
                             {
 
-                              if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                              if (!CheckCTO(id, cto_date_format, "08:00:00") || !CheckSO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1785,11 +1816,11 @@ namespace DOH7PAYROLL.Repo
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
-                            if (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00"))
+                            if ((!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00")) || (!CheckSO(id, format, "08:00:00") && CheckSO(id, format, "13:00:00")))
                             {
                                 mins += 240;
                             }
-                            else if (CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
+                            else if ((CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00")) || (CheckSO(id, format, "08:00:00") && !CheckSO(id, format, "13:00:00")))
                             {
                                 mins += 240;
                             }
