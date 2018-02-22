@@ -1461,7 +1461,7 @@ namespace DOH7PAYROLL.Repo
         {
 
             Boolean found = false;
-            String query = "SELECT userid FROM cdo_logs WHERE userid = '"+userid+"' AND datein = '"+date+"' AND time = '"+time+"' LIMIT 2";
+            String query = "SELECT userid FROM cdo_logs WHERE userid = '"+userid+"' AND datein = '"+date+"' AND time = '"+time+"' LIMIT 1";
             if (this.OpenConnection() == true)
             {
                 try
@@ -1473,7 +1473,6 @@ namespace DOH7PAYROLL.Repo
                     while (dataReader.Read())
                     {
                         found = true;
-                        break;
                     }
                     //Create a data reader and Execute the command
                     dataReader.Close();
@@ -1485,6 +1484,7 @@ namespace DOH7PAYROLL.Repo
                 }
 
             }
+           
             return found;
         }
 
@@ -1492,7 +1492,7 @@ namespace DOH7PAYROLL.Repo
         {
 
             Boolean found = false;
-            String query = "SELECT userid FROM so_logs WHERE userid = '" + userid + "' AND datein = '" + date + "' AND time = '" + time + "' LIMIT 2";
+            String query = "SELECT userid FROM so_logs WHERE userid = '" + userid + "' AND datein = '" + date + "' AND time = '" + time + "' LIMIT 1";
             if (this.OpenConnection() == true)
             {
                 try
@@ -1504,7 +1504,6 @@ namespace DOH7PAYROLL.Repo
                     while (dataReader.Read())
                     {
                         found = true;
-                        break;
                     }
                     //Create a data reader and Execute the command
                     dataReader.Close();
