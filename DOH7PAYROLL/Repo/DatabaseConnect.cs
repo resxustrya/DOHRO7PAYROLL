@@ -1476,7 +1476,7 @@ namespace DOH7PAYROLL.Repo
                         found = true;
                     }
                     //Create a data reader and Execute the command
-                    //dataReader.Close();
+                    dataReader.Close();
                     //this.CloseConnection();
                 }
                 catch (MySqlException e)
@@ -1508,11 +1508,11 @@ namespace DOH7PAYROLL.Repo
                     }
                     //Create a data reader and Execute the command
                     dataReader.Close();
-                    this.CloseConnection();
+                   // this.CloseConnection();
                 }
                 catch (MySqlException e)
                 {
-                    this.CloseConnection();
+                   // this.CloseConnection();
                 }
 
             }
@@ -1543,8 +1543,8 @@ namespace DOH7PAYROLL.Repo
             if (this.OpenConnection() == true)
             {
                 //Create Command
-             //   try
-              //  {
+               try
+              {
                     MySqlCommand cmd = new MySqlCommand(query, dtr);
                     //format = "CALL GETLOGS('8:00:00','12:00:00','13:00:00','17:00:00','0001','2017-05-02','2017-05-02')";
                     //Create a data reader and Execute the command
@@ -1687,10 +1687,11 @@ namespace DOH7PAYROLL.Repo
                                     mins += result_am_out;
                                 }
 
-                            if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                              if (!CheckCTO(id, cto_date_format, "13:00:00") || !CheckSO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
+                                
                                
                             }
                             ///CASE 4 
@@ -1707,10 +1708,11 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     mins += result_am_in;
                                 }
-                            if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                          if (!CheckCTO(id, cto_date_format, "13:00:00") || !CheckSO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
+                               
                                 
                             }
                             ///CASE 5
@@ -1743,10 +1745,11 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
 
-                              if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                            if (!CheckCTO(id, cto_date_format, "08:00:00") || !CheckSO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
+                                
                                 
                                
                                 //PM IN
@@ -1775,11 +1778,11 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
                             {
 
-                            if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                           if (!CheckCTO(id, cto_date_format, "08:00:00") || !CheckSO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
-                               
+                              
                                
                                 //PM IN
                                 TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
@@ -1825,15 +1828,15 @@ namespace DOH7PAYROLL.Repo
                     if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
-                           if (!CheckCTO(id, cto_date_format, "08:00:00") && CheckCTO(id, cto_date_format, "13:00:00"))
+                         if ( (!CheckCTO(id, cto_date_format, "08:00:00") && CheckCTO(id, cto_date_format, "13:00:00")) || (!CheckSO(id, cto_date_format, "08:00:00") && CheckSO(id, cto_date_format, "13:00:00")))
                             {
                                 mins += 240;
                             }
-                            else if (CheckCTO(id, cto_date_format, "08:00:00") && !CheckCTO(id, cto_date_format, "13:00:00"))
+                            else if ( (CheckCTO(id, cto_date_format, "08:00:00") && !CheckCTO(id, cto_date_format, "13:00:00")) || (CheckSO(id, cto_date_format, "08:00:00") && !CheckSO(id, cto_date_format, "13:00:00")))
                             {
                                 mins += 240;
                             }
-                            else {
+                         else {
                            
                                 if (days_absent.Equals(""))
                                 {
@@ -1843,7 +1846,7 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     days_absent += "*" + format;
                                 }
-                          }
+                         }
                         }      
                     }
                     for (int i = 0; i < no_days; i++)
@@ -1855,11 +1858,11 @@ namespace DOH7PAYROLL.Repo
                         }
                     }
                     //return list to be displayed
-              //  }
-             /*   catch (Exception e)
-                {
-                    return "ERROR ERROR ERROR";
-                }*/
+              }
+              catch (Exception e)
+            {
+                return "ERROR ERROR ERROR";
+            }
             }
 
             return mins + " " + working_days + " " + days_absent;
