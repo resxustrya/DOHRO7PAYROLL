@@ -588,10 +588,10 @@ namespace DOH7PAYROLL.Repo
             return response;
         }
 
-        public String DummyCTO()
+        public String DummyCTO(String userid, String date, String time)
         {
             String response = "";
-            string query = "SELECT datein FROM cdo_logs LIMIT 10";
+            string query = "SELECT datein FROM cdo_logs WHERE userid = '"+userid+"' AND datein = '"+date+"' AND time = '"+time+"' LIMIT 10";
             if (this.OpenConnection() == true)
             {
                 try
@@ -1543,8 +1543,8 @@ namespace DOH7PAYROLL.Repo
             if (this.OpenConnection() == true)
             {
                 //Create Command
-                try
-                {
+             //   try
+              //  {
                     MySqlCommand cmd = new MySqlCommand(query, dtr);
                     //format = "CALL GETLOGS('8:00:00','12:00:00','13:00:00','17:00:00','0001','2017-05-02','2017-05-02')";
                     //Create a data reader and Execute the command
@@ -1816,11 +1816,11 @@ namespace DOH7PAYROLL.Repo
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
-                            if ((!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00")) || (!CheckSO(id, format, "08:00:00") && CheckSO(id, format, "13:00:00")))
+                            if ( (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00") ) || ( !CheckSO(id, format, "08:00:00") && CheckSO(id, format, "13:00:00") ) )
                             {
                                 mins += 240;
                             }
-                            else if ((CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00")) || (CheckSO(id, format, "08:00:00") && !CheckSO(id, format, "13:00:00")))
+                            else if ( ( CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00") ) || ( CheckSO(id, format, "08:00:00") && !CheckSO(id, format, "13:00:00") ) )
                             {
                                 mins += 240;
                             }
@@ -1845,11 +1845,11 @@ namespace DOH7PAYROLL.Repo
                         }
                     }
                     //return list to be displayed
-                }
-                catch (Exception e)
+              //  }
+             /*   catch (Exception e)
                 {
                     return "ERROR ERROR ERROR";
-                }
+                }*/
             }
 
             return mins + " " + working_days + " " + days_absent;
