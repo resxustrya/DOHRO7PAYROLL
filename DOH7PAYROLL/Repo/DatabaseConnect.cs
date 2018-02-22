@@ -1565,10 +1565,10 @@ namespace DOH7PAYROLL.Repo
                         String pm_out1 = dataReader["pm_out"].ToString();
                         if (!pm_out1.Equals("")) { pm_out1 = pm_out1.Split('_')[0]; }
 
-                        int mMonth = int.Parse(date_in.Split('/')[0]);
-                        int mDay = int.Parse(date_in.Split('/')[1]);
+                        String mMonth = (int.Parse(date_in.Split('/')[0])>9)? int.Parse(date_in.Split('/')[0])+"" : "0"+int.Parse(date_in.Split('/')[0]);
+                        String mDay = (int.Parse(date_in.Split('/')[1]) > 9) ? int.Parse(date_in.Split('/')[1]) + "" : "0" + int.Parse(date_in.Split('/')[1]);
 
-                        String cto_date_format = mMonth + "/" + mDay + "/" + date_in.Split('/')[2];
+                    String cto_date_format = date_in.Split('/')[2] + "-" + mMonth + "-" + mDay;
 
                         ///CASE 1 WHOLEDAY
                         if (!am_in1.Equals("") && !am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
