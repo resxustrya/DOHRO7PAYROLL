@@ -1349,7 +1349,7 @@ namespace DOH7PAYROLL.Repo
             date = year + "-" + month + "-" + day;
 
             List<Employee> list = new List<Employee>();
-            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND end > '" + date + "' AND status = '1'";
+            string query = "SELECT id FROM calendar WHERE start <= '" + date + "' AND status = '1'";
             //Create Command
             if (this.OpenConnection() == true)
             {
@@ -1383,7 +1383,7 @@ namespace DOH7PAYROLL.Repo
             return false;
         }
 
-      /*  public Boolean CheckCTO(String userid, String date, String time) 
+      public Boolean CheckCTO(String userid, String date, String time) 
         {
 
             Boolean found = false;
@@ -1413,7 +1413,7 @@ namespace DOH7PAYROLL.Repo
             }
             return found;
         }
-        */
+       
 
 
         public String GetMins(String id, String from, String to, String am_in, String am_out, String pm_in, String pm_out)
@@ -1582,11 +1582,11 @@ namespace DOH7PAYROLL.Repo
                                     mins += result_am_out;
                                 }
 
-                             /*   if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                               if (!CheckCTO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
-                                */
+                               
                             }
                             ///CASE 4 
                             else if (!am_in1.Equals("") && am_out1.Equals("") && pm_in1.Equals("") && pm_out1.Equals(""))
@@ -1602,10 +1602,10 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     mins += result_am_in;
                                 }
-                             /*   if (!CheckCTO(id, cto_date_format, "13:00:00"))
+                              if (!CheckCTO(id, cto_date_format, "13:00:00"))
                                 {
                                     mins += 240;
-                                }*/
+                                }
                             }
                             ///CASE 5
                             else if (!am_in1.Equals("") && am_out1.Equals("") && pm_in1.Equals("") && !pm_out1.Equals(""))
@@ -1637,11 +1637,11 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
 
-                               /* if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                               if (!CheckCTO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
-                                */
+                               
                                 //PM IN
                                 TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
                                 TimeSpan pm_in_subtrahend = TimeSpan.Parse("13:00:00");
@@ -1668,11 +1668,11 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
                             {
 
-                               /* if (!CheckCTO(id, cto_date_format, "08:00:00"))
+                              if (!CheckCTO(id, cto_date_format, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
-                                */
+                               
                                 //PM IN
                                 TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
                                 TimeSpan pm_in_subtrahend = TimeSpan.Parse("13:00:00");
@@ -1711,36 +1711,27 @@ namespace DOH7PAYROLL.Repo
                         if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
-                            if (days_absent.Equals(""))
-                            {
-                                days_absent += format;
-                            }
-                            else
-                            {
-                                days_absent += "*" + format;
-                            }
-
-                        }
-                      /*  else if (!CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
-                        {
-                            if (days_absent.Equals(""))
-                            {
-                                days_absent += format;
-                            }
-                            else
-                            {
-                                days_absent += "*" + format;
-                            }
-                        }
-                        else if (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00"))
+                           if (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00"))
                             {
                                 mins += 240;
+                                continue;
                             }
                             else if (CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00"))
                             {
                                 mins += 240;
-                            }
-                            */
+                                continue;
+                            }   
+                                               
+                                if (days_absent.Equals(""))
+                                {
+                                    days_absent += format;
+                                }
+                                else
+                                {
+                                    days_absent += "*" + format;
+                                }
+                          
+                        }      
                     }
                     for (int i = 0; i < no_days; i++)
                     {
