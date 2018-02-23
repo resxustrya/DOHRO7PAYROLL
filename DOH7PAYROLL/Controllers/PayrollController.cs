@@ -453,9 +453,9 @@ namespace DOH7PAYROLL.Controllers
         }
         */
 
-        public String DummyCTO(String userid, String date, String time)
+        public String DummyCTO()
         {
-            return DatabaseConnect.Instance.DummyCTO(userid, date, time);
+            return DatabaseConnect.Instance.DummyCTO();
         }
         public String DummyDateAdd()
         {

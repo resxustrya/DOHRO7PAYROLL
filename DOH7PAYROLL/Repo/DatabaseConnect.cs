@@ -589,10 +589,10 @@ namespace DOH7PAYROLL.Repo
             return response;
         }
 
-        public String DummyCTO(String userid, String date, String time)
+        public String DummyCTO()
         {
             String response = "";
-            string query = "SELECT datein FROM cdo_logs WHERE userid = '"+userid+"' AND datein = '"+date+"' AND time = '"+time+"' LIMIT 10";
+            string query = "SELECT datein FROM cdo_logs";
             if (this.OpenConnection() == true)
             {
                 try
@@ -1749,9 +1749,7 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     mins += 240;
                                 }
-                                
-                                
-                               
+
                                 //PM IN
                                 TimeSpan pm_in_span = TimeSpan.Parse(pm_in1);
                                 TimeSpan pm_in_subtrahend = TimeSpan.Parse("13:00:00");
