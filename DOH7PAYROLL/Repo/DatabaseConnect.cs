@@ -1816,6 +1816,7 @@ namespace DOH7PAYROLL.Repo
                     //CHECK
                     for (int i = 0; i < days.Count; i++)
                     {
+                        //
                         String format = month+ "/" +days[i] + "/" + year;
 
                     String mMonth = (month > 9) ? month + "" : "0" + month;
