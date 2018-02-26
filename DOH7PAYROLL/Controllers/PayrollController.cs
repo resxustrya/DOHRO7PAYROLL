@@ -452,7 +452,7 @@ namespace DOH7PAYROLL.Controllers
             }
         }
         */
-        //TRY DODOI
+        //TRY DODOI NI CYA
         public String DummyCTO()
         {
             return DatabaseConnect.Instance.DummyCTO();
