@@ -1687,7 +1687,7 @@ namespace DOH7PAYROLL.Repo
                                     mins += result_am_out;
                                 }
 
-                              if (!CheckCTO(id, cto_date_format, "13:00:00") || !CheckSO(id, date_in, "13:00:00"))
+                              if (!CheckCTO(id, date_in, "13:00:00") || !CheckSO(id, date_in, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1708,7 +1708,7 @@ namespace DOH7PAYROLL.Repo
                                 {
                                     mins += result_am_in;
                                 }
-                          if (!CheckCTO(id, cto_date_format, "13:00:00") || !CheckSO(id, date_in, "13:00:00"))
+                          if (!CheckCTO(id, date_in, "13:00:00") || !CheckSO(id, date_in, "13:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1745,7 +1745,7 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && !pm_out1.Equals(""))
                             {
 
-                            if (!CheckCTO(id, cto_date_format, "08:00:00") || !CheckSO(id, date_in, "08:00:00"))
+                            if (!CheckCTO(id, date_in, "08:00:00") || !CheckSO(id, date_in, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1776,7 +1776,7 @@ namespace DOH7PAYROLL.Repo
                             else if (am_in1.Equals("") && am_out1.Equals("") && !pm_in1.Equals("") && pm_out1.Equals(""))
                             {
 
-                           if (!CheckCTO(id, cto_date_format, "08:00:00") || !CheckSO(id, date_in, "08:00:00"))
+                           if (!CheckCTO(id, date_in, "08:00:00") || !CheckSO(id, date_in, "08:00:00"))
                                 {
                                     mins += 240;
                                 }
@@ -1827,11 +1827,11 @@ namespace DOH7PAYROLL.Repo
                     if (!ifWeekend(format) && !IsHoliday(format))
                         {
                             // mins += 480;
-                         if ( (!CheckCTO(id, cto_date_format, "08:00:00") && CheckCTO(id, cto_date_format, "13:00:00")) || (!CheckSO(id, format, "08:00:00") && CheckSO(id, format, "13:00:00")))
+                         if ( (!CheckCTO(id, format, "08:00:00") && CheckCTO(id, format, "13:00:00")) || (!CheckSO(id, format, "08:00:00") && CheckSO(id, format, "13:00:00")))
                             {
                                 mins += 240;
                             }
-                            else if ( (CheckCTO(id, cto_date_format, "08:00:00") && !CheckCTO(id, cto_date_format, "13:00:00")) || (CheckSO(id, format, "08:00:00") && !CheckSO(id, format, "13:00:00")))
+                            else if ( (CheckCTO(id, format, "08:00:00") && !CheckCTO(id, format, "13:00:00")) || (CheckSO(id, format, "08:00:00") && !CheckSO(id, format, "13:00:00")))
                             {
                                 mins += 240;
                             }
